@@ -12,6 +12,7 @@ db.sqlite3
 
 # Media files
 media/*
+!media/.gitkeep
 
 # Static files
 static/*
@@ -22,6 +23,13 @@ static/*
 
 # Node modules
 node_modules/
+frontend/node_modules/
 
 # OS-generated files
 .DS_Store
+
+# Exclude specific folders
+/backend/backend/__pycache__/
+/backend/media/audio_files/
+/backend/myapp/__pycache__/
+/backend/myapp/migrations/
