@@ -10,12 +10,6 @@ __pycache__/
 db.sqlite3
 *.sqlite3
 
-# Media files
-media/*
-!media/.gitkeep
-
-# Static files
-static/*
 
 # Django migrations
 */migrations/*
