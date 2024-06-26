@@ -10,10 +10,8 @@ __pycache__/
 db.sqlite3
 *.sqlite3
 
-
-# Django migrations
-*/migrations/*
-!*/migrations/__init__.py
+# Media files
+media/
 
 # Node modules
 node_modules/
@@ -22,10 +20,13 @@ frontend/node_modules/
 # OS-generated files
 .DS_Store
 
-# Exclude specific folders
-/backend/backend/__pycache__/
-/backend/myapp/__pycache__/
-/backend/myapp/migrations/
+# Static files
+static/
+
+# Django migrations - include all migration files
+**/migrations/*
+!**/migrations/__init__.py
+!**/migrations/*.py
 
 # Include only the audio_files folder but exclude its contents
 /backend/media/audio_files/*
