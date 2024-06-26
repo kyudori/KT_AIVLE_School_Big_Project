@@ -24,6 +24,9 @@ frontend/node_modules/
 
 # Exclude specific folders
 /backend/backend/__pycache__/
-/backend/media/audio_files/*
 /backend/myapp/__pycache__/
 /backend/myapp/migrations/
+
+# Include only the audio_files folder but exclude its contents
+/media/audio_files/*
+!/media/audio_files/.gitkeep
