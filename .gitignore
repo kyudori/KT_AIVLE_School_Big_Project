@@ -28,5 +28,5 @@ frontend/node_modules/
 /backend/myapp/migrations/
 
 # Include only the audio_files folder but exclude its contents
-/media/audio_files/*
-!/media/audio_files/.gitkeep
+/backend/media/audio_files/*
+!/backend/media/audio_files/.gitkeep
