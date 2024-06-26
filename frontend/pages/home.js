@@ -16,7 +16,7 @@ export default function Home() {
         <div className={styles.textContainer}>
           <h1>Voice Verity</h1>
           <p>파헤치다, 구분하다, 진실을 말하다.</p>
-          <button onClick={handleTryVoiceVerity}>Try Voice Verity</button>
+          <button className={styles.try} onClick={handleTryVoiceVerity}>Try Voice Verity</button>
         </div>
         <div className={styles.infoSection}>
           <h2>완전 대박 사실!</h2>

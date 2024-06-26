@@ -2,12 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/home": "pages/home.js",
-  "/user-info": "pages/user-info.js",
-  "/team": "pages/team.js",
-  "/api-status": "pages/api-status.js",
-  "/docs": "pages/docs.js",
-  "/docs/user-guide": "pages/docs/user-guide.js",
-  "/setting": "pages/setting.js",
-  "/try": "pages/try.js"
+  "/signup": "pages/signup.js",
+  "/try": "pages/try.js",
+  "/home": "pages/home.js"
 }

@@ -1,8 +1,8 @@
 .nav {
     display: flex;
     align-items: center;
-    background-color: #333;
     padding: 10px;
+    background-image: linear-gradient(180deg, #000000 0%, rgba(102, 102, 102, 0.59) 111.94%);
   }
   
   .nav a {
@@ -52,4 +52,5 @@
     background-color: #ddd;
     color: black;
   }
+  
   

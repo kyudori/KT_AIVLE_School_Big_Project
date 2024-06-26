@@ -1,9 +1,12 @@
 .homeContainer {
     font-family: 'Arial', sans-serif;
     color: white;
-    background: linear-gradient(to bottom, #333, #666);
-    min-height: 100vh;
+    background-image: url(./images/background.png);    min-height: 100vh;
     display: flex;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    background-attachment: fixed;
     flex-direction: column;
   }
   
@@ -61,3 +64,11 @@
     margin-bottom: 10px;
   }
   
+  .try {
+    background-color: rgb(0, 0, 0, 0.3);
+    border-radius: 30px;
+    padding: 10px 40px 10px 40px;
+    color: white;
+    text-decoration-line: underline;
+    font-size: 20px;
+  }
