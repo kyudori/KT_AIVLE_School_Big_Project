@@ -1,4 +1,11 @@
+@font-face {
+  font-family: fontA;
+  src: local("Y 너만을 비춤체"),
+  url(../styles/Y너만을비춤체.ttf);
+ }
+
 .nav {
+    font-family: fontA, sans-serif;
     display: flex;
     align-items: center;
     padding: 10px;
