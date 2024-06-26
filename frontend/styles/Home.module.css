@@ -1,0 +1,63 @@
+.homeContainer {
+    font-family: 'Arial', sans-serif;
+    color: white;
+    background: linear-gradient(to bottom, #333, #666);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .mainContent {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .textContainer {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+    width: 80%;
+  }
+  
+  .textContainer h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+  }
+  
+  .textContainer p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+  }
+  
+  .textContainer button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .textContainer button:hover {
+    background-color: #555;
+  }
+  
+  .infoSection {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+    width: 80%;
+  }
+  
+  .infoItems {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .infoItems div {
+    margin-bottom: 10px;
+  }
+  
