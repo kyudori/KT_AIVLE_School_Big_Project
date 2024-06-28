@@ -51,20 +51,40 @@ export default function TryVoice() {
   return (
     <div className={styles.previewContext}>
       <Navbar />
-      <h1>Try Voice Verity</h1>
-      <h2>Upload your voice</h2>
-      <div className={styles.fileupload}>
-        <form onSubmit={handleSubmit}>
-          <input type="file" onChange={handleFileChange} />
-          <button type="submit">Upload</button>
-        </form>
-        <div className={styles.resultContext}>
-          {result && (
-          <div>
-            <h2>Analysis Result:</h2>
-            <p>{result}</p>
-          </div>
-          )}
+      <div className={styles.mainContent}>
+        <h1>Try Voice Verity</h1>
+        <h2 className={styles.fontsize}>Show what we do</h2>
+        <h2>The Dangers of Deep Voice</h2>
+        <div className={styles.fileupload}>
+           <div className={styles.playcontent}>
+            <div className={styles.pbox}>
+              <div className={styles.profile}>
+                <div className={styles.eek}></div>
+              </div>
+              <div className={styles.play}><button></button></div>
+            </div>
+            <div className={styles.pbox}>
+              <div className={styles.profile}>
+                <div className={styles.juj}></div>
+              </div>
+              <div className={styles.play}><button></button></div>
+            </div>
+           </div>
+        </div>
+       <h2>Upload your voice</h2>
+       <div className={styles.fileupload}>
+          <form onSubmit={handleSubmit}>
+            <input type="file" onChange={handleFileChange} />
+            <button type="submit">Upload</button>
+          </form>
+          <div className={styles.resultContext}>
+           {result && (
+            <div>
+             <h2>Analysis Result:</h2>
+             <p>{result}</p>
+            </div>
+            )}
+         </div>
         </div>
       </div>
       <footer className={styles.foot}>

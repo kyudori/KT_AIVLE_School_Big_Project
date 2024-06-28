@@ -2,6 +2,7 @@ import Navbar from '../components/Navbar';
 import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.css';
 
+
 export default function Home() {
   const router = useRouter();
 
@@ -35,6 +36,10 @@ export default function Home() {
             <div className={styles.infoItem}>
               <p className={styles.img}>🚗</p>
               비싼 자동차!!!!!!!!!!! 관심없음!!!!!! 친가! 칠!!!!!!!!!ㅎㅎㅁㅁㅁㅁㅁ!!!!!!</div>
+          </div>
+          <div>
+            <br/><br/><br/><br/><br/><br/>
+            <h2>Do your Job.</h2>
           </div>
         </div>
       </div>

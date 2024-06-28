@@ -1,4 +1,5 @@
 .teamContainer {
+    font-family: fontA, sans-serif;
     font-family: 'Arial', sans-serif;
     color: white;
     background: linear-gradient(to bottom, #333, #666);
