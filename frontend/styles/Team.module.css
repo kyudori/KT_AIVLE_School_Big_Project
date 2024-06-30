@@ -1,39 +1,80 @@
+@font-face {
+  font-family: fontA;
+  src: local("Y 너만을 비춤체"),
+  url(Y너만을비춤체.ttf);
+}
+
 .teamContainer {
-    font-family: fontA, sans-serif;
-    font-family: 'Arial', sans-serif;
-    color: white;
-    background: linear-gradient(to bottom, #333, #666);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .content {
-    padding: 20px;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.7);
-    margin: 20px auto;
-    border-radius: 10px;
-    width: 80%;
-  }
-  
-  .heading {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-  }
-  
-  .subHeading {
-    font-size: 1.2em;
-    margin-bottom: 20px;
-  }
-  
-  .teamList {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .teamList li {
-    font-size: 1.2em;
-    margin: 10px 0;
-  }
-  
+  font-family: fontA, sans-serif;
+  background-image: url(/images/home/background.png);  
+  color: white;  
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  padding: 20px;
+  text-align: center;
+  margin: 20px auto;
+  width: 80%;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+}
+
+.heading {
+  font-size: 2.5em;
+  margin-bottom: 40px;
+}
+
+.subHeading {
+  font-size: 1.2em;
+  margin-bottom: 60px;
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 80px;
+  justify-items: center;
+}
+
+.teamCard {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  width: 250px;
+}
+
+.profileImage {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.teamCard h2 {
+  margin-top: 0;
+  color: black;
+}
+
+.teamCard p {
+  font-size: 1em;
+  color: #666;
+}
+
+.teamCard button {
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.teamCard button:hover {
+  background-color: #555;
+}

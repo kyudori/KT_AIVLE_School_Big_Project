@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import styles from '../styles/FindId.module.css';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -27,7 +28,7 @@ export default function FindId() {
       return;
     }
     try {
-      const response = await axios.post(`${BACKEND_URL}api/find-id/`, { username, contact });
+      const response = await axios.post(`${BACKEND_URL}/api/find-id/`, { username, contact });
       if (response.data.error) {
         alert(response.data.error);
       } else {
@@ -79,6 +80,7 @@ export default function FindId() {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

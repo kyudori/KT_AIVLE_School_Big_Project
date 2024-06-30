@@ -8,12 +8,13 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get(`${BACKEND_URL}api/user-info/`, {
+      axios.get(`${BACKEND_URL}/api/user-info/`, {
         headers: {
           'Authorization': `Token ${token}`
         }
@@ -38,22 +39,36 @@ export default function Navbar() {
   return (
     <nav className={styles.nav}>
       <Link href="/home" className={styles.brand}>Voice Verity</Link>
-      {user && user.is_staff && <a href={`${BACKEND_URL}admin`} target="_blank" rel="noopener noreferrer">Admin</a>}
-      <Link href="/api-status">API</Link>
-      <Link href="/team">팀 소개</Link>
-      <Link href="/docs">문서</Link>
-      {user ? (
-        <div className={styles.userMenu}>
-          <span>{user.email} 님</span>
-          <div className={styles.dropdown}>
-            <Link href="/user-info">내 정보</Link>
-            <Link href="/setting">환경설정</Link>
-            <button onClick={handleLogout}>로그아웃</button>
+      <div className={styles.rightMenu}>
+        {user ? (
+          <div className={styles.userSection}>
+            <div className={styles.navLinks}>
+              {user && user.is_staff && <a href={`${BACKEND_URL}/admin`} target="_blank" rel="noopener noreferrer">Admin</a>}
+              <Link href="/intro">Intro</Link>
+              <Link href="/team">Team</Link>
+              <Link href="/docs">Docs</Link>
+              <Link href="/api-status">API</Link>
+            </div>
+            <div onClick={() => setDropdownVisible(!dropdownVisible)} className={styles.userInfo}>
+              <span>{user.email}님</span>
+              <div className={styles.triangle}></div>
+              <div className={`${styles.dropdown} ${dropdownVisible ? styles.show : ''}`}>
+                <Link href="/user-info">내 정보</Link>
+                <Link href="/setting">환경설정</Link>
+                <button onClick={handleLogout}>로그아웃</button>
+              </div>
+            </div>
           </div>
-        </div>
-      ) : (
-        <Link href="/login">로그인</Link>
-      )}
+        ) : (
+          <div className={styles.navLinks}>
+            <Link href="/intro">Intro</Link>
+            <Link href="/team">Team</Link>
+            <Link href="/api-status">API</Link>
+            <Link href="/docs">Docs</Link>
+            <Link href="/login">Login</Link>
+          </div>
+        )}
+      </div>
     </nav>
   );
 }

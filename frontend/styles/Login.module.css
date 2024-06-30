@@ -1,3 +1,9 @@
+@font-face {
+  font-family: fontA;
+  src: local("Y 너만을 비춤체"),
+  url(Y너만을비춤체.ttf);
+}
+
 .container {
     font-family: fontA;
     display: flex;

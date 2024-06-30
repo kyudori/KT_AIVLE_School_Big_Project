@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import styles from '../styles/Try.module.css';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -33,7 +34,7 @@ export default function TryVoice() {
     formData.append('file', file);
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${BACKEND_URL}api/upload-audio/`, formData, {
+      const response = await axios.post(`${BACKEND_URL}/api/upload-audio/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Token ${token}`
@@ -87,16 +88,7 @@ export default function TryVoice() {
          </div>
         </div>
       </div>
-      <footer className={styles.foot}>
-        <p className={styles.end}>신기한 스쿨버스</p>
-          <ul className={styles.terms}>
-            <li>서비스 약관</li>
-            <hr></hr>
-            <li>운영약관</li>
-            <hr></hr>
-            <li>개인정보보호약관</li>
-          </ul>
-      </footer>
+      <Footer />
     </div>
   );
 }

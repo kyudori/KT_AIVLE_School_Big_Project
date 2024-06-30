@@ -2,155 +2,110 @@
   font-family: fontA;
   src: local("Y 너만을 비춤체"),
   url(Y너만을비춤체.ttf);
- }
+}
 
 .homeContainer {
-    font-family: fontA, sans-serif;
-    background-image: url(./images/background.png);  
-    color: white;  
-    min-height: 100vh;
-    display: flex;
-    background-repeat: no-repeat;
-    background-position: top center;
-    background-size: cover;
-    flex-direction: column;
-    position: absolute;;
-    left: 0;
-    top: 0;
-  }
+  font-family: fontA, sans-serif;
+  background-image: url(/images/home/background.png);  
+  color: white;  
+  min-height: 100vh;
+  display: flex;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+  flex-direction: column;
+  position: absolute;;
+  left: 0;
+  top: 0;
+}
 
-  .mainContent {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .textContainer {
-    font-weight: normal;
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 10px;
-    width: 80%;
-  }
-  
-  .textContainer h1 {
-    font-size: 3em;
-    margin-bottom: 10px;
-  }
-  
-  .textContainer p {
-    font-weight: normal;
-    font-size: 1.2em;
-    margin-bottom: 20px;
-  }
-  
-  .textContainer button {
-    background-color: rgb(0, 0, 0, 0.3);
-    border-radius: 30px;
-    border-color: white;
-    padding: 10px 40px 10px 40px;
-    color: white;
-    text-decoration-line: underline;
-    font-size: 20px;
-  }
-  
-  .textContainer button:hover {
-    background-color: #555;
-  }
-  
-  .infoSection {
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 10px;
-    width: 75%;
-    background-image: linear-gradient(180deg, rgb(0, 0, 0, 0.6) 0%, rgb(102 102 102 / 0%) 100%);
-    height: 1000px;
-  }
-  
-  .infoItems {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  
-  .infoItems div {
-    text-align: start;
-    font-size: 20px;
-    margin-bottom: 10px;
-    line-height: 1.5;
-  }
+.mainContent {
+  padding: 20px;
+  text-align: center;
+}
 
-  .infoItem {
-    width: 30%;
-  }
+.textContainer {
+  font-weight: normal;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 10px;
+  width: 80%;
+}
 
-  .textContainer p{
-    font-size: 40px;
-    left: 216px; 
-    top: 233px;
-    text-align: left;
-    color: #fff;
-  }
+.textContainer h1 {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
 
-  .textContainer span{
-    margin: 20px;
-    text-shadow: 5px 5px 5px #000000;
-    display: inline-table;
-  }
+.textContainer p {
+  font-weight: normal;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
 
-  .buttonContainer {
-    display: block;
-    height: fit-content;
-    text-align: right;
-    margin-right: 100px;
-    margin-bottom: 40px;
-  }
+.textContainer button {
+  background-color: rgb(0, 0, 0, 0.3);
+  border-radius: 30px;
+  border-color: white;
+  padding: 10px 40px 10px 40px;
+  color: white;
+  text-decoration-line: underline;
+  font-size: 20px;
+}
 
-  .img{
-    text-align: center;
-    font-size: 50px;
-  }
+.textContainer button:hover {
+  background-color: #555;
+}
 
+.infoSection {
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 10px;
+  width: 75%;
+  background-image: linear-gradient(180deg, rgb(0, 0, 0, 0.6) 0%, rgb(102 102 102 / 0%) 100%);
+  height: 1000px;
+}
 
-  .foot {
-    background: linear-gradient(to top, #13241b 0%, rgba(59,59,59,0) 233.14%);
-    color: white;
-    min-height: 10vh;
-    width: 100%;
-  }
-  
-  .homeContainer footer{
-    width: 100%;
-    display: flex;
-    bottom: 0px;
-    justify-content: space-between;
-  }
-  
-  .end {
-    font-size: 20px;
-    width: fit-content;
-    text-align: left;
-    bottom: 0;
-    margin-top: 40px;
-    margin-left: 20px;
-  }
-  
-  .terms {
-    width: fit-content;
-    position: relative;
-    margin-top: 30px;
-    color: white; 
-    display: flex;
-    list-style: none;
-    justify-content: flex-end;
-    font-size: 15px;
-  }
+.infoItems {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 
-  .homeContainer hr{
-    align-self: center;
-    margin: 0px;
-    height: 15px;
-  }
+.infoItems div {
+  text-align: start;
+  font-size: 20px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
 
-  .homeContainer li{
-    margin: 10px;
-  }
+.infoItem {
+  width: 30%;
+}
+
+.textContainer p {
+  font-size: 40px;
+  left: 216px; 
+  top: 233px;
+  text-align: left;
+  color: #fff;
+}
+
+.textContainer span {
+  margin: 20px;
+  text-shadow: 5px 5px 5px #000000;
+  display: inline-table;
+}
+
+.buttonContainer {
+  display: block;
+  height: fit-content;
+  text-align: right;
+  margin-right: 100px;
+  margin-bottom: 40px;
+}
+
+.img {
+  text-align: center;
+  font-size: 50px;
+}

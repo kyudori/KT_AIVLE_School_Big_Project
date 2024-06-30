@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import styles from '../styles/Login.module.css';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -23,7 +24,7 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`${BACKEND_URL}api/login/`, { email, password });
+      const response = await axios.post(`${BACKEND_URL}/api/login/`, { email, password });
       localStorage.setItem('token', response.data.token);
       router.push('/home');
     } catch (error) {
@@ -60,6 +61,7 @@ export default function Login() {
           <p><Link href="/signup" className={styles.link}>회원가입</Link></p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import styles from '../styles/Signup.module.css';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -53,7 +54,7 @@ export default function Signup() {
       return;
     }
     try {
-      const response = await axios.post(`${BACKEND_URL}api/signup/`, { username, email, password, company, contact });
+      const response = await axios.post(`${BACKEND_URL}/api/signup/`, { username, email, password, company, contact });
       localStorage.setItem('token', response.data.token);
       alert('Signup successful');
       router.push('/home');
@@ -127,6 +128,7 @@ export default function Signup() {
           <button type="submit" className={styles.signupButton}>Signup</button>
         </form>
       </div>
+      <Footer />
     </div>
   );
 }

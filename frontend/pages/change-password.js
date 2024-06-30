@@ -27,7 +27,7 @@ export default function ChangePassword() {
     }
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.post(`${BACKEND_URL}api/change-password/`, {
+      const response = await axios.post(`${BACKEND_URL}/api/change-password/`, {
         current_password: currentPassword,
         new_password: newPassword
       }, {

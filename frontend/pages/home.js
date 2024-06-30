@@ -1,7 +1,7 @@
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.css';
-
 
 export default function Home() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function Home() {
             <br className='gap'></br><span>진실을 말하다.</span>
           </p>
           <div className={styles.buttonContainer}>
-          <button onClick={handleTryVoiceVerity}>Try Voice Verity</button>
+            <button onClick={handleTryVoiceVerity}>Try Voice Verity</button>
           </div>
         </div>
         <div className={styles.infoSection}>
@@ -29,30 +29,24 @@ export default function Home() {
           <div className={styles.infoItems}>
             <div className={styles.infoItem}>
               <p className={styles.img}>😒</p>
-              집에 오니까 굉장히 덥고 습하고 충무로로 돌아가서 시원하게 짜장면 먹고 싶으나 사람 너무 많아서 빨리 나와야 하하하 힘내시죠 하하하 열받네</div>
+              KT AIVLE School AI Track 8조가 개발한 Voice Deep Fake 탐지 솔루션입니다.
+            </div>
             <div className={styles.infoItem}>
               <p className={styles.img}>🌼</p>
-              태정태세문단세예성연종인명선언희순숙경영정순헌철고순가나다라마바사아차카타파하하하하하 오오유유유ㅜㅜ</div>
+              솔루션은 API 형태로 제공되며, 본 웹 서비스는 API를 사용하는 방법을 소개하고 간단하게 체험할 수 있습니다.
+            </div>
             <div className={styles.infoItem}>
               <p className={styles.img}>🚗</p>
-              비싼 자동차!!!!!!!!!!! 관심없음!!!!!! 친가! 칠!!!!!!!!!ㅎㅎㅁㅁㅁㅁㅁ!!!!!!</div>
+              회원 가입 후 Intro, Team, API, Docs, Try Voice Verity 페이지를 차례로 방문하여 저희의 솔루션을 직접 즐겨보세요.
+            </div>
           </div>
           <div>
-            <br/><br/><br/><br/><br/><br/>
+            <br /><br /><br /><br /><br /><br />
             <h2>Do your Job.</h2>
           </div>
         </div>
       </div>
-      <footer className={styles.foot}>
-        <p className={styles.end}>신기한 스쿨버스</p>
-          <ul className={styles.terms}>
-            <li>서비스 약관</li>
-            <hr></hr>
-            <li>운영약관</li>
-            <hr></hr>
-            <li>개인정보보호약관</li>
-          </ul>
-      </footer>
+      <Footer />
     </div>
   );
 }
