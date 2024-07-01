@@ -123,6 +123,7 @@ export default function TryVoice() {
         <h1>Try Voice Verity</h1>
         <div className={styles.tabButtons}>
           <button className={activeTab === 'celebrity' ? styles.activeTab : ''} onClick={() => handleTabChange('celebrity')}>Celebrity Deep Fake</button>
+          <span> | </span>
           <button className={activeTab === 'phishing' ? styles.activeTab : ''} onClick={() => handleTabChange('phishing')}>Phishing Detection</button>
         </div>
         {activeTab === 'celebrity' ? (
@@ -132,14 +133,18 @@ export default function TryVoice() {
             <div className={styles.fileupload}>
               <div className={styles.playcontent}>
                 <div className={styles.pbox}>
-                  <div className={styles.profile} onMouseEnter={() => playCelebrityAudio('/audios/try/celebrity1.wav')}>
-                    <div className={styles.eek}></div>
+                  <div className={styles.profile}>
+                    <div className={styles.eek}>
+                      <div className={styles.faceplay} onMouseEnter={() => playCelebrityAudio('/audios/try/celebrity1.wav')}></div>
+                    </div>
                   </div>
                   <div className={styles.play}><button onClick={() => playFakeAudio('/audios/try/fake1.wav')}></button></div>
                 </div>
                 <div className={styles.pbox}>
-                  <div className={styles.profile} onMouseEnter={() => playCelebrityAudio('/audios/try/celebrity1.wav')}>
-                    <div className={styles.juj}></div>
+                  <div className={styles.profile}>
+                    <div className={styles.juj}>
+                      <div className={styles.faceplay} onMouseEnter={() => playCelebrityAudio('/audios/try/celebrity1.wav')}></div>
+                    </div>
                   </div>
                   <div className={styles.play}><button onClick={() => playFakeAudio('/audios/try/fake1.wav')}></button></div>
                 </div>

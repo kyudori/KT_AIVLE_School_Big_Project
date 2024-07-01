@@ -35,6 +35,7 @@ export default function Login() {
   return (
     <div className={styles.container}>
       <Navbar />
+      <div className={styles.main}>
       <div className={styles.loginBox}>
         <h1 className={styles.title}>Voice Verity</h1>
         <form onSubmit={handleSubmit}>
@@ -60,6 +61,7 @@ export default function Login() {
           <p><Link href="/find-id" className={styles.link}>아이디</Link> / <Link href="/reset-password" className={styles.link}>비밀번호</Link>를 잊으셨습니까?</p>
           <p><Link href="/signup" className={styles.link}>회원가입</Link></p>
         </div>
+      </div>
       </div>
       <Footer />
     </div>

@@ -9,6 +9,8 @@
   background-image: url(/images/home/background.png);  
   color: white;  
   min-height: 100vh;
+  min-width: 90vw;
+  width: 100%;
   display: flex;
   background-repeat: no-repeat;
   background-position: top center;
@@ -20,6 +22,7 @@
 }
 
 .mainContent {
+  min-height: 100vh;
   padding: 20px;
   text-align: center;
 }

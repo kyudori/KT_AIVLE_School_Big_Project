@@ -5,17 +5,49 @@
   }
 
 .documentationContainer {
+    font-family: fontA;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-image: url(/images/home/background.png);  
+    min-width: 90vw;
+    width: 100%;
+    background-size: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url(./images/docsback.png), #111;
+    background-position: bottom center;
+    background-repeat:no-repeat;
   }
   
+  .headsection{
+    text-align-last: center;
+  }
+
   .contentContainer {
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
     flex: 1;
   }
   
+  .section{
+    padding:50px;
+  }
+
+  .section hr {
+    opacity: 50%;
+  }
+
+  .section h2{
+    text-align: start;
+  }
+
+  .section p {
+    opacity: 70%;
+    font-weight: normal;
+  }
+
+
   .sidebar {
     position: sticky;
     top: 0px;
@@ -23,7 +55,7 @@
     background: #111;
     padding: 20px;
     color: white;
-    height: calc(100vh - 90px); /* Navbar + Footer height */
+    height: 100vh
   }
   
   .sidebarList {
@@ -60,7 +92,6 @@
   .content {
     flex-grow: 1;
     padding: 20px;
-    background: #222;
     color: white;
   }
   
@@ -80,18 +111,29 @@
   }
   
   .card {
-    background: #333;
+    background: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
     text-align: center;
     cursor: pointer;
-    width: 15%;
+    min-width: 20%;
   }
   
   .card:hover {
     background: #444;
   }
   
+  .card .cardicon {
+    background-image: url(./images/starticon.png);
+    height: 150px;
+    width: 150px;
+    padding: 20px;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    display: inline-block;
+  }
+
   .fileFormats {
     display: flex;
     justify-content: space-around;
@@ -103,4 +145,7 @@
     padding: 10px 20px;
     border-radius: 5px;
   }
-  
+
+  .section ul{
+    opacity: 70%;
+  }

@@ -78,12 +78,15 @@ export default function Documentation() {
         </div>
         <div className={styles.content}>
           <section id="start" className={styles.section}>
+            <div className={styles.headsection}>
             <h1 className={styles.heading}>Voice Verity documentation</h1>
             <p>Voice Verity는 KT AivleSchool 5기 AI Track 8조가 제공하는 API 및 플랫폼 서비스 입니다.</p>
             <div className={styles.cardContainer}>
               <div className={styles.card} onClick={() => handleScrollToSection('start')}>
+                <div className={styles.cardicon}></div>
                 <h2>시작 하기</h2>
-                <p>Read documentation &gt;</p>
+                <p>Read</p>
+                <p>documentation</p>
               </div>
               <div className={styles.card} onClick={handleNavigateToSetting}>
                 <h2>Key 발급</h2>
@@ -91,6 +94,7 @@ export default function Documentation() {
               </div>
             </div>
             <p>Voice Verity는 음성 파일에 대해 Deep Fake 여부를 판별합니다.</p>
+            </div>
           </section>
           <section id="supported-files" className={styles.section}>
             <h2>지원하는 파일 형식</h2>
@@ -104,15 +108,18 @@ export default function Documentation() {
           <section id="authentication" className={styles.section}>
             <h2>인증</h2>
             <p>플랫폼에 회원가입 및 로그인하여 API 키를 발급받습니다.</p>
+            <hr/>
             <pre>Authorization: Bearer YOUR_API_KEY</pre>
           </section>
           <section id="endpoints" className={styles.section}>
             <h2>엔드 포인트</h2>
+            <hr/>
             <h3>1. 판별(Decision)</h3>
+            <ul><li>URL: /api/decision</li>
+              <li>Method: POST</li>
+              <li>설명: 업로드한 음성 파일을 기반으로 AI 모델로부터 Fake 여부를 판단합니다.</li></ul>
             <pre>
-              {`URL: /api/decision
-Method: POST
-설명: 업로드한 음성 파일을 기반으로 AI 모델로부터 Fake 여부를 판단합니다.
+              {`
 요청 형식(json):
 {
   "data": [
@@ -142,6 +149,7 @@ Method: GET
           </section>
           <section id="error-codes" className={styles.section}>
             <h2>에러 코드</h2>
+            <hr/>
             <ul>
               <li>400 Bad Request: 잘못된 요청 형식입니다.</li>
               <li>401 Unauthorized: 인증 실패입니다. 올바른 API 키를 제공하십시오.</li>
