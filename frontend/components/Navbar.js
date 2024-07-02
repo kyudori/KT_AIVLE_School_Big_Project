@@ -45,16 +45,16 @@ export default function Navbar() {
             <div className={styles.navLinks}>
               {user && user.is_staff && <a href={`${BACKEND_URL}/admin`} target="_blank" rel="noopener noreferrer">Admin</a>}
               <Link href="/intro">Intro</Link>
+              <Link href="/api-status">API</Link>
               <Link href="/team">Team</Link>
               <Link href="/docs">Docs</Link>
-              <Link href="/api-status">API</Link>
             </div>
             <div onClick={() => setDropdownVisible(!dropdownVisible)} className={styles.userInfo}>
               <span>{user.email}님</span>
               <div className={styles.triangle}></div>
               <div className={`${styles.dropdown} ${dropdownVisible ? styles.show : ''}`}>
-                <Link href="/user-info">&nbsp; &nbsp;내 정보</Link>
-                <Link href="/setting">&nbsp; &nbsp;환경설정</Link>
+                <Link href="/user-info">&nbsp;&nbsp;내 정보</Link>
+                <Link href="/setting">&nbsp;&nbsp;환경설정</Link>
                 <button onClick={handleLogout}>로그아웃</button>
               </div>
             </div>
@@ -62,8 +62,8 @@ export default function Navbar() {
         ) : (
           <div className={styles.navLinks}>
             <Link href="/intro">Intro</Link>
-            <Link href="/team">Team</Link>
             <Link href="/api-status">API</Link>
+            <Link href="/team">Team</Link>
             <Link href="/docs">Docs</Link>
             <Link href="/login">Login</Link>
           </div>

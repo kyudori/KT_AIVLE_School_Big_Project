@@ -1,6 +1,6 @@
 .foot {
-    background: linear-gradient(to top, #13241b 0%, rgba(59,59,59,0) 233.14%);
-    color: white;
+    background: rgba(221,221,221,0.5);
+    color: #000;
     min-height: 5vh;
     width: 100%;
     display: flex;
@@ -26,7 +26,7 @@
   }
   
   .terms a {
-    color: white;
+    color: #000;
     text-decoration: none;
   }
   

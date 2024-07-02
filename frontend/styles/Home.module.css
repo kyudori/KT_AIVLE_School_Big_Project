@@ -6,33 +6,34 @@
 
 .homeContainer {
   font-family: fontA, sans-serif;
-  background-image: url(/images/home/background.png);  
-  color: white;  
+  background: white;  
+  color: black;
   min-height: 100vh;
-  min-width: 90vw;
-  width: 100%;
   display: flex;
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: cover;
   flex-direction: column;
-  position: absolute;;
+  position: absolute;
+  width: 100%;
   left: 0;
   top: 0;
 }
 
 .mainContent {
+  display: grid;    
   min-height: 100vh;
-  padding: 20px;
+  height: 100%;
   text-align: center;
+  margin: 0 200px 0 200px;
+  justify-content: center;
+
 }
 
 .textContainer {
-  font-weight: normal;
   padding: 20px;
-  margin: 20px auto;
-  border-radius: 10px;
-  width: 80%;
+  margin: 0px 20px 50px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 425px;
 }
 
 .textContainer h1 {
@@ -43,69 +44,157 @@
 .textContainer p {
   font-weight: normal;
   font-size: 1.2em;
-  margin-bottom: 20px;
+}
+
+.logo {
+  background-image: url(./images/logo.png);
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+  width: 256px;
+  height: 182px;
 }
 
 .textContainer button {
-  background-color: rgb(0, 0, 0, 0.3);
+  background-color: rgb(0, 0, 0, 0);
   border-radius: 30px;
-  border-color: white;
+  border-color: rgb(0, 0, 0);
   padding: 10px 40px 10px 40px;
-  color: white;
-  text-decoration-line: underline;
+  color: rgb(0, 0, 0);
   font-size: 20px;
+  font-family: fontA;
 }
 
 .textContainer button:hover {
-  background-color: #555;
+  background-color: #d9d9d9;
 }
 
 .infoSection {
+  font-size: 20px;
   padding: 20px;
-  margin: 20px auto;
   border-radius: 10px;
-  width: 75%;
-  background-image: linear-gradient(180deg, rgb(0, 0, 0, 0.6) 0%, rgb(102 102 102 / 0%) 100%);
-  height: 1000px;
+  width: 100%;
+  height: 520px;
 }
 
-.infoItems {
+.infoSection h2 {
+  font-weight: normal;
+  margin: 10px;
+  font-size: 36px;
+}
+
+
+.infoSection .infoItems {
+  margin: 10px;
+  font-size: 32px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.infoItems div {
-  text-align: start;
-  font-size: 20px;
-  margin-bottom: 10px;
-  line-height: 1.5;
+.infoSection .infoItems h3 {
+  font-weight: normal;
+  font-size: 24px;
+  margin: 10px;
 }
 
-.infoItem {
-  width: 30%;
+.infoSection .infoItem {
+  border-radius: 30px;
+  outline: solid rgba(0,0,0,0.3);
+  width: 472px;
+  height: 280px;
 }
+
+.infoSection .infoItem p {
+  color: #616161;
+  font-size: 20px;
+  margin: 0;
+}
+
+.infoSection button{
+  cursor: pointer;
+  height: 60px;
+  width: 230px;
+  margin-top: 23px;
+  border: none;
+  font-family: fontA;
+  font-size: 24px;
+  background-color: #000;
+  color: #fff;
+  border-radius: 30px;
+}
+
+.infoSection button:hover {
+  background-color: #616161;
+
+}
+
+.voiceverity {
+  height: 575px;
+}
+
+.listensection {
+  height: 620px;
+  display: block;
+  justify-self: center;
+}
+
+.listensection section {
+  border-radius: 30px;
+  height: 400px;
+  width: 900px;
+  outline: solid rgba(0,0,0,0.3);
+}
+
+.listensection button {
+  width: 70px;
+  height: 40px;
+  cursor: pointer;
+  border: none;
+  font-family: fontA;
+  font-size: 24px;
+  background-color: rgba(0,0,0,0.5);
+  color: #fff;
+  border-radius: 30px;
+}
+
+.toggleitem {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #fff;
+  top: 1px;
+  left: 1px;
+  transition: transform 0.3s;
+}
+
+.real .toggleitem {
+  transform: translateX(0px);
+}
+
+.fake .toggleitem {
+  transform: translateX(30px);
+}
+
 
 .textContainer p {
   font-size: 40px;
   left: 216px; 
   top: 233px;
   text-align: left;
-  color: #fff;
+  color: #000000;
 }
 
 .textContainer span {
   margin: 20px;
-  text-shadow: 5px 5px 5px #000000;
   display: inline-table;
 }
 
 .buttonContainer {
-  display: block;
-  height: fit-content;
-  text-align: right;
-  margin-right: 100px;
-  margin-bottom: 40px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 .img {

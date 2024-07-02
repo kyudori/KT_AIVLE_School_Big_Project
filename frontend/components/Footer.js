@@ -4,7 +4,7 @@ import styles from './Footer.module.css';
 export default function Footer() {
   return (
     <footer className={styles.foot}>
-      <p className={styles.end}>KT AIVLE SCHOOL</p>
+      <p className={styles.end}>Voice Volice</p>
       <ul className={styles.terms}>
         <li>
           <Link href="/terms/service">서비스 약관</Link>
