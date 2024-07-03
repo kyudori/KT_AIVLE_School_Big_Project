@@ -85,11 +85,12 @@
 }
 
 .nav .dropdown a{
-  margin: 0;
-  padding: 0;
+  width: 100%;
+  padding: 0px 30px;
 }
 
-.nav .dropdown button {
+.logoutbtn button{
+  text-align: -webkit-center;
   width: 100%;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0);
@@ -100,8 +101,25 @@
   font-size: inherit;
 }
 
-.nav .dropdown a:hover,
-.nav .dropdown button:hover {
+.nav .dropdown button{
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.nav .dropdown a:hover {
+  font-size: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: all ease 0.3s 0s;
+  color: #333;
+}
+
+.logoutbtn button:hover {
   font-size: 20px;
   background-color: rgba(0, 0, 0, 0.2);
   color: #333;

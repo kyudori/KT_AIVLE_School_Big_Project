@@ -111,24 +111,29 @@ export default function Home() {
           <h2>독보적인 AI 음성 탐지 기술, Voice Verity</h2>
           <p>Voice Verity는 짧은 시간의 통화음으로도 목소리를 구별하는 기술을 갖추고 있습니다.</p>
           <div>
-            <div /><ul>Building a Deep voice dataset</ul>
+            <div className={styles.dataicon} /><ul>Building a Deep voice dataset
             <li>생성형 AI를 이용한 고품질 한국어 딥보이스 데이터셋 자체 구축했습니다.</li>
+            </ul>
           </div>
           <div>
-            <div /><ul>Deep Learning Deep Voice Classifier</ul>
+            <div className={styles.callicon} /><ul>Deep Learning Deep Voice Classifier
             <li>딥러닝 기반의 딥보이스 분류 모델을 개발하여 정확하게 딥보이스를 감지합니다.</li>
+            </ul>
           </div>
           <div>
-            <div /><ul>Real-time Deep voice Classifier</ul>
+            <div className={styles.timeicon} /><ul>Real-time Deep voice Classifier
             <li>최신 딥러닝 모델을 이용하여 높은 정확성과 빠른 추론 속도의 모델을 이용하여 통화 상태에서의 실시간 딥보이스 분류 지원합니다.</li>
+            </ul>
           </div>
         </div>
         <div className={styles.listensection}>
-          <h2>Deep Voice(딥보이스)를 들어보세요</h2>
-          <p>사이버 범죄 수법으로 Deep Voice를 사용하는 비율이 늘어나고 있습니다.</p>
-          <p>실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.</p>
+          <div style={{height: "200px"}}>
+            <h2>Deep Voice(딥보이스)를 들어보세요</h2>
+            <p>사이버 범죄 수법으로 Deep Voice를 사용하는 비율이 늘어나고 있습니다.</p>
+            <p>실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.</p>
+          </div>
           <section>
-            <li>사진 속 인물과 목소리의 주인은 전혀 다른 사람임을 알려드립니다.</li>
+            <li>* 사진 속 인물과 목소리의 주인은 전혀 다른 사람임을 알려드립니다.</li>
             <div className={styles.profileSection}>
               <div className={styles.profileContainer}>
                 <div
@@ -144,11 +149,12 @@ export default function Home() {
                     hoveredProfile === 1 && <div className={styles.playButton}>▶</div>
                   )}
                 </div>
-                <button className={`${styles.toggle} ${isOn1 ? styles.real : styles.fake}`} onClick={toggleHandler1}>
-                  <div className={styles.toggleitem}></div>
-                </button>
-                <p> {isOn1 ? 'Real Voice' : 'Fake Voice'}</p>
-              </div>
+                <div className={styles.toggleline}>
+                  <button className={`${styles.toggle} ${isOn1 ? styles.real : styles.fake}`} onClick={toggleHandler1}>
+                   <div className={styles.toggleitem}></div>
+                  </button>
+                  <p> {isOn1 ? 'Real Voice' : 'Fake Voice'}</p></div>
+                </div>
               <div className={styles.profileContainer}>
                 <div
                   className={styles.profile}
@@ -163,15 +169,47 @@ export default function Home() {
                     hoveredProfile === 2 && <div className={styles.playButton}>▶</div>
                   )}
                 </div>
-                <button className={`${styles.toggle} ${isOn2 ? styles.real : styles.fake}`} onClick={toggleHandler2}>
-                  <div className={styles.toggleitem}></div>
-                </button>
-                <p> {isOn2 ? 'Real Voice' : 'Fake Voice'}</p>
+                <div className={styles.toggleline}>
+                  <button className={`${styles.toggle} ${isOn2 ? styles.real : styles.fake}`} onClick={toggleHandler2}>
+                    <div className={styles.toggleitem}></div>
+                  </button>
+                  <p> {isOn2 ? 'Real Voice' : 'Fake Voice'}</p>
+                </div>
               </div>
             </div>
             <ReactAudioPlayer src={audioSrc} ref={realAudioRef} controls style={{ display: 'none' }} />
             <ReactAudioPlayer src={audioSrc} ref={fakeAudioRef} controls style={{ display: 'none' }} />
           </section>
+        </div>
+        <div className={styles.do}>
+          <div>
+            <div style={{height:'200px'}}>
+              <h2>Voice Verity로 어떤 걸 할 수 있을까?</h2>
+              <p>Voice Verity는 생각지도 못한 다양한 곳에 사용될 수 있습니다.</p>
+            </div>
+            <div className={styles.row}>
+              <div className={styles.column}>
+               <section>
+                <div className={styles.space}><div className={styles.icon}><div className={styles.enter} /></div></div>
+                <ul>Entertainment
+                <li>성우 및 가수의 딥보이스 무단 사용 탐지</li>
+                <li>음성 합성 기술의 품질 평가</li></ul>
+               </section>
+               <section>
+                <div className={styles.space}><div className={styles.prevent} /></div>
+                <ul>Prevention
+                <li>음성 인증 시스템의 보안 강화</li>
+                <li>통화 중 실시간 딥페이크 음성 탐지</li></ul>
+               </section>
+               <section>
+                <div className={styles.space}><div className={styles.icon}><div className={styles.media} /></div></div>
+                <ul>Media literacy
+                <li>뉴스나 팟캐스트의 음성 진위 여부 확인</li>
+                <li>영화나 TV 프로그램에서 사용된 음성의 진실성 검증</li></ul>
+               </section>
+              </div>
+            </div>
+          </div>
         </div>
         <div className={styles.youtubeSection}>
           <h2>우리의 Dev Story</h2>
