@@ -129,7 +129,7 @@ def upload_audio(request):
 
     # Flask 서버에 파일 경로 전송
     try:
-        response = requests.post(f"{FLASK_URL}/web-analyze", json={'file_path': os.path.join(settings.MEDIA_ROOT, 'audio_files', filename)}, headers={'Authorization': f'Bearer {api_key_obj.key}'})
+        response = requests.post(f"{FLASK_URL}/api/web-analyze", json={'file_path': os.path.join(settings.MEDIA_ROOT, 'audio_files', filename)}, headers={'Authorization': f'Bearer {api_key_obj.key}'})
         response.raise_for_status()
         result = response.json().get('result', 'Error')
     except requests.RequestException as e:

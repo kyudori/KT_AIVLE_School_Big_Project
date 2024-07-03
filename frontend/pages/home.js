@@ -2,26 +2,80 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.css';
-import { useState } from 'react';
-
+import ReactAudioPlayer from 'react-audio-player';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Home() {
   const router = useRouter();
+  const [isOn1, setisOn1] = useState(true);
+  const [isOn2, setisOn2] = useState(true);
+  const [playingAudio, setPlayingAudio] = useState(null);
+  const [audioSrc, setAudioSrc] = useState(null);
+  const realAudioRef = useRef(null);
+  const fakeAudioRef = useRef(null);
+  const [hoveredProfile, setHoveredProfile] = useState(null);
 
   const handleTryVoiceVerity = () => {
     router.push('/try');
   };
 
-  const [isOn, setisOn] = useState(true);
+  const handleSubscriptionPlan = () => {
+    router.push('/plan');
+  };
 
-  const toggleHandler = () => {
-    setisOn( prevState=> !prevState);
-  }; 
+  const handleContactUs = () => {
+    router.push('/contact');
+  };
+
+  const toggleHandler1 = () => {
+    setisOn1(prevState => !prevState);
+  };
+
+  const toggleHandler2 = () => {
+    setisOn2(prevState => !prevState);
+  };
+
+  const playAudio = (profile, isReal) => {
+    const audioToPlay = isReal ? `/audios/real_voice${profile}.wav` : `/audios/fake_voice${profile}.wav`;
+
+    if (playingAudio === audioToPlay) {
+      // 이미 재생 중인 오디오를 다시 클릭하면 정지
+      setPlayingAudio(null);
+      if (realAudioRef.current.audioEl.current.src.includes(audioToPlay)) {
+        realAudioRef.current.audioEl.current.pause();
+        realAudioRef.current.audioEl.current.currentTime = 0;
+      }
+      if (fakeAudioRef.current.audioEl.current.src.includes(audioToPlay)) {
+        fakeAudioRef.current.audioEl.current.pause();
+        fakeAudioRef.current.audioEl.current.currentTime = 0;
+      }
+    } else {
+      // 다른 오디오 클릭 시, 현재 재생 중인 오디오 정지
+      if (realAudioRef.current.audioEl.current.src) {
+        realAudioRef.current.audioEl.current.pause();
+        realAudioRef.current.audioEl.current.currentTime = 0;
+      }
+      if (fakeAudioRef.current.audioEl.current.src) {
+        fakeAudioRef.current.audioEl.current.pause();
+        fakeAudioRef.current.audioEl.current.currentTime = 0;
+      }
+      setPlayingAudio(audioToPlay);
+      setAudioSrc(audioToPlay);
+
+      setTimeout(() => {
+        if (isReal) {
+          realAudioRef.current.audioEl.current.play();
+        } else {
+          fakeAudioRef.current.audioEl.current.play();
+        }
+      }, 0);
+    }
+  };
 
   return (
     <div className={styles.homeContainer}>
+      <Navbar />
       <div className={styles.mainContent}>
-          <Navbar />
         <div className={styles.textContainer}>
           <p className='phrase'>
             <span> 파헤치다, </span>
@@ -42,14 +96,14 @@ export default function Home() {
               <h3>슈뢰딩거의 목소리를 체험해보려면</h3>
               <p>이거 내 목소리 맞아?</p>
               <p>얼마나 진짜 같을까? Fake Voice!</p>
-              <button className={styles.infobutton}>체험하러 가기</button>
+              <button className={styles.infobutton} onClick={handleTryVoiceVerity}>체험하러 가기</button>
             </div>
             <div className={styles.infoItem}>
               <h2>API Service</h2>
               <h3>우리 서비스를 구독하고 싶다면</h3>
               <p>아 싸다싸!</p>
               <p>우리 서비스 완전 싸요!</p>
-              <button>구독플랜 보기</button>
+              <button onClick={handleSubscriptionPlan}>구독플랜 보기</button>
             </div>
           </div>
         </div>
@@ -75,15 +129,69 @@ export default function Home() {
           <p>실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.</p>
           <section>
             <li>사진 속 인물과 목소리의 주인은 전혀 다른 사람임을 알려드립니다.</li>
-            <div>
-              <div>
-                <div className={styles.profile}/>
-                <button className={`${styles.toggle} ${isOn ? styles.real : styles.fake}`} onClick={toggleHandler}>
-                <div className={styles.toggleitem}></div></button><p> {isOn ? 'Real Voice' : 'Fake Voice'}</p>
+            <div className={styles.profileSection}>
+              <div className={styles.profileContainer}>
+                <div
+                  className={styles.profile}
+                  onMouseEnter={() => setHoveredProfile(1)}
+                  onMouseLeave={() => setHoveredProfile(null)}
+                  onClick={() => playAudio(1, isOn1)}
+                  style={{ backgroundImage: "url('/images/home/profile1.jpg')" }}
+                >
+                  {playingAudio === `/audios/real_voice1.wav` || playingAudio === `/audios/fake_voice1.wav` ? (
+                    <div className={styles.playButton}>⏸</div>
+                  ) : (
+                    hoveredProfile === 1 && <div className={styles.playButton}>▶</div>
+                  )}
+                </div>
+                <button className={`${styles.toggle} ${isOn1 ? styles.real : styles.fake}`} onClick={toggleHandler1}>
+                  <div className={styles.toggleitem}></div>
+                </button>
+                <p> {isOn1 ? 'Real Voice' : 'Fake Voice'}</p>
+              </div>
+              <div className={styles.profileContainer}>
+                <div
+                  className={styles.profile}
+                  onMouseEnter={() => setHoveredProfile(2)}
+                  onMouseLeave={() => setHoveredProfile(null)}
+                  onClick={() => playAudio(2, isOn2)}
+                  style={{ backgroundImage: "url('/images/home/profile2.jpg')" }}
+                >
+                  {playingAudio === `/audios/real_voice2.wav` || playingAudio === `/audios/fake_voice2.wav` ? (
+                    <div className={styles.playButton}>⏸</div>
+                  ) : (
+                    hoveredProfile === 2 && <div className={styles.playButton}>▶</div>
+                  )}
+                </div>
+                <button className={`${styles.toggle} ${isOn2 ? styles.real : styles.fake}`} onClick={toggleHandler2}>
+                  <div className={styles.toggleitem}></div>
+                </button>
+                <p> {isOn2 ? 'Real Voice' : 'Fake Voice'}</p>
               </div>
             </div>
-            <div></div>
+            <ReactAudioPlayer src={audioSrc} ref={realAudioRef} controls style={{ display: 'none' }} />
+            <ReactAudioPlayer src={audioSrc} ref={fakeAudioRef} controls style={{ display: 'none' }} />
           </section>
+        </div>
+        <div className={styles.youtubeSection}>
+          <h2>우리의 Dev Story</h2>
+          <h3>Voice Verity의 시작은 어디서부터였을까? </h3>
+          <h3>Voice Volice의 이야기를 만나보세요.</h3>
+          <h3>우리의 이야기는 끝나지 않았습니다.</h3>
+          <div className={styles.youtubeContainer}>
+            <iframe 
+              src="https://www.youtube.com/embed/DMJ0Jrxu_Oo"
+              title="YouTube video player" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen>
+            </iframe>
+          </div>
+        </div>
+        <div className={styles.contactUs}>
+          <h2>Voice Verity와 함께해요.</h2>
+          <h3>당신의 든든한 파트너가 될 수 있습니다.</h3>
+          <button onClick={handleContactUs}>Contact Us</button>
         </div>
       </div>
       <Footer />

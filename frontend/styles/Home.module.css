@@ -24,7 +24,6 @@
   text-align: center;
   margin: 0 200px 0 200px;
   justify-content: center;
-
 }
 
 .textContainer {
@@ -56,10 +55,10 @@
 }
 
 .textContainer button {
-  background-color: rgb(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0);
   border-radius: 30px;
   border-color: rgb(0, 0, 0);
-  padding: 10px 40px 10px 40px;
+  padding: 10px 40px;
   color: rgb(0, 0, 0);
   font-size: 20px;
   font-family: fontA;
@@ -82,7 +81,6 @@
   margin: 10px;
   font-size: 36px;
 }
-
 
 .infoSection .infoItems {
   margin: 10px;
@@ -112,7 +110,7 @@
   margin: 0;
 }
 
-.infoSection button{
+.infoSection button {
   cursor: pointer;
   height: 60px;
   width: 230px;
@@ -127,7 +125,6 @@
 
 .infoSection button:hover {
   background-color: #616161;
-
 }
 
 .voiceverity {
@@ -147,11 +144,31 @@
   outline: solid rgba(0,0,0,0.3);
 }
 
+.profileSection {
+  display: flex;
+  justify-content: space-around;
+}
+
 .listensection .profile {
   width: 260px;
   height: 190px;
   border-radius: 30px;
   outline: solid #000;
+  cursor: pointer;
+  background-size: cover;
+  position: relative;
+}
+
+.playButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
 }
 
 .listensection button {
@@ -184,7 +201,6 @@
   transform: translateX(30px);
 }
 
-
 .textContainer p {
   font-size: 40px;
   left: 216px; 
@@ -208,4 +224,39 @@
 .img {
   text-align: center;
   font-size: 50px;
+}
+
+.youtubeSection {
+  height: 600px;
+  text-align: center;
+}
+
+.youtubeContainer {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contactUs {
+  text-align: center;
+  padding: 20px;
+}
+
+.contactUs button {
+  cursor: pointer;
+  height: 60px;
+  width: 230px;
+  margin-top: 23px;
+  border: none;
+  font-family: fontA;
+  font-size: 24px;
+  background-color: #000;
+  color: #fff;
+  border-radius: 30px;
+}
+
+.contactUs button:hover {
+  background-color: #616161;
 }

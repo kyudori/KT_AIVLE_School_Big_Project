@@ -1,36 +1,19 @@
 .foot {
-    background: rgba(221,221,221,0.5);
-    color: #000;
-    min-height: 5vh;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px; /* 좌우 패딩 추가 */
-    box-sizing: border-box; /* box-sizing 추가 */
-  }
-  
-  .end {
-    font-size: 20px;
-  }
-  
-  .terms {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .terms li {
-    margin-left: 20px;
-  }
-  
-  .terms a {
-    color: #000;
-    text-decoration: none;
-  }
-  
-  .terms a:hover {
-    text-decoration: underline;
-  }
-  
+  background: rgba(221, 221, 221, 0.5);
+  color: #000;
+  min-height: 5vh;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px; /* 좌우 패딩 추가 */
+  box-sizing: border-box; /* box-sizing 추가 */
+}
+
+.end {
+  font-size: 20px;
+}
+
+.right {
+  font-size: 20px;
+}
