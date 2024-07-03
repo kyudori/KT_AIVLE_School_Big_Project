@@ -12,11 +12,14 @@
 }
 
 .nav a {
+  max-width: fit-content;
+  display: flex;
   font-size: 20px;
   color: #000;
   padding: 14px 20px;
   text-decoration: none;
   text-align: center;
+  align-items: center;
 }
 
 .nav .rightMenu a:hover {
@@ -82,11 +85,8 @@
 }
 
 .nav .dropdown a{
-  padding: 10px 10px 10px 0px;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 .nav .dropdown button {
@@ -102,7 +102,7 @@
 
 .nav .dropdown a:hover,
 .nav .dropdown button:hover {
-  font-size: large;
+  font-size: 20px;
   background-color: rgba(0, 0, 0, 0.2);
   color: #333;
   transition: all ease 0.3s 0s;

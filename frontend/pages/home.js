@@ -77,7 +77,7 @@ export default function Home() {
             <li>사진 속 인물과 목소리의 주인은 전혀 다른 사람임을 알려드립니다.</li>
             <div>
               <div>
-                <div />
+                <div className={styles.profile}/>
                 <button className={`${styles.toggle} ${isOn ? styles.real : styles.fake}`} onClick={toggleHandler}>
                 <div className={styles.toggleitem}></div></button><p> {isOn ? 'Real Voice' : 'Fake Voice'}</p>
               </div>

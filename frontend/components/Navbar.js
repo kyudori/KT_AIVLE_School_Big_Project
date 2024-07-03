@@ -53,8 +53,8 @@ export default function Navbar() {
               <span>{user.email}님</span>
               <div className={styles.triangle}></div>
               <div className={`${styles.dropdown} ${dropdownVisible ? styles.show : ''}`}>
-                <Link href="/user-info">&nbsp;&nbsp;내 정보</Link>
-                <Link href="/setting">&nbsp;&nbsp;환경설정</Link>
+                <button>내 정보<Link href="/user-info" /></button>
+                <button>환경설정<Link href="/setting" /></button>
                 <button onClick={handleLogout}>로그아웃</button>
               </div>
             </div>
