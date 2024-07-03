@@ -15,7 +15,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    background: url(./images/docsback.png), #111;
+    background: #fff;
     background-position: bottom center;
     background-repeat:no-repeat;
   }
@@ -25,13 +25,12 @@
   }
 
   .contentContainer {
-    background: rgba(0, 0, 0, 0.3);
     display: flex;
     flex: 1;
   }
   
   .section{
-    padding:50px;
+    padding:40px 0px;
   }
 
   .section hr {
@@ -49,13 +48,14 @@
 
 
   .sidebar {
+
     position: sticky;
     top: 0px;
     width: 160px;
     background: #111;
     padding: 20px;
     color: white;
-    height: 100vh
+    height: calc(100vh - 40px)
   }
   
   .sidebarList {
@@ -64,7 +64,7 @@
   }
   
   .sidebarList li {
-    margin: 10px 0;
+    margin: 20px 10px;
     cursor: pointer;
     font-size: 1.1em;
     position: relative;
@@ -90,9 +90,9 @@
   }
   
   .content {
+    margin: 0px 100px;
     flex-grow: 1;
-    padding: 20px;
-    color: white;
+    color: rgb(0, 0, 0);
   }
   
   .section {
@@ -101,26 +101,29 @@
   
   .heading {
     font-size: 2.5em;
+    margin-top: 70px;
     margin-bottom: 20px;
   }
   
   .cardContainer {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 30px;
+    margin: 100px 0px;
   }
   
   .card {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 20px;
+    background: #fff;
+    width: 350px;
+    height: 400px;
     border-radius: 10px;
+    outline: auto #000;
     text-align: center;
     cursor: pointer;
     min-width: 20%;
   }
   
   .card:hover {
-    background: #444;
+    background: #999;
   }
   
   .card .cardicon {
@@ -134,16 +137,43 @@
     display: inline-block;
   }
 
+  .filesection{
+    outline: auto orange;
+    background-color: #000;
+    padding: 30px 30px 10px 50px;
+    border-radius: 30px;
+    color: orange;
+  }
+
+  .filesection h2 {
+    font-size: 30px;
+
+  }
+
+  .filesection h3{
+    font-weight: normal;
+    font-size: 24px;
+    color: #000;
+    -webkit-text-stroke: 1px orange;
+  }
+
+  .filesection p {
+    text-align: right;
+    color: #999;
+  }
+
   .fileFormats {
+    font-weight: bold;
     display: flex;
-    justify-content: space-around;
     margin: 20px 0;
   }
   
   .fileFormat {
-    background: #444;
-    padding: 10px 20px;
-    border-radius: 5px;
+    width: 50px;
+    margin: 0px 20px;
+    outline: solid 1px orange;
+    padding: 5px 30px;
+    border-radius: 20px;
   }
 
   .section ul{

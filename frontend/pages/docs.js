@@ -40,7 +40,6 @@ export default function Documentation() {
 
   return (
     <div className={styles.documentationContainer}>
-      <Navbar />
       <div className={styles.contentContainer}>
         <div className={styles.sidebar}>
           <ul className={styles.sidebarList}>
@@ -77,10 +76,12 @@ export default function Documentation() {
           </ul>
         </div>
         <div className={styles.content}>
+        <Navbar />
           <section id="start" className={styles.section}>
             <div className={styles.headsection}>
             <h1 className={styles.heading}>Voice Verity documentation</h1>
-            <p>Voice Verity는 KT AivleSchool 5기 AI Track 8조가 제공하는 API 및 플랫폼 서비스 입니다.</p>
+            <p><span>Voice Verity는 KT AivleSchool 5기 AI Track 8조가 제공하는</span><br/>
+            <span>API 및 플랫폼 서비스 입니다.</span></p>
             <div className={styles.cardContainer}>
               <div className={styles.card} onClick={() => handleScrollToSection('start')}>
                 <div className={styles.cardicon}></div>
@@ -96,8 +97,9 @@ export default function Documentation() {
             <p>Voice Verity는 음성 파일에 대해 Deep Fake 여부를 판별합니다.</p>
             </div>
           </section>
-          <section id="supported-files" className={styles.section}>
+          <section id="supported-files" className={styles.filesection}>
             <h2>지원하는 파일 형식</h2>
+            <h3>File format</h3>
             <div className={styles.fileFormats}>
               <span className={styles.fileFormat}>.wav</span>
               <span className={styles.fileFormat}>.mp3</span>
@@ -158,9 +160,9 @@ Method: GET
               <li>500 Internal Server Error: 서버에 문제가 발생했습니다.</li>
             </ul>
           </section>
+      <Footer />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
