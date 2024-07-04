@@ -12,6 +12,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -24,12 +25,17 @@ export default function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setErrorMessage('');  // Reset the error message
     try {
       const response = await axios.post(`${BACKEND_URL}/api/login/`, { email, password });
       localStorage.setItem('token', response.data.token);
       router.push('/home');
     } catch (error) {
-      console.error('Error logging in', error);
+      if (error.response && error.response.status === 400) {
+        setErrorMessage('존재하지 않는 회원이거나 잘못된 입력입니다.');
+      } else {
+        setErrorMessage('An unexpected error occurred. Please try again.');
+      }
     }
   };
 
@@ -59,6 +65,7 @@ export default function Login() {
               required
               className={styles.inputField}
             />
+            {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}  {/* Display the error message */}
             <button type="submit" className={styles.loginButton}>로그인</button>
           </form>
           <div className={styles.linkContainer}>
