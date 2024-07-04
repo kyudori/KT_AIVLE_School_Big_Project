@@ -1,3 +1,4 @@
+/* CSS 파일: Navbar.module.css */
 @font-face {
   font-family: fontA;
   src: local("Y 너만을 비춤체"),
@@ -20,13 +21,6 @@
   text-decoration: none;
   text-align: center;
   align-items: center;
-}
-
-.nav .rightMenu a:hover {
-  background: rgba(0, 0, 0, 0.2);
-  color: #333;
-  font-size: 24px;
-  transition: all ease 0.3s 0s;
 }
 
 .nav .brand {
@@ -67,7 +61,7 @@
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid white;
+  border-top: 5px solid black;
   margin-left: 5px;
 }
 
@@ -82,6 +76,7 @@
   min-width: 140px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
+  white-space: nowrap; /* 추가 */
 }
 
 .nav .dropdown a{
@@ -112,20 +107,20 @@
   font-size: inherit;
 }
 
-.nav .dropdown a:hover {
-  font-size: 20px;
-  background-color: rgba(0, 0, 0, 0.2);
-  transition: all ease 0.3s 0s;
-  color: #333;
-}
-
+.nav .dropdown a:hover,
 .logoutbtn button:hover {
-  font-size: 20px;
   background-color: rgba(0, 0, 0, 0.2);
-  color: #333;
   transition: all ease 0.3s 0s;
+  color: #333;
 }
 
 .nav .dropdown.show {
   display: flex;
+}
+
+.nav .rightMenu a:hover {
+  background: none;
+  color: inherit;
+  font-size: 20px;
+  transition: none;
 }
