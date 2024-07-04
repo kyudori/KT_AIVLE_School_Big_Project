@@ -1,3 +1,4 @@
+// setting.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -28,7 +29,7 @@ export default function Setting() {
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error fetching credits', error);
+        console.error('크레딧 가져오기 오류', error);
       });
 
       axios.get(`${BACKEND_URL}/api/user-info/`, {
@@ -40,7 +41,7 @@ export default function Setting() {
         setApiKey(response.data.api_key);
       })
       .catch(error => {
-        console.error('Error fetching API key', error);
+        console.error('API 키 가져오기 오류', error);
       });
     }
   }, []);
@@ -55,10 +56,10 @@ export default function Setting() {
       });
       setApiKey(response.data.api_key || '');
       setApiKeyIssued(true);
-      alert(`${action === 'get-api-key' ? 'API key issued' : action === 'regenerate-api-key' ? 'API key regenerated' : 'API key deleted'} successfully`);
+      alert(`${action === 'get-api-key' ? 'API 키 발급' : action === 'regenerate-api-key' ? 'API 키 재발급' : 'API 키 삭제'} 성공`);
     } catch (error) {
-      console.error(`Error ${action} API key`, error);
-      alert(`Error ${action} API key`);
+      console.error(`API 키 ${action} 오류`, error);
+      alert(`API 키 ${action} 오류`);
     }
   };
 
@@ -69,40 +70,42 @@ export default function Setting() {
   return (
     <div className={styles.container}>
       <Navbar />
-      <div className={styles.settingBox}>
-        <h1 className={styles.title}>환경설정</h1>
-        {loading ? <p>Loading...</p> : (
-          <div>
-            <p>Credits: {credits}</p>
+      <div className={styles.main}>
+        <div className={styles.settingBox}>
+          <h1 className={styles.title}>환경설정</h1>
+          {loading ? <p>로딩 중...</p> : (
             <div>
-              <label>
-                Password:
+              <p>크레딧: {credits}</p>
+              <div className={styles.fieldGroup}>
+                <label>비밀번호:</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={styles.inputField}
                 />
-              </label>
-              {!apiKey ? (
-                <button onClick={() => handleApiKeyAction('get-api-key')} className={styles.button}>발급</button>
-              ) : (
-                <>
-                  <button onClick={() => handleApiKeyAction('regenerate-api-key')} className={styles.button}>재 발급</button>
-                  <button onClick={() => handleApiKeyAction('delete-api-key')} className={styles.button}>API-Key 삭제</button>
-                </>
+              </div>
+              <div className={styles.buttonGroup}>
+                {!apiKey ? (
+                  <button onClick={() => handleApiKeyAction('get-api-key')} className={styles.button}>API 키 발급</button>
+                ) : (
+                  <>
+                    <button onClick={() => handleApiKeyAction('regenerate-api-key')} className={styles.button}>API 키 재발급</button>
+                    <button onClick={() => handleApiKeyAction('delete-api-key')} className={styles.button}>API 키 삭제</button>
+                  </>
+                )}
+              </div>
+              {apiKey && (
+                <div className={styles.apiKeyBox}>
+                  <p>API 키: {apiKey}</p>
+                </div>
+              )}
+              {apiKeyIssued && (
+                <button onClick={handleTryVoiceVerity} className={styles.button}>Voice Verity 시도</button>
               )}
             </div>
-            {apiKey && (
-              <div>
-                <p>API Key: {apiKey}</p>
-              </div>
-            )}
-            {apiKeyIssued && (
-              <button onClick={handleTryVoiceVerity} className={styles.button}>Try Voice Verity</button>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <Footer />
     </div>

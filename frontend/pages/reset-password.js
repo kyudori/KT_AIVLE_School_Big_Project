@@ -1,3 +1,4 @@
+// reset-password.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -18,7 +19,7 @@ export default function ResetPassword() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      alert('You are already logged in');
+      alert('이미 로그인 상태입니다.');
       router.push('/home');
     }
   }, []);
@@ -26,11 +27,11 @@ export default function ResetPassword() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!email || !username || !contact || !password || !confirmPassword) {
-      alert('Please fill in all fields');
+      alert('모든 필드를 채워주세요.');
       return;
     }
     if (password !== confirmPassword) {
-      alert('PW가 일치하지 않습니다.');
+      alert('비밀번호가 일치하지 않습니다.');
       return;
     }
     try {
@@ -38,63 +39,65 @@ export default function ResetPassword() {
       if (response.data.error) {
         alert(response.data.error);
       } else {
-        alert('PW 변경 성공');
+        alert('비밀번호 변경 성공');
         router.push('/login');
       }
     } catch (error) {
-      console.error('Error resetting password', error);
-      alert('없는 회원입니다.');
+      console.error('비밀번호 초기화 중 오류 발생', error);
+      alert('잘못된 정보를 입력했거나 이전과 동일한 비밀번호 변경은 불과합니다.');
     }
   };
 
   return (
     <div className={styles.container}>
       <Navbar />
-      <div className={styles.resetPasswordBox}>
-        <h1 className={styles.title}>PW 초기화</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className={styles.inputField}
-          />
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            className={styles.inputField}
-          />
-          <input
-            type="text"
-            placeholder="Contact Without '-'"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            required
-            className={styles.inputField}
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className={styles.inputField}
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            className={styles.inputField}
-          />
-          <button type="submit" className={styles.resetButton}>Reset Password</button>
-        </form>
+      <div className={styles.main}>
+        <div className={styles.resetPasswordBox}>
+          <h1 className={styles.title}>비밀번호 초기화</h1>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="email"
+              placeholder="이메일"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className={styles.inputField}
+            />
+            <input
+              type="text"
+              placeholder="사용자 이름"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className={styles.inputField}
+            />
+            <input
+              type="text"
+              placeholder="연락처 ('-' 없이 입력)"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              required
+              className={styles.inputField}
+            />
+            <input
+              type="password"
+              placeholder="새 비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className={styles.inputField}
+            />
+            <input
+              type="password"
+              placeholder="새 비밀번호 확인"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              className={styles.inputField}
+            />
+            <button type="submit" className={styles.resetButton}>비밀번호 초기화</button>
+          </form>
+        </div>
       </div>
       <Footer />
     </div>

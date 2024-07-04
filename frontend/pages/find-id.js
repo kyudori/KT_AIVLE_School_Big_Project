@@ -24,7 +24,7 @@ export default function FindId() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!username || !contact) {
-      alert('Please fill in all fields');
+      alert('모든 빈칸을 채워주세요.');
       return;
     }
     try {
@@ -43,42 +43,44 @@ export default function FindId() {
   return (
     <div className={styles.container}>
       <Navbar />
-      <div className={styles.findIdBox}>
-        <h1 className={styles.title}>ID 찾기</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Username"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            className={styles.inputField}
-          />
-          <input
-            type="text"
-            placeholder="Contact Without '-' "
-            id="contact"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            required
-            className={styles.inputField}
-          />
-          <button type="submit" className={styles.findButton}>Find ID</button>
-        </form>
-        {users.length > 0 && (
-          <div className={styles.userList}>
-            <h2>Users found:</h2>
-            <ul>
-              {users.map((user, index) => (
-                <li key={index}>
-                  Email: {user.email} <br />
-                  Joined Date: {new Date(user.date_joined).toLocaleDateString()}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      <div className={styles.main}>
+        <div className={styles.findIdBox}>
+          <h1 className={styles.title}>ID 찾기</h1>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="사용자 이름"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className={styles.inputField}
+            />
+            <input
+              type="text"
+              placeholder="연락처 ('-'없이 입력)"
+              id="contact"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              required
+              className={styles.inputField}
+            />
+            <button type="submit" className={styles.findButton}>Find ID</button>
+          </form>
+          {users.length > 0 && (
+            <div className={styles.userList}>
+              <h2>Users found:</h2>
+              <ul>
+                {users.map((user, index) => (
+                  <li key={index}>
+                    이메일: {user.email} <br />
+                    가입 날짜: {new Date(user.date_joined).toLocaleDateString()}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
       <Footer />
     </div>

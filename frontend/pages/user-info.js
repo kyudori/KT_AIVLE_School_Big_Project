@@ -1,3 +1,4 @@
+// user-info.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -29,7 +30,7 @@ export default function UserInfo() {
         setContact(response.data.contact);
       })
       .catch(error => {
-        console.error('Error fetching user info', error);
+        console.error('사용자 정보 가져오기 오류', error);
       });
     }
   }, []);
@@ -37,7 +38,7 @@ export default function UserInfo() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !contact) {
-      alert('Username and Contact fields cannot be empty');
+      alert('사용자 이름과 연락처 필드를 비워둘 수 없습니다.');
       return;
     }
     const token = localStorage.getItem('token');
@@ -51,10 +52,10 @@ export default function UserInfo() {
           'Authorization': `Token ${token}`
         }
       });
-      alert('User info updated successfully');
+      alert('사용자 정보가 성공적으로 업데이트되었습니다.');
     } catch (error) {
-      console.error('Error updating user info', error);
-      alert('Error updating user info');
+      console.error('사용자 정보 업데이트 오류', error);
+      alert('사용자 정보 업데이트 오류');
     }
   };
 
@@ -65,48 +66,52 @@ export default function UserInfo() {
   return (
     <div className={styles.container}>
       <Navbar />
-      <div className={styles.userInfoBox}>
-        <h1 className={styles.title}>User Info</h1>
-        {user ? (
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Email: {user.email}</label>
-            </div>
-            <div>
-              <label>Username:</label>
-              <input 
-                type="text" 
-                value={username} 
-                onChange={(e) => setUsername(e.target.value)} 
-                required
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Company:</label>
-              <input 
-                type="text" 
-                value={company} 
-                onChange={(e) => setCompany(e.target.value)} 
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Contact:</label>
-              <input 
-                type="text" 
-                value={contact} 
-                onChange={(e) => setContact(e.target.value)} 
-                required
-                className={styles.inputField}
-              />
-            </div>
-            <button type="submit" className={styles.button}>Save</button>
-            <button type="button" onClick={handlePasswordChange} className={styles.button}>Change Password</button>
-          </form>
-        ) : (
-          <p>Loading...</p>
-        )}
+      <div className={styles.main}>
+        <div className={styles.userInfoBox}>
+          <h1 className={styles.title}>사용자 정보</h1>
+          {user ? (
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <div className={styles.fieldGroup}>
+                <label>이메일: {user.email}</label>
+              </div>
+              <div className={styles.fieldGroup}>
+                <label>사용자 이름:</label>
+                <input 
+                  type="text" 
+                  value={username} 
+                  onChange={(e) => setUsername(e.target.value)} 
+                  required
+                  className={styles.inputField}
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label>회사:</label>
+                <input 
+                  type="text" 
+                  value={company} 
+                  onChange={(e) => setCompany(e.target.value)} 
+                  className={styles.inputField}
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label>연락처:</label>
+                <input 
+                  type="text" 
+                  value={contact} 
+                  onChange={(e) => setContact(e.target.value)} 
+                  required
+                  className={styles.inputField}
+                />
+              </div>
+              <div className={styles.buttonGroup}>
+                <button type="submit" className={styles.button}>저장</button>
+                <button type="button" onClick={handlePasswordChange} className={styles.button}>비밀번호 변경</button>
+              </div>
+            </form>
+          ) : (
+            <p>로딩 중...</p>
+          )}
+        </div>
       </div>
       <Footer />
     </div>
