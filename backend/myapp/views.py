@@ -109,6 +109,7 @@ def user_info(request):
             'sms_marketing': user.sms_marketing,
             'email_marketing': user.email_marketing,
             'profile_image_url': profile_image_url,
+            'is_staff': user.is_staff,
         })
     elif request.method == 'PUT':
         user.nickname = request.data.get('nickname', user.nickname)
