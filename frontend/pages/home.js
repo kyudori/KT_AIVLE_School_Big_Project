@@ -80,7 +80,7 @@ export default function Home() {
           <p className='phrase'>
             <span> 파헤치다, </span>
             <br className='gap'></br><span>구분하다,</span>
-            <br className='gap'></br><span style={{color:'#0300A7', margin:'0 0 0 20px'}}>진실</span><span style={{margin:'0px'}}>을 말하다.</span>
+            <br className='gap'></br><span><span style={{color:'#0300A7', margin:'0px'}}>진실</span>을 말하다.</span>
           </p>
           <div className={styles.buttonContainer}>
             <div className={styles.logo}/>
@@ -89,7 +89,7 @@ export default function Home() {
         </div>
         <div className={styles.infoSection}>
           <h2>Voice Verity, 목소리에 <span style={{color:"#0300A7"}}>진실성</span>을 더하다.</h2>
-          <p>수화기 너머의 목소리가 진짜 목소리일까요?</p><br />
+          <p>수화기 너머의 목소리가 진짜 목소리일까요?</p>
           <div className={styles.infoItems}>
             <div className={styles.infoItem}>
               <h2>Preview</h2>
@@ -127,10 +127,11 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.listensection}>
-          <div style={{height: "190px"}}>
+          <div style={{height: "fit-content"}}>
             <h2>Deep Voice(딥보이스)를 들어보세요</h2>
-            <p>사이버 범죄 수법으로 Deep Voice를 사용하는 비율이 늘어나고 있습니다.</p>
-            <p>실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.</p>
+            <p>사이버 범죄 수법으로 Deep Voice를 사용하는 비율이 늘어나고 있습니다.<br />
+              <span>실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.</span>
+            </p>
           </div>
           <section>
             <li>* 사진 속 인물과 목소리의 주인은 전혀 다른 사람임을 알려드립니다.</li>
@@ -180,7 +181,7 @@ export default function Home() {
         </div>
         <div className={styles.do}>
           <div>
-            <div style={{height:'180px'}}>
+            <div style={{height:'fit-content'}}>
               <h2>Voice Verity로 어떤 걸 할 수 있을까?</h2>
               <p>Voice Verity는 생각지도 못한 다양한 곳에 사용될 수 있습니다.</p>
             </div>
@@ -212,8 +213,8 @@ export default function Home() {
         <div className={styles.youtubeSection}>
           <div>
             <h2>우리의 Dev Story</h2>
-            <p>Voice Verity의 시작은 어디서부터였을까? Voice Volice의 이야기를 만나보세요.</p>
-            <p>우리의 이야기는 끝나지 않았습니다.</p>
+            <p>Voice Verity의 시작은 어디서부터였을까? Voice Volice의 이야기를 만나보세요.<br />
+            <span>우리의 이야기는 끝나지 않았습니다.</span></p>
           </div>
           <div className={styles.youtubeContainer}>
             <iframe 
@@ -227,7 +228,7 @@ export default function Home() {
         </div>
         <div className={styles.contactUs}>
           <h2>Voice Verity와 함께해요.</h2>
-          <p>당신의 든든한 파트너가 될 수 있습니다.</p>
+          <p style={{margin:"20px"}}>당신의 든든한 파트너가 될 수 있습니다.</p>
           <button onClick={handleContactUs}>Contact Us</button>
         </div>
       </div>
