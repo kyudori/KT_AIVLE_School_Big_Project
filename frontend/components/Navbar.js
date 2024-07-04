@@ -49,7 +49,7 @@ export default function Navbar() {
               <Link href="/docs">Docs</Link>
             </div>
             <div onClick={() => setDropdownVisible(!dropdownVisible)} className={styles.userInfo}>
-              <span>{user.name}님</span>
+              <span>{user.nickname}님</span>
               <div className={styles.triangle}></div>
               <div className={`${styles.dropdown} ${dropdownVisible ? styles.show : ''}`}>
                 <Link href="/user-info"><button>내 정보</button></Link>

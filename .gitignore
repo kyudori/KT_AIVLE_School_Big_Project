@@ -16,3 +16,7 @@ frontend/.next/
 # Include only the audio_files folder but exclude its contents
 /backend/media/audio_files/*
 !/backend/media/audio_files/.gitkeep
+
+# Include only the profile_images folder but exclude its contents
+/backend/media/profile_images/*
+!/backend/media/profile_images/.gitkeep

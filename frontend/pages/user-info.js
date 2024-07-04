@@ -1,4 +1,3 @@
-// user-info.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -10,9 +9,16 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function UserInfo() {
   const [user, setUser] = useState(null);
-  const [username, setUsername] = useState('');
+  const [nickname, setNickname] = useState('');
   const [company, setCompany] = useState('');
   const [contact, setContact] = useState('');
+  const [smsMarketing, setSmsMarketing] = useState(false);
+  const [emailMarketing, setEmailMarketing] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('/images/userinfo/profile_default.png');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -25,9 +31,12 @@ export default function UserInfo() {
       })
       .then(response => {
         setUser(response.data);
-        setUsername(response.data.name);
+        setNickname(response.data.nickname);
         setCompany(response.data.company);
         setContact(response.data.contact);
+        setSmsMarketing(response.data.sms_marketing);
+        setEmailMarketing(response.data.email_marketing);
+        setImagePreviewUrl(response.data.profile_image_url ? `${BACKEND_URL}${response.data.profile_image_url}` : '/images/userinfo/profile_default.png');
       })
       .catch(error => {
         console.error('사용자 정보 가져오기 오류', error);
@@ -37,16 +46,18 @@ export default function UserInfo() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!username || !contact) {
-      alert('사용자 이름과 연락처 필드를 비워둘 수 없습니다.');
+    if (!nickname || !contact) {
+      alert('닉네임과 연락처 필드를 비워둘 수 없습니다.');
       return;
     }
     const token = localStorage.getItem('token');
     try {
       await axios.put(`${BACKEND_URL}/api/user-info/`, {
-        name: username,
+        nickname: nickname,
         company: company,
-        contact: contact
+        contact: contact,
+        sms_marketing: smsMarketing,
+        email_marketing: emailMarketing,
       }, {
         headers: {
           'Authorization': `Token ${token}`
@@ -59,8 +70,85 @@ export default function UserInfo() {
     }
   };
 
-  const handlePasswordChange = () => {
-    router.push('/change-password');
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      alert('모든 비밀번호 필드를 입력해주세요.');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      alert('새 비밀번호가 일치하지 않습니다.');
+      setNewPassword('');
+      setConfirmPassword('');
+      return;
+    }
+    const token = localStorage.getItem('token');
+    try {
+      await axios.post(`${BACKEND_URL}/api/change-password/`, {
+        current_password: currentPassword,
+        new_password: newPassword
+      }, {
+        headers: {
+          'Authorization': `Token ${token}`
+        }
+      });
+      alert('비밀번호가 성공적으로 변경되었습니다.');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      console.error('비밀번호 변경 오류', error);
+      alert('이전 비밀번호가 동일하거나 잘못 입력하셨습니다.');
+    }
+  };
+
+  const handleAccountDeletion = async () => {
+    if (confirm('정말 탈퇴하시겠습니까?')) {
+      const token = localStorage.getItem('token');
+      try {
+        await axios.delete(`${BACKEND_URL}/api/delete-account/`, {
+          headers: {
+            'Authorization': `Token ${token}`
+          }
+        });
+        alert('계정이 성공적으로 삭제되었습니다.');
+        localStorage.removeItem('token');
+        router.push('/');
+      } catch (error) {
+        console.error('계정 삭제 오류', error);
+        alert('계정 삭제 오류');
+      }
+    }
+  };
+
+  const handleImageChange = async (e) => {
+    e.preventDefault();
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      setProfileImage(file);
+      setImagePreviewUrl(reader.result);
+    }
+
+    reader.readAsDataURL(file);
+
+    const formData = new FormData();
+    formData.append('profile_image', file);
+
+    const token = localStorage.getItem('token');
+    try {
+      await axios.put(`${BACKEND_URL}/api/user-info/`, formData, {
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      alert('프로필 이미지가 성공적으로 업데이트되었습니다.');
+    } catch (error) {
+      console.error('프로필 이미지 업데이트 오류', error);
+      alert('프로필 이미지 업데이트 오류');
+    }
   };
 
   return (
@@ -68,28 +156,82 @@ export default function UserInfo() {
       <Navbar />
       <div className={styles.main}>
         <div className={styles.userInfoBox}>
-          <h1 className={styles.title}>사용자 정보</h1>
+          <div className={styles.profileContainer}>
+            <img 
+              src={imagePreviewUrl} 
+              alt="Profile Preview" 
+              className={styles.profileImage} 
+            />
+            <label htmlFor="profile-upload" className={styles.profileUploadLabel}>
+              Upload
+              <input 
+                id="profile-upload" 
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageChange} 
+                className={styles.profileUploadInput}
+              />
+            </label>
+            <h1>{user?.username || "User Name"}</h1>
+          </div>
           {user ? (
-            <form onSubmit={handleSubmit} className={styles.form}>
+            <form className={styles.form}>
+              <h2>계정 정보</h2>
               <div className={styles.fieldGroup}>
-                <label>이메일: {user.email}</label>
-              </div>
-              <div className={styles.fieldGroup}>
-                <label>사용자 이름:</label>
+                <label>이름:</label>
                 <input 
                   type="text" 
-                  value={username} 
-                  onChange={(e) => setUsername(e.target.value)} 
-                  required
+                  value={user.username} 
+                  readOnly
                   className={styles.inputField}
                 />
               </div>
               <div className={styles.fieldGroup}>
-                <label>회사:</label>
+                <label>이메일:</label>
+                <input 
+                  type="email" 
+                  value={user.email} 
+                  readOnly
+                  className={styles.inputField}
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label>현재 비밀번호:</label>
+                <input 
+                  type="password" 
+                  value={currentPassword} 
+                  onChange={(e) => setCurrentPassword(e.target.value)} 
+                  className={styles.inputField}
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label>새 비밀번호:</label>
+                <input 
+                  type="password" 
+                  value={newPassword} 
+                  onChange={(e) => setNewPassword(e.target.value)} 
+                  className={styles.inputField}
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label>비밀번호 다시 입력:</label>
+                <input 
+                  type="password" 
+                  value={confirmPassword} 
+                  onChange={(e) => setConfirmPassword(e.target.value)} 
+                  className={styles.inputField}
+                />
+              </div>
+              <button type="button" onClick={handlePasswordChange} className={styles.button}>비밀번호 변경</button>
+
+              <h2>회원 정보</h2>
+              <div className={styles.fieldGroup}>
+                <label>닉네임:</label>
                 <input 
                   type="text" 
-                  value={company} 
-                  onChange={(e) => setCompany(e.target.value)} 
+                  value={nickname} 
+                  onChange={(e) => setNickname(e.target.value)} 
+                  required
                   className={styles.inputField}
                 />
               </div>
@@ -103,10 +245,37 @@ export default function UserInfo() {
                   className={styles.inputField}
                 />
               </div>
-              <div className={styles.buttonGroup}>
-                <button type="submit" className={styles.button}>저장</button>
-                <button type="button" onClick={handlePasswordChange} className={styles.button}>비밀번호 변경</button>
+              <div className={styles.fieldGroup}>
+                <label>회사명:</label>
+                <input 
+                  type="text" 
+                  value={company} 
+                  onChange={(e) => setCompany(e.target.value)} 
+                  className={styles.inputField}
+                />
               </div>
+
+              <h2>마케팅활용동의 및 광고수신동의</h2>
+              <div className={styles.checkboxGroup}>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    checked={smsMarketing} 
+                    onChange={() => setSmsMarketing(!smsMarketing)} 
+                  />
+                  SMS 수신 동의
+                </label>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    checked={emailMarketing} 
+                    onChange={() => setEmailMarketing(!emailMarketing)} 
+                  />
+                  E-mail 수신 동의
+                </label>
+              </div>
+              <button type="button" onClick={handleSubmit} className={styles.button}>변경사항 저장</button>
+              <span className={styles.deleteText} onClick={handleAccountDeletion}>회원 탈퇴하기</span>
             </form>
           ) : (
             <p>로딩 중...</p>

@@ -20,6 +20,7 @@ markdown-it-py==3.0.0
 MarkupSafe==2.1.5
 mdurl==0.1.2
 mysqlclient==2.2.4
+pillow==10.4.0
 Pygments==2.18.0
 PyJWT==2.8.0
 python-dotenv==1.0.1

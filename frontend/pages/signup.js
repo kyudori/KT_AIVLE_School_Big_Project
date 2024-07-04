@@ -1,137 +1,102 @@
-// signup.js
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import styles from '../styles/Signup.module.css';
+import styles from '../styles/Signup1.module.css';
 import Image from 'next/image';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-
 export default function Signup() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [company, setCompany] = useState('');
-  const [contact, setContact] = useState('');
   const router = useRouter();
+  const [allChecked, setAllChecked] = useState(false);
+  const [termsChecked, setTermsChecked] = useState({
+    personalInfo: false,
+    serviceTerms: false,
+    voiceCollection: false,
+  });
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      alert('이미 로그인 상태입니다.');
-      router.push('/home');
+    const savedTerms = JSON.parse(localStorage.getItem('termsChecked'));
+    if (savedTerms) {
+      setTermsChecked(savedTerms);
+      setAllChecked(Object.values(savedTerms).every((value) => value));
     }
   }, []);
 
-  const handleSubmit = async (event) => {
+  useEffect(() => {
+    localStorage.setItem('termsChecked', JSON.stringify(termsChecked));
+  }, [termsChecked]);
+
+  const handleAllCheck = () => {
+    const newCheckState = !allChecked;
+    setAllChecked(newCheckState);
+    setTermsChecked({
+      personalInfo: newCheckState,
+      serviceTerms: newCheckState,
+      voiceCollection: newCheckState,
+    });
+  };
+
+  const handleCheck = (term) => {
+    const newCheckState = !termsChecked[term];
+    setTermsChecked({
+      ...termsChecked,
+      [term]: newCheckState,
+    });
+    setAllChecked(newCheckState && Object.keys(termsChecked).every((key) => key === term || termsChecked[key]));
+  };
+
+  const handleSubmit = (event) => {
     event.preventDefault();
-    if (!username) {
-      alert('사용자 이름은 필수 항목입니다.');
-      document.getElementById('username').focus();
+    if (!termsChecked.personalInfo || !termsChecked.serviceTerms) {
+      alert('필수 약관에 동의해주세요.');
       return;
     }
-    if (!email) {
-      alert('이메일은 필수 항목입니다.');
-      document.getElementById('email').focus();
-      return;
-    }
-    if (!contact) {
-      alert('연락처는 필수 항목입니다.');
-      document.getElementById('contact').focus();
-      return;
-    }
-    if (!password) {
-      alert('비밀번호는 필수 항목입니다.');
-      document.getElementById('password').focus();
-      return;
-    }
-    if (password !== confirmPassword) {
-      alert('비밀번호가 일치하지 않습니다.');
-      setPassword('');
-      setConfirmPassword('');
-      document.getElementById('password').focus();
-      return;
-    }
-    try {
-      const response = await axios.post(`${BACKEND_URL}/api/signup/`, { username, email, password, company, contact });
-      localStorage.setItem('token', response.data.token);
-      alert('회원가입 성공');
-      router.push('/home');
-    } catch (error) {
-      if (error.response && error.response.data.error === 'Email already exists') {
-        alert('이미 존재하는 이메일입니다.');
-        setEmail('');
-        document.getElementById('email').focus();
-      }
-    }
+    localStorage.setItem('allowedToSignup2', 'true');
+    router.push('/signup2');
   };
 
   return (
     <div className={styles.container}>
       <Navbar />
       <div className={styles.main}>
-        <div className={styles.signupBox}>
-        <div className={styles.logoContainer}>
-            <Image src="/images/logo.png" alt="Voice Volice Logo" width={115} height={80} />
+        <div className={styles.progress}>
+          <span>1 / 2</span>
+          <div className={styles.progressBar}>
+            <div className={styles.progressFilled} />
           </div>
-          {/* <h1 className={styles.title}>회원가입</h1> */}
+        </div>
+        <div className={styles.signupBox}>
+          <div className={styles.logoContainer}>
+            <Image src="/images/logo.png" alt="Voice Verity Logo" width={115} height={80} />
+          </div>
+          <h1>Voice Verity</h1>
+          <p>서비스 약관에 동의 해주세요.</p>
           <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="사용자 이름"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className={styles.inputField}
-            />
-            <input
-              type="email"
-              placeholder="이메일"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className={styles.inputField}
-            />
-            <input
-              type="text"
-              placeholder="회사 (선택사항)"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              className={styles.inputField}
-            />
-            <input
-              type="text"
-              placeholder="연락처 ('-' 없이 입력)"
-              id="contact"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              required
-              className={styles.inputField}
-            />
-            <input
-              type="password"
-              placeholder="비밀번호"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className={styles.inputField}
-            />
-            <input
-              type="password"
-              placeholder="비밀번호 확인"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              className={styles.inputField}
-            />
-            <button type="submit" className={styles.signupButton}>회원가입</button>
+            <div className={styles.checkboxContainer}>
+              <label>
+                <input type="checkbox" checked={allChecked} onChange={handleAllCheck} />
+                모두 동의합니다.
+              </label>
+              <p>
+                전체 동의는 필수 및 선택정보에 대한 동의도 포함되어 있으며, 개별적으로도 동의를 선택하실 수 있습니다.
+                선택항목에 대한 동의를 거부하시는 경우에도 서비스는 이용이 가능합니다.
+              </p>
+              <div className={styles.termsList}>
+                <label>
+                  <input type="checkbox" checked={termsChecked.personalInfo} onChange={() => handleCheck('personalInfo')} />
+                  <a href="/terms/personal-info" target="_blank" rel="noopener noreferrer">[필수] 개인정보 수집 및 이용 동의</a>
+                </label>
+                <label>
+                  <input type="checkbox" checked={termsChecked.serviceTerms} onChange={() => handleCheck('serviceTerms')} />
+                  <a href="/terms/service-terms" target="_blank" rel="noopener noreferrer">[필수] Voice Verity 통합서비스 약관</a>
+                </label>
+                <label>
+                  <input type="checkbox" checked={termsChecked.voiceCollection} onChange={() => handleCheck('voiceCollection')} />
+                  <a href="/terms/voice-collection" target="_blank" rel="noopener noreferrer">[선택] 음성 보이스 수집 및 이용 동의</a>
+                </label>
+              </div>
+            </div>
+            <button type="submit" className={styles.signupButton}>다음</button>
           </form>
         </div>
       </div>

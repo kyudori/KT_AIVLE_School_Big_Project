@@ -19,6 +19,7 @@ import requests
 from datetime import date
 from django.utils import timezone
 from dotenv import load_dotenv
+from django.core.files.storage import default_storage
 
 User = get_user_model()
 
@@ -36,10 +37,21 @@ def signup(request):
         password=data['password'],
         email=data['email'],
         company=data.get('company', ''),
-        contact=data.get('contact', '')
+        contact=data.get('contact', ''),
+        nickname=data.get('nickname', ''),
+        consent_personal_info=data.get('consent_personal_info', False),
+        consent_service_terms=data.get('consent_service_terms', False),
+        consent_voice_data=data.get('consent_voice_data', False),
     )
     token, created = Token.objects.get_or_create(user=user)
     return Response({'token': token.key}, status=status.HTTP_201_CREATED)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_account(request):
+    user = request.user
+    user.delete()
+    return Response({'status': 'Account deleted successfully'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @csrf_exempt
@@ -83,9 +95,31 @@ def find_id(request):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
 def user_info(request):
     user = request.user
-    return Response({'email': user.email, 'name': user.username, 'company': user.company, 'contact': user.contact, 'is_staff': user.is_staff})
+    if request.method == 'GET':
+        profile_image_url = user.profile_image.url if user.profile_image else None
+        return Response({
+            'email': user.email,
+            'username': user.username,
+            'nickname': user.nickname,
+            'company': user.company,
+            'contact': user.contact,
+            'sms_marketing': user.sms_marketing,
+            'email_marketing': user.email_marketing,
+            'profile_image_url': profile_image_url,
+        })
+    elif request.method == 'PUT':
+        user.nickname = request.data.get('nickname', user.nickname)
+        user.company = request.data.get('company', user.company)
+        user.contact = request.data.get('contact', user.contact)
+        user.sms_marketing = request.data.get('sms_marketing') in ['true', True, '1', 1]
+        user.email_marketing = request.data.get('email_marketing') in ['true', True, '1', 1]
+        if 'profile_image' in request.FILES:
+            user.profile_image = request.FILES['profile_image']
+        user.save()
+        return Response({'status': 'Profile updated successfully'})
 
 @api_view(['POST'])
 def change_password(request):
