@@ -74,8 +74,8 @@ export default function Home() {
 
   return (
     <div className={styles.homeContainer}>
-      <Navbar />
       <div className={styles.mainContent}>
+      <Navbar />
         <div className={styles.textContainer}>
           <p className='phrase'>
             <span> 파헤치다, </span>
