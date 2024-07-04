@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import styles from '../styles/Login.module.css';
+import Image from 'next/image';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -36,32 +37,35 @@ export default function Login() {
     <div className={styles.container}>
       <Navbar />
       <div className={styles.main}>
-      <div className={styles.loginBox}>
-        <h1 className={styles.title}>Voice Verity</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="이메일 ID"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className={styles.inputField}
-          />
-          <input
-            type="password"
-            placeholder="비밀번호"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className={styles.inputField}
-          />
-          <button type="submit" className={styles.loginButton}>로그인</button>
-        </form>
-        <div className={styles.linkContainer}>
-          <p><Link href="/find-id" className={styles.link}>아이디</Link> / <Link href="/reset-password" className={styles.link}>비밀번호</Link>를 잊으셨습니까?</p>
-          <p><Link href="/signup" className={styles.link}>회원가입</Link></p>
+        <div className={styles.loginBox}>
+          <div className={styles.logoContainer}>
+            <Image src="/images/logo.png" alt="Voice Volice Logo" width={100} height={100} />
+          </div>
+          <h1 className={styles.title}>Voice Volice</h1>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="email"
+              placeholder="이메일 ID"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className={styles.inputField}
+            />
+            <input
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className={styles.inputField}
+            />
+            <button type="submit" className={styles.loginButton}>로그인</button>
+          </form>
+          <div className={styles.linkContainer}>
+            <p><Link href="/find-id" className={styles.link}>아이디</Link> / <Link href="/reset-password" className={styles.link}>비밀번호</Link>를 잊으셨습니까?</p>
+            <p><Link href="/signup" className={styles.link}>회원가입</Link></p>
+          </div>
         </div>
-      </div>
       </div>
       <Footer />
     </div>
