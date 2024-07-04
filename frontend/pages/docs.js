@@ -75,6 +75,7 @@ export default function Documentation() {
             </li>
           </ul>
         </div>
+        <div style={{width:'100%'}}>
         <div className={styles.content}>
         <Navbar />
           <section id="start" className={styles.section}>
@@ -97,6 +98,10 @@ export default function Documentation() {
             <p>Voice Verity는 음성 파일에 대해 Deep Fake 여부를 판별합니다.</p>
             </div>
           </section>
+          <div style={{
+            display: "flex",
+            justifycontent: "center",
+            alignItems: 'center'}}>
           <section id="supported-files" className={styles.filesection}>
             <h2>지원하는 파일 형식</h2>
             <h3>File format</h3>
@@ -106,12 +111,12 @@ export default function Documentation() {
               <span className={styles.fileFormat}>.m4a</span>
             </div>
             <p>10MB 이하의 음성 파일</p>
-          </section>
+          </section></div>
           <section id="authentication" className={styles.section}>
             <h2>인증</h2>
             <p>플랫폼에 회원가입 및 로그인하여 API 키를 발급받습니다.</p>
             <hr/>
-            <pre>Authorization: Bearer YOUR_API_KEY</pre>
+            <div className={styles.codeEX}><pre>Authorization: Bearer YOUR_API_KEY</pre></div>
           </section>
           <section id="endpoints" className={styles.section}>
             <h2>엔드 포인트</h2>
@@ -120,7 +125,7 @@ export default function Documentation() {
             <ul><li>URL: /api/decision</li>
               <li>Method: POST</li>
               <li>설명: 업로드한 음성 파일을 기반으로 AI 모델로부터 Fake 여부를 판단합니다.</li></ul>
-            <pre>
+            <div className={styles.codeEX}><pre>
               {`
 요청 형식(json):
 {
@@ -132,22 +137,26 @@ export default function Documentation() {
     }
   ]
 }
+              `}</pre></div><br />
+              <div className={styles.codeEX}><pre>
+              {`
 응답(json):
 {
   "prediction": [예측값1, 예측값2, ...]
 }`}
-            </pre>
+            </pre></div>
             <h3>2. 상태(Status)</h3>
-            <pre>
-              {`URL: /api/status
-Method: GET
-설명: 호출하는 API 모델의 상태를 확인합니다.
+            <ul><li>URL: /api/status</li>
+            <li>Method: GET</li>
+            <li>설명: 호출하는 API 모델의 상태를 확인합니다.</li></ul>
+            <div className={styles.codeEX}><pre>
+              {`
 응답(json):
 {
   "status": "ready",
   "version": "1.0.0"
 }`}
-            </pre>
+            </pre></div>
           </section>
           <section id="error-codes" className={styles.section}>
             <h2>에러 코드</h2>
@@ -160,7 +169,8 @@ Method: GET
               <li>500 Internal Server Error: 서버에 문제가 발생했습니다.</li>
             </ul>
           </section>
-      <Footer />
+        </div>
+        <Footer />
         </div>
       </div>
     </div>

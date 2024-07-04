@@ -90,7 +90,7 @@
   }
   
   .content {
-    margin: 0px 100px;
+    margin: 0px 200px;
     flex-grow: 1;
     color: rgb(0, 0, 0);
   }
@@ -138,6 +138,7 @@
   }
 
   .filesection{
+    width: 800px;
     outline: auto orange;
     background-color: #000;
     padding: 30px 30px 10px 50px;
@@ -178,4 +179,21 @@
 
   .section ul{
     opacity: 70%;
+  }
+  
+  .codeEX{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+    gap: 10px;
+    width: 800px;
+    height: fit-content;
+    background: #011627;
+    border-radius: 15px;
+  }
+
+  .codeEX pre{
+    margin: 0 50px;
+    color: #fff;
   }
