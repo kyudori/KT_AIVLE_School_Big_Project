@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import styles from '../styles/Signup.module.css';
+import Image from 'next/image';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -73,7 +74,10 @@ export default function Signup() {
       <Navbar />
       <div className={styles.main}>
         <div className={styles.signupBox}>
-          <h1 className={styles.title}>회원가입</h1>
+        <div className={styles.logoContainer}>
+            <Image src="/images/logo.png" alt="Voice Volice Logo" width={115} height={80} />
+          </div>
+          {/* <h1 className={styles.title}>회원가입</h1> */}
           <form onSubmit={handleSubmit}>
             <input
               type="text"

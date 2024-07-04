@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import styles from '../styles/FindId.module.css';
+import Image from 'next/image';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -45,7 +46,9 @@ export default function FindId() {
       <Navbar />
       <div className={styles.main}>
         <div className={styles.findIdBox}>
-          <h1 className={styles.title}>ID 찾기</h1>
+        <div className={styles.logoContainer}>
+            <Image src="/images/logo.png" alt="Voice Volice Logo" width={115} height={80} />
+          </div>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
@@ -65,7 +68,7 @@ export default function FindId() {
               required
               className={styles.inputField}
             />
-            <button type="submit" className={styles.findButton}>Find ID</button>
+            <button type="submit" className={styles.findButton}>ID 찾기</button>
           </form>
           {users.length > 0 && (
             <div className={styles.userList}>

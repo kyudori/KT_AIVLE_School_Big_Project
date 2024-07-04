@@ -47,7 +47,7 @@ export default function Login() {
           <div className={styles.logoContainer}>
             <Image src="/images/logo.png" alt="Voice Volice Logo" width={115} height={80} />
           </div>
-          <h1 className={styles.title}>Voice Volice</h1>
+          {/* <h1 className={styles.title}>Voice Volice</h1> */}
           <form onSubmit={handleSubmit}>
             <input
               type="email"
