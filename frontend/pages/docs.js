@@ -38,6 +38,11 @@ export default function Documentation() {
     router.push('/setting');
   };
 
+  const handleContactUs = () => {
+    router.push('/contact');
+  };
+
+
   return (
     <div className={styles.documentationContainer}>
       <div className={styles.contentContainer}>
@@ -75,7 +80,7 @@ export default function Documentation() {
             </li>
           </ul>
         </div>
-        <div style={{width:'90%'}}>
+        <div className={styles.center}>
         <div className={styles.content}>
         <Navbar />
           <section id="start" className={styles.section}>
@@ -168,8 +173,14 @@ export default function Documentation() {
             </ul>
             <div style={{width:'840px'}}></div>
           </section>
-          <div style={{height:'500px'}}/>
-          </div>
+          <section className={styles.section}>
+            <div className={styles.contactUs}>
+              <h2 style={{textAlign:'center'}}>Voice Verity와 함께해요.</h2>
+              <p style={{margin:"20px"}}>당신의 든든한 파트너가 될 수 있습니다.</p>
+              <button onClick={handleContactUs}>Contact Us</button>
+            </div>
+          </section>
+        </div>
         <Footer />
         </div>
       </div>
