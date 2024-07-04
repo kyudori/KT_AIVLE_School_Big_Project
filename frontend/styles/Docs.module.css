@@ -151,6 +151,17 @@
     display: inline-block;
   }
 
+  .card .cardicon2 {
+    background-image: url(./images/Key.png);
+    height: 135px;
+    width: 100px;
+    padding: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    display: inline-block;
+  }
+
   .filesection{
     width: 800px;
     outline: auto orange;

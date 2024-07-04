@@ -96,6 +96,7 @@ export default function Documentation() {
                 <p>documentation</p>
               </div>
               <div className={styles.card} onClick={handleNavigateToSetting}>
+              <div className={styles.cardicon2}></div>
                 <h2>Key 발급</h2>
                 <p>Go to Setting &gt;</p>
               </div>
