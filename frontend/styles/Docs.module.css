@@ -11,13 +11,10 @@
     min-height: 100vh;
     min-width: 90vw;
     width: 100%;
-    background-size: cover;
     position: absolute;
     left: 0;
     top: 0;
     background: #fff;
-    background-position: bottom center;
-    background-repeat:no-repeat;
   }
   
   .headsection{
@@ -30,15 +27,20 @@
   }
   
   .section{
-    padding:40px 0px;
+    width: 840px;
+    margin:100px 0px;
   }
 
   .section hr {
+    border-style: solid;
     opacity: 50%;
+    margin: 30px 0;
   }
 
   .section h2{
+    font-weight: normal;
     text-align: start;
+    font-size: 45px;
   }
 
   .section p {
@@ -48,10 +50,9 @@
 
 
   .sidebar {
-
     position: sticky;
     top: 0px;
-    width: 160px;
+    min-width: 160px;
     background: #111;
     padding: 20px;
     color: white;
@@ -107,8 +108,10 @@
   
   .cardContainer {
     display: flex;
-    justify-content: space-around;
     margin: 100px 0px;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 840px;
   }
   
   .card {
@@ -124,6 +127,10 @@
   
   .card:hover {
     background: #999;
+  }
+
+  .card h2 {
+    font-size: 36px;
   }
   
   .card .cardicon {
@@ -179,6 +186,12 @@
 
   .section ul{
     opacity: 70%;
+    margin: 30px 10px;
+  }
+
+  .section h3{
+    font-weight: normal;
+    font-size: 24px;
   }
   
   .codeEX{

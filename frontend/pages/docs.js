@@ -75,7 +75,7 @@ export default function Documentation() {
             </li>
           </ul>
         </div>
-        <div style={{width:'100%'}}>
+        <div style={{width:'90%'}}>
         <div className={styles.content}>
         <Navbar />
           <section id="start" className={styles.section}>
@@ -95,23 +95,20 @@ export default function Documentation() {
                 <p>Go to Setting &gt;</p>
               </div>
             </div>
-            <p>Voice Verity는 음성 파일에 대해 Deep Fake 여부를 판별합니다.</p>
+            <h3>Voice Verity는 음성 파일에 대해 Deep Fake 여부를 판별합니다.</h3>
             </div>
           </section>
-          <div style={{
-            display: "flex",
-            justifycontent: "center",
-            alignItems: 'center'}}>
-          <section id="supported-files" className={styles.filesection}>
-            <h2>지원하는 파일 형식</h2>
-            <h3>File format</h3>
-            <div className={styles.fileFormats}>
-              <span className={styles.fileFormat}>.wav</span>
-              <span className={styles.fileFormat}>.mp3</span>
-              <span className={styles.fileFormat}>.m4a</span>
-            </div>
-            <p>10MB 이하의 음성 파일</p>
-          </section></div>
+          <section id="supported-files" className={styles.section}>
+            <div className={styles.filesection}>
+             <h2>지원하는 파일 형식</h2>
+             <h3>File format</h3>
+              <div className={styles.fileFormats}>
+                <span className={styles.fileFormat}>.wav</span>
+                <span className={styles.fileFormat}>.mp3</span>
+               <span className={styles.fileFormat}>.m4a</span>
+             </div>
+             <p>10MB 이하의 음성 파일</p>
+           </div></section>
           <section id="authentication" className={styles.section}>
             <h2>인증</h2>
             <p>플랫폼에 회원가입 및 로그인하여 API 키를 발급받습니다.</p>
@@ -121,13 +118,15 @@ export default function Documentation() {
           <section id="endpoints" className={styles.section}>
             <h2>엔드 포인트</h2>
             <hr/>
+            <div style={{marginBottom:'50px'}}>
             <h3>1. 판별(Decision)</h3>
             <ul><li>URL: /api/decision</li>
               <li>Method: POST</li>
               <li>설명: 업로드한 음성 파일을 기반으로 AI 모델로부터 Fake 여부를 판단합니다.</li></ul>
+            <h3>Example</h3>
+            <h3 style={{color:"#5B5B5B"}}>Request 요청 본문(json)</h3>
             <div className={styles.codeEX}><pre>
               {`
-요청 형식(json):
 {
   "data": [
     {
@@ -138,21 +137,19 @@ export default function Documentation() {
   ]
 }
               `}</pre></div><br />
+              <h3 style={{color:"#5B5B5B"}}>Response 응답(json)</h3>
               <div className={styles.codeEX}><pre>
-              {`
-응답(json):
-{
+              {`{
   "prediction": [예측값1, 예측값2, ...]
 }`}
-            </pre></div>
+            </pre></div></div>
             <h3>2. 상태(Status)</h3>
             <ul><li>URL: /api/status</li>
             <li>Method: GET</li>
             <li>설명: 호출하는 API 모델의 상태를 확인합니다.</li></ul>
+            <h3 style={{color:"#5B5B5B"}}>Response 응답(json)</h3>
             <div className={styles.codeEX}><pre>
-              {`
-응답(json):
-{
+              {`{
   "status": "ready",
   "version": "1.0.0"
 }`}
@@ -160,6 +157,7 @@ export default function Documentation() {
           </section>
           <section id="error-codes" className={styles.section}>
             <h2>에러 코드</h2>
+            <p>API사용 시 발생할 수 있는 일반적인 에러 코드와 의미는 다음과 같습니다.</p>
             <hr/>
             <ul>
               <li>400 Bad Request: 잘못된 요청 형식입니다.</li>
@@ -168,8 +166,10 @@ export default function Documentation() {
               <li>404 Not Found: 요청한 리소스를 찾을 수 없습니다.</li>
               <li>500 Internal Server Error: 서버에 문제가 발생했습니다.</li>
             </ul>
+            <div style={{width:'840px'}}></div>
           </section>
-        </div>
+          <div style={{height:'500px'}}/>
+          </div>
         <Footer />
         </div>
       </div>
