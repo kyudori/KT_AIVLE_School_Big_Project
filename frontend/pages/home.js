@@ -80,7 +80,7 @@ export default function Home() {
           <p className='phrase'>
             <span> 파헤치다, </span>
             <br className='gap'></br><span>구분하다,</span>
-            <br className='gap'></br><span>진실을 말하다.</span>
+            <br className='gap'></br><span style={{color:'#0300A7', margin:'0 0 0 20px'}}>진실</span><span style={{margin:'0px'}}>을 말하다.</span>
           </p>
           <div className={styles.buttonContainer}>
             <div className={styles.logo}/>
@@ -88,19 +88,19 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.infoSection}>
-          <h2>Voice Verity, 목소리에 진실성을 더하다.</h2>
+          <h2>Voice Verity, 목소리에 <span style={{color:"#0300A7"}}>진실성</span>을 더하다.</h2>
           <p>수화기 너머의 목소리가 진짜 목소리일까요?</p><br />
           <div className={styles.infoItems}>
             <div className={styles.infoItem}>
               <h2>Preview</h2>
-              <h3>슈뢰딩거의 목소리를 체험해보려면</h3>
+              <h3>슈뢰딩거의 목소리를 <span style={{color:"#0300A7"}}>체험해보려면</span></h3>
               <p>이거 내 목소리 맞아?</p>
               <p>얼마나 진짜 같을까? Fake Voice!</p>
               <button className={styles.infobutton} onClick={handleTryVoiceVerity}>체험하러 가기</button>
             </div>
             <div className={styles.infoItem}>
               <h2>API Service</h2>
-              <h3>우리 서비스를 구독하고 싶다면</h3>
+              <h3>우리 서비스를 <span style={{color:"#0300A7"}}>구독하고 싶다면</span></h3>
               <p>아 싸다싸!</p>
               <p>우리 서비스 완전 싸요!</p>
               <button onClick={handleSubscriptionPlan}>구독플랜 보기</button>
@@ -127,7 +127,7 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.listensection}>
-          <div style={{height: "200px"}}>
+          <div style={{height: "190px"}}>
             <h2>Deep Voice(딥보이스)를 들어보세요</h2>
             <p>사이버 범죄 수법으로 Deep Voice를 사용하는 비율이 늘어나고 있습니다.</p>
             <p>실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.</p>
@@ -141,8 +141,7 @@ export default function Home() {
                   onMouseEnter={() => setHoveredProfile(1)}
                   onMouseLeave={() => setHoveredProfile(null)}
                   onClick={() => playAudio(1, isOn1)}
-                  style={{ backgroundImage: "url('/images/home/profile1.jpg')" }}
-                >
+                ><div className={styles.profileeek}/>
                   {playingAudio === `/audios/real_voice1.wav` || playingAudio === `/audios/fake_voice1.wav` ? (
                     <div className={styles.playButton}>⏸</div>
                   ) : (
@@ -160,9 +159,7 @@ export default function Home() {
                   className={styles.profile}
                   onMouseEnter={() => setHoveredProfile(2)}
                   onMouseLeave={() => setHoveredProfile(null)}
-                  onClick={() => playAudio(2, isOn2)}
-                  style={{ backgroundImage: "url('/images/home/profile2.jpg')" }}
-                >
+                  onClick={() => playAudio(2, isOn2)}><div className={styles.profilejuj} />
                   {playingAudio === `/audios/real_voice2.wav` || playingAudio === `/audios/fake_voice2.wav` ? (
                     <div className={styles.playButton}>⏸</div>
                   ) : (
@@ -183,7 +180,7 @@ export default function Home() {
         </div>
         <div className={styles.do}>
           <div>
-            <div style={{height:'200px'}}>
+            <div style={{height:'180px'}}>
               <h2>Voice Verity로 어떤 걸 할 수 있을까?</h2>
               <p>Voice Verity는 생각지도 못한 다양한 곳에 사용될 수 있습니다.</p>
             </div>
@@ -191,31 +188,33 @@ export default function Home() {
               <div className={styles.column}>
                <section>
                 <div className={styles.space}><div className={styles.icon}><div className={styles.enter} /></div></div>
-                <ul>Entertainment
-                <li>성우 및 가수의 딥보이스 무단 사용 탐지</li>
+                <h2 style={{margin:"0px 0px 0px 20px", fontSize:'34px', textAlign:'left'}}>Entertainment</h2>
+                <ul><li>성우 및 가수의 딥보이스 무단 사용 탐지</li>
                 <li>음성 합성 기술의 품질 평가</li></ul>
                </section>
                <section>
                 <div className={styles.space}><div className={styles.prevent} /></div>
-                <ul>Prevention
-                <li>음성 인증 시스템의 보안 강화</li>
+                <h2 style={{margin:"0px 0px 0px 20px", fontSize:'34px', textAlign:'left'}}>Prevention</h2>
+                <ul><li>음성 인증 시스템의 보안 강화</li>
                 <li>통화 중 실시간 딥페이크 음성 탐지</li></ul>
                </section>
                <section>
                 <div className={styles.space}><div className={styles.icon}><div className={styles.media} /></div></div>
-                <ul>Media literacy
-                <li>뉴스나 팟캐스트의 음성 진위 여부 확인</li>
+                <h2 style={{margin:"0px 0px 0px 20px", fontSize:'34px', textAlign:'left'}}>Media literacy</h2>
+                <ul><li>뉴스나 팟캐스트의 음성 진위 여부 확인</li>
                 <li>영화나 TV 프로그램에서 사용된 음성의 진실성 검증</li></ul>
                </section>
               </div>
             </div>
           </div>
         </div>
+
         <div className={styles.youtubeSection}>
-          <h2>우리의 Dev Story</h2>
-          <h3>Voice Verity의 시작은 어디서부터였을까? </h3>
-          <h3>Voice Volice의 이야기를 만나보세요.</h3>
-          <h3>우리의 이야기는 끝나지 않았습니다.</h3>
+          <div>
+            <h2>우리의 Dev Story</h2>
+            <p>Voice Verity의 시작은 어디서부터였을까? Voice Volice의 이야기를 만나보세요.</p>
+            <p>우리의 이야기는 끝나지 않았습니다.</p>
+          </div>
           <div className={styles.youtubeContainer}>
             <iframe 
               src="https://www.youtube.com/embed/DMJ0Jrxu_Oo"
@@ -228,7 +227,7 @@ export default function Home() {
         </div>
         <div className={styles.contactUs}>
           <h2>Voice Verity와 함께해요.</h2>
-          <h3>당신의 든든한 파트너가 될 수 있습니다.</h3>
+          <p>당신의 든든한 파트너가 될 수 있습니다.</p>
           <button onClick={handleContactUs}>Contact Us</button>
         </div>
       </div>
