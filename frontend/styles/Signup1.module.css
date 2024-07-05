@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  min-width: 100vw;
   width: 100%;
   position: absolute;
   left: 0;
@@ -24,9 +23,28 @@
   padding: 40px 60px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 400px;
+  max-width: 500px;
   width: 100%;
+}
+
+.signupBox p, .checkboxContainer span,
+.signupBox a{
+  font-size: 20px;
+}
+
+.signupBox h1 {
+  font-weight: normal;
+}
+
+.signupBox label {
+  display: flex;
+  align-items: center;
+}
+
+.allcheck {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .logoContainer {
@@ -35,40 +53,41 @@
 
 .progress {
   display: flex;
-  align-items: center;
   justify-content: center;
   margin-bottom: 20px;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .progressBar {
-  width: 100px;
-  height: 10px;
+  width: 50px;
+  height: 20px;
   background: #ccc;
   margin-left: 10px;
-  border-radius: 5px;
+  border-radius: 30px;
 }
 
 .progressFilled {
   width: 50%;
   height: 100%;
-  background: #000;
-  border-radius: 5px;
+  background: #666;
+  border-radius: 30px;
 }
 
 .checkboxContainer {
   text-align: left;
-  margin-top: 20px;
+  margin: 0 50px;
 }
 
 .checkboxContainer p {
-  font-size: 0.9em;
+  font-size: 1em;
   color: #555;
 }
 
 .checkboxContainer input[type="checkbox"] {
   appearance: none;
   background-color: #fff;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -78,7 +97,7 @@
 }
 
 .checkboxContainer input[type="checkbox"]:checked {
-  background-color: #000;
+  background-color: #ccc;
 }
 
 .checkboxContainer input[type="checkbox"]:checked::after {
@@ -93,22 +112,30 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .termsList {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .termsList label {
-  display: block;
+  display: flex;
   margin-bottom: 10px;
 }
 
+.termsList a {
+  text-decoration: none;
+  color: #000;
+}
+
 .signupButton {
+  font-family: fontA;
+  font-size: 20px;
   width: 100%;
   padding: 10px;
-  background-color: #000;
-  color: white;
+  background-color: #d9d9d9;
+  color: #000;
   border: none;
-  border-radius: 5px;
+  border-radius: 15px;
   cursor: pointer;
   margin-top: 20px;
 }

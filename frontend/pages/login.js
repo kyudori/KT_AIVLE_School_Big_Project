@@ -41,7 +41,8 @@ export default function Login() {
 
   return (
     <div className={styles.container}>
-      <Navbar />
+      <div style={{padding:'0 200px', 
+        background: '#fff'}}><Navbar /></div>
       <div className={styles.main}>
         <div className={styles.loginBox}>
           <div className={styles.logoContainer}>
@@ -69,7 +70,7 @@ export default function Login() {
             <button type="submit" className={styles.loginButton}>로그인</button>
           </form>
           <div className={styles.linkContainer}>
-            <p><Link href="/find-id" className={styles.link}>아이디</Link> / <Link href="/reset-password" className={styles.link}>비밀번호</Link>를 잊으셨습니까?</p>
+            <p><Link href="/find-id" className={styles.link}>ID</Link> / <Link href="/reset-password" className={styles.link}>PW</Link>를 잊으셨습니까?</p>
             <p><Link href="/signup" className={styles.link}>회원가입</Link></p>
           </div>
         </div>
