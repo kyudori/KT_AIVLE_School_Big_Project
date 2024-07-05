@@ -1,0 +1,61 @@
+.container {
+    font-family: fontA;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 100vw;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #f0f0f0;
+  }
+  
+  .main {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .plansContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .planCard {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    width: 250px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .planCard h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .planCard p {
+    margin: 10px 0;
+  }
+  
+  .planCard button {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .planCard button:hover {
+    background: #444;
+  }
+  
+  .option {
+    margin-bottom: 10px;
+  }
+  

@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import signup, login, find_id, reset_password, user_info, change_password, upload_audio, get_api_key, regenerate_api_key, delete_api_key, get_credits, validate_key, api_usage_weekly, group_usage, user_files, delete_account
+from .views import signup, login, find_id, reset_password, user_info, change_password, upload_audio, get_api_key, regenerate_api_key, delete_api_key, get_credits, validate_key, api_usage_weekly, group_usage, user_files, delete_account, subscription_plans, create_payment, approve_payment, cancel_payment, fail_payment
+
 
 urlpatterns = [
     path('signup/', signup, name='signup'),
@@ -17,6 +18,10 @@ urlpatterns = [
     path('api-usage-weekly/', api_usage_weekly),
     path('group-usage/', group_usage),
     path('user-files/', user_files),
-    path('delete-account/', delete_account, name='delete_account'),  # 추가된 경로
-
+    path('delete-account/', delete_account, name='delete_account'),
+    path('subscription-plans/', subscription_plans, name='subscription_plans'),
+    path('payments/create/', create_payment, name='create_payment'),
+    path('payments/approval/', approve_payment, name='approve_payment'),
+    path('payments/cancel/', cancel_payment, name='cancel_payment'),
+    path('payments/fail/', fail_payment, name='fail_payment'),
 ]
