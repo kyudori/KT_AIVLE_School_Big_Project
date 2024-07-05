@@ -16,7 +16,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory
+from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory, Payment
 from django.db import models 
 import requests
 from datetime import date
@@ -27,7 +27,8 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import redirect, render
 import logging
-
+from urllib.parse import urlencode
+from django.contrib.auth import login as django_login
 
 User = get_user_model()
 
@@ -61,14 +62,18 @@ def delete_account(request):
     user.delete()
     return Response({'status': 'Account deleted successfully'}, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def login(request):
     data = request.data
     user = authenticate(username=data['email'], password=data['password'])
     if user is not None:
         token, created = Token.objects.get_or_create(user=user)
+        
+        # django_login 함수는 Django HttpRequest 객체를 필요로 함
+        django_login(request._request, user)  # 사용자 세션 설정
+
         return Response({'token': token.key})
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -173,15 +178,15 @@ logger = logging.getLogger(__name__)
 def create_payment(request):
     data = request.data
     plan = get_object_or_404(SubscriptionPlan, pk=data['plan_id'])
-    
+
     kakao_api_url = 'https://open-api.kakaopay.com/online/v1/payment/ready'
     headers = {
-        'Authorization': f'SECRET_KEY {settings.KAKAO_DEV_SECRET_KEY}', 
+        'Authorization': f'SECRET_KEY {settings.KAKAO_DEV_SECRET_KEY}',
         'Content-Type': 'application/json',
     }
     payload = {
         'cid': 'TC0ONETIME',  # 테스트용 가맹점 코드
-        'partner_order_id': '1001',
+        'partner_order_id': request.user.email,
         'partner_user_id': request.user.username,
         'item_name': plan.name,
         'quantity': 1,
@@ -193,35 +198,39 @@ def create_payment(request):
     }
 
     try:
-        # 요청 데이터 로깅
-        logger.debug(f"Request URL: {kakao_api_url}")
-        logger.debug(f"Request Headers: {headers}")
-        logger.debug(f"Request Payload: {payload}")
-
         response = requests.post(kakao_api_url, headers=headers, data=json.dumps(payload))
         response_data = response.json()
-
-        # 응답 데이터 로깅
-        logger.debug(f"Response Status Code: {response.status_code}")
-        logger.debug(f"Response Data: {response_data}")
 
         if response.status_code != 200:
             return Response({'error': 'Failed to initiate payment', 'details': response_data}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Store payment information in the database
+        payment = Payment.objects.create(
+            user=request.user,
+            plan=plan,
+            tid=response_data['tid'],
+            amount=plan.price,
+            status='initiated'
+        )
+
+        # 세션에 tid 저장
         request.session['tid'] = response_data['tid']
-        request.session['plan_id'] = plan.id
+        request.session.modified = True  # 세션이 변경되었음을 명시적으로 표시
+        print("Session TID:", request.session['tid'])  # 디버깅 로그
 
-        return Response(response_data)
+        return Response({'next_redirect_pc_url': response_data['next_redirect_pc_url']})
     except requests.RequestException as e:
-        logger.error(f"RequestException: {str(e)}")
         return Response({'error': 'Failed to initiate payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-# 결제 승인 처리
+    
+@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def approve_payment(request):
-    pg_token = request.GET.get('pg_token')
+    user = request.user
+
+    # 세션에서 tid 가져오기
     tid = request.session.get('tid')
+    print("Retrieved TID from session:", tid)  # 디버깅 로그
     if not tid:
         return Response({'error': 'Transaction ID not found in session'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -233,34 +242,39 @@ def approve_payment(request):
     params = {
         'cid': 'TC0ONETIME',
         'tid': tid,
-        'partner_order_id': '1001',
-        'partner_user_id': request.user.username,
-        'pg_token': pg_token,
+        'partner_order_id': user.email,
+        'partner_user_id': user.username,
+        'pg_token': request.GET.get('pg_token'),
     }
 
-    response = requests.post(kakao_api_url, headers=headers, data=params)
-    response_data = response.json()
+    try:
+        response = requests.post(kakao_api_url, headers=headers, data=json.dumps(params))
+        response_data = response.json()
 
-    if 'aid' not in response_data:
-        return Response({'error': 'Failed to approve payment', 'details': response_data}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-    plan = get_object_or_404(SubscriptionPlan, pk=request.session.get('plan_id'))
-    UserSubscription.objects.create(user=request.user, plan=plan, daily_credits=plan.api_calls_per_day, total_credits=plan.credits)
-    PaymentHistory.objects.create(user=request.user, plan=plan, amount=plan.price)
+        if 'aid' not in response_data:
+            return Response({'error': 'Failed to approve payment', 'details': response_data}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    return JsonResponse(response_data)
+        # 결제 승인 후 결제 정보 업데이트
+        payment = Payment.objects.get(tid=tid)
+        payment.status = 'approved'
+        payment.save()
 
-# 결제 취소 처리
+        UserSubscription.objects.create(user=user, plan=payment.plan, daily_credits=payment.plan.api_calls_per_day, total_credits=payment.plan.credits)
+        PaymentHistory.objects.create(user=user, plan=payment.plan, amount=payment.amount)
+
+        return Response({'status': 'Payment approved successfully'})
+    except requests.RequestException as e:
+        return Response({'error': 'Failed to approve payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def cancel_payment(request):
-    return redirect(f'{settings.BASE_URL}/plans')
+    return redirect(f'{settings.FRONTEND_URL}/plancancel')
 
-# 결제 실패 처리
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def fail_payment(request):
-    return redirect(f'{settings.BASE_URL}/plans')
+    return redirect(f'{settings.FRONTEND_URL}/planfail')
 
 load_dotenv()
 

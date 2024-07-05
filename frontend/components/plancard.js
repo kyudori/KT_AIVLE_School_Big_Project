@@ -20,7 +20,8 @@ const PlanCard = ({ plan }) => {
           },
         }
       );
-      const { next_redirect_pc_url } = response.data;
+      const { next_redirect_pc_url, tid } = response.data;
+      sessionStorage.setItem('tid', tid); // 세션 스토리지에 TID 저장
       window.location.href = next_redirect_pc_url;
     } catch (error) {
       console.error('결제 요청 실패:', error);
@@ -34,14 +35,14 @@ const PlanCard = ({ plan }) => {
       {plan.options ? (
         plan.options.map((option, index) => (
           <div key={index} className={styles.option}>
-            <p>{(option.price).toLocaleString('ko-KR')}원 / {option.credits} Credit 구매</p>
-            <button onClick={() => handlePayment(option.price, plan.id)}>Buy Now</button>
+            <p>{option.price.toLocaleString('ko-KR')}원 / {option.credits} Credit 구매</p>
+            <button className={styles.button} onClick={() => handlePayment(option.price, plan.id)}>Buy Now</button>
           </div>
         ))
       ) : (
         <>
-          <p>{(plan.price).toLocaleString('ko-KR')}원</p>
-          <button onClick={() => handlePayment(plan.price, plan.id)}>Buy Now</button>
+          <p>{plan.price.toLocaleString('ko-KR')}원</p>
+          <button className={styles.button} onClick={() => handlePayment(plan.price, plan.id)}>Buy Now</button>
         </>
       )}
       <p>{plan.description}</p>

@@ -1,61 +1,59 @@
 .container {
-    font-family: fontA;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    min-width: 100vw;
-    width: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: #f0f0f0;
-  }
-  
-  .main {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .plansContainer {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-  }
-  
-  .planCard {
-    background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 20px;
-    width: 250px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .planCard h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .planCard p {
-    margin: 10px 0;
-  }
-  
-  .planCard button {
-    background: #000;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .planCard button:hover {
-    background: #444;
-  }
-  
-  .option {
-    margin-bottom: 10px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.main {
+  max-width: 1200px;
+  width: 100%;
+}
+
+.plansContainer {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.planCard {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.planCard h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.planCard p {
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+.option {
+  margin-top: 10px;
+}
+
+.option p {
+  margin-bottom: 10px;
+}
+
+.button {
+  background: #0070f3;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #005bb5;
+}
