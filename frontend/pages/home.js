@@ -153,7 +153,7 @@ export default function Home() {
                   <button className={`${styles.toggle} ${isOn1 ? styles.real : styles.fake}`} onClick={toggleHandler1}>
                    <div className={styles.toggleitem}></div>
                   </button>
-                  <p> {isOn1 ? 'Real Voice' : 'Fake Voice'}</p></div>
+                  <p style={{fontSize:'24px'}}> {isOn1 ? 'Real Voice' : 'Fake Voice'}</p></div>
                 </div>
               <div className={styles.profileContainer}>
                 <div
@@ -171,7 +171,7 @@ export default function Home() {
                   <button className={`${styles.toggle} ${isOn2 ? styles.real : styles.fake}`} onClick={toggleHandler2}>
                     <div className={styles.toggleitem}></div>
                   </button>
-                  <p> {isOn2 ? 'Real Voice' : 'Fake Voice'}</p>
+                  <p style={{fontSize:'24px'}}> {isOn2 ? 'Real Voice' : 'Fake Voice'}</p>
                 </div>
               </div>
             </div>
