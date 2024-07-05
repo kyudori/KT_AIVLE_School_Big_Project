@@ -17,6 +17,45 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+    
+class SubscriptionPlan(models.Model):
+    PLAN_CHOICES = [
+        ('Pay As You Go', 'Pay As You Go'),
+        ('BASIC', 'Basic'),
+        ('ASSOCIATE', 'Associate'),
+        ('PROFESSIONAL', 'Professional'),
+    ]
+    name = models.CharField(max_length=20, choices=PLAN_CHOICES)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    api_calls_per_day = models.IntegerField(null=True, blank=True)
+    credits = models.IntegerField(null=True, blank=True)
+    is_recurring = models.BooleanField(default=False)
+    description = models.TextField(default="")
+
+    def __str__(self):
+        return self.name
+
+class UserSubscription(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    daily_credits = models.IntegerField(default=0)
+    total_credits = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.plan.name}"
+
+class PaymentHistory(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_date = models.DateTimeField(auto_now_add=True)
+    is_successful = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.plan.name} - {self.amount}"
 
 class APIKey(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

@@ -3,9 +3,12 @@
 import os
 import random
 import string
+import json
 from datetime import timedelta
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.decorators import api_view, permission_classes
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -13,13 +16,18 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from .models import AudioFile, UploadHistory, APIKey
+from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory
 from django.db import models 
 import requests
 from datetime import date
 from django.utils import timezone
 from dotenv import load_dotenv
 from django.core.files.storage import default_storage
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+import logging
+
 
 User = get_user_model()
 
@@ -136,6 +144,123 @@ def change_password(request):
     user.set_password(data['new_password'])
     user.save()
     return Response({'status': 'Password changed successfully'}, status=status.HTTP_200_OK)
+
+# 카카오페이
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def subscription_plans(request):
+    plans = SubscriptionPlan.objects.all()
+    plans_data = [
+        {
+            'id': plan.id,
+            'name': plan.name,
+            'price': plan.price,
+            'api_calls_per_day': plan.api_calls_per_day,
+            'credits': plan.credits,
+            'is_recurring': plan.is_recurring,
+            'description': plan.description
+        } for plan in plans
+    ]
+    return Response(plans_data, status=status.HTTP_200_OK)
+
+
+# 설정된 로거 사용
+logger = logging.getLogger(__name__)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_payment(request):
+    data = request.data
+    plan = get_object_or_404(SubscriptionPlan, pk=data['plan_id'])
+    
+    kakao_api_url = 'https://open-api.kakaopay.com/online/v1/payment/ready'
+    headers = {
+        'Authorization': f'SECRET_KEY {settings.KAKAO_DEV_SECRET_KEY}', 
+        'Content-Type': 'application/json',
+    }
+    payload = {
+        'cid': 'TC0ONETIME',  # 테스트용 가맹점 코드
+        'partner_order_id': '1001',
+        'partner_user_id': request.user.username,
+        'item_name': plan.name,
+        'quantity': 1,
+        'total_amount': int(plan.price),
+        'tax_free_amount': 0,
+        'approval_url': settings.APPROVAL_URL,
+        'cancel_url': settings.CANCEL_URL,
+        'fail_url': settings.FAIL_URL,
+    }
+
+    try:
+        # 요청 데이터 로깅
+        logger.debug(f"Request URL: {kakao_api_url}")
+        logger.debug(f"Request Headers: {headers}")
+        logger.debug(f"Request Payload: {payload}")
+
+        response = requests.post(kakao_api_url, headers=headers, data=json.dumps(payload))
+        response_data = response.json()
+
+        # 응답 데이터 로깅
+        logger.debug(f"Response Status Code: {response.status_code}")
+        logger.debug(f"Response Data: {response_data}")
+
+        if response.status_code != 200:
+            return Response({'error': 'Failed to initiate payment', 'details': response_data}, status=status.HTTP_400_BAD_REQUEST)
+
+        request.session['tid'] = response_data['tid']
+        request.session['plan_id'] = plan.id
+
+        return Response(response_data)
+    except requests.RequestException as e:
+        logger.error(f"RequestException: {str(e)}")
+        return Response({'error': 'Failed to initiate payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# 결제 승인 처리
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def approve_payment(request):
+    pg_token = request.GET.get('pg_token')
+    tid = request.session.get('tid')
+    if not tid:
+        return Response({'error': 'Transaction ID not found in session'}, status=status.HTTP_400_BAD_REQUEST)
+
+    kakao_api_url = 'https://open-api.kakaopay.com/online/v1/payment/approve'
+    headers = {
+        'Authorization': f'SECRET_KEY {settings.KAKAO_SECRET_KEY}',
+        'Content-Type': 'application/json',
+    }
+    params = {
+        'cid': 'TC0ONETIME',
+        'tid': tid,
+        'partner_order_id': '1001',
+        'partner_user_id': request.user.username,
+        'pg_token': pg_token,
+    }
+
+    response = requests.post(kakao_api_url, headers=headers, data=params)
+    response_data = response.json()
+
+    if 'aid' not in response_data:
+        return Response({'error': 'Failed to approve payment', 'details': response_data}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    plan = get_object_or_404(SubscriptionPlan, pk=request.session.get('plan_id'))
+    UserSubscription.objects.create(user=request.user, plan=plan, daily_credits=plan.api_calls_per_day, total_credits=plan.credits)
+    PaymentHistory.objects.create(user=request.user, plan=plan, amount=plan.price)
+
+    return JsonResponse(response_data)
+
+# 결제 취소 처리
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def cancel_payment(request):
+    return redirect(f'{settings.BASE_URL}/plans')
+
+# 결제 실패 처리
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def fail_payment(request):
+    return redirect(f'{settings.BASE_URL}/plans')
 
 load_dotenv()
 
