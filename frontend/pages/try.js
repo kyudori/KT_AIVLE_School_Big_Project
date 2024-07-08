@@ -9,7 +9,7 @@ import styles from "../styles/Try.module.css";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const ALLOWED_EXTENSIONS = [".wav", ".mp3", ".mp4"];
-const MAX_FILE_SIZE_MB = 20;
+const MAX_FILE_SIZE_MB = 500;
 
 export default function TryVoice() {
   const [file, setFile] = useState(null);

@@ -281,7 +281,7 @@ load_dotenv()
 FLASK_URL = 'http://220.149.235.232:8000'
 
 ALLOWED_EXTENSIONS = ['.wav', '.mp3', '.m4a']
-MAX_FILE_SIZE_MB = 100
+MAX_FILE_SIZE_MB = 500
 MAX_UPLOADS_PER_DAY = 6060
 
 @api_view(['POST'])
