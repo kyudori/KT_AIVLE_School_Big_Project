@@ -141,6 +141,7 @@ def user_info(request):
         user.email_marketing = request.data.get('email_marketing') in ['true', True, '1', 1]
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
+            # Save the image to local storage
             fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'profile_images'))
             filename = fs.save(profile_image.name, profile_image)
             user.profile_image = os.path.join('profile_images', filename)
