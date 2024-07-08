@@ -68,8 +68,7 @@ background-image: linear-gradient(rgba(255, 255, 255, 0) 0% , black 20% 60%, rgb
 }
 
 .fileName:hover {
-  color: #4d4d4d;
-  text-decoration: underline; /* 밑줄 추가 */
+  color: #949494;
 }
 
 .mainContent .form {
