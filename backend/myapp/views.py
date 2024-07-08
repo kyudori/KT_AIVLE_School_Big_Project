@@ -130,8 +130,16 @@ def user_info(request):
         user.contact = request.data.get('contact', user.contact)
         user.sms_marketing = request.data.get('sms_marketing') in ['true', True, '1', 1]
         user.email_marketing = request.data.get('email_marketing') in ['true', True, '1', 1]
+        
         if 'profile_image' in request.FILES:
-            user.profile_image = request.FILES['profile_image']
+            # 파일을 S3에 저장
+            profile_image = request.FILES['profile_image']
+            file_name = f"profile_images/{user.username}/{profile_image.name}"
+            file_path = default_storage.save(file_name, profile_image)
+            file_url = default_storage.url(file_path)
+            
+            user.profile_image = file_path
+
         user.save()
         return Response({'status': 'Profile updated successfully'})
 
@@ -297,16 +305,16 @@ def upload_audio(request):
     file_size_mb = file.size / (1024 * 1024)
 
     if file_extension not in ALLOWED_EXTENSIONS:
-        return Response({'error': 'Invalid file extension. Allowed extensions are: .wav, .mp3, .m4a'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Invalid file extension. Allowed extensions are: .wav, .mp3, .m4a'}, status=status.HTTP_401_BAD_REQUEST)
 
     if file_size_mb > MAX_FILE_SIZE_MB:
-        return Response({'error': f'File size exceeds {MAX_FILE_SIZE_MB} MB limit'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': f'File size exceeds {MAX_FILE_SIZE_MB} MB limit'}, status=status.HTTP_402_BAD_REQUEST)
 
     today = timezone.now().date()
     upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
 
     if upload_history.upload_count >= MAX_UPLOADS_PER_DAY:
-        return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_BAD_REQUEST)
 
     # S3에 파일 업로드
     file_path = default_storage.save(f'audio_files/{file.name}', file)
