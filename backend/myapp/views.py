@@ -130,7 +130,7 @@ def user_info(request):
             'contact': user.contact,
             'sms_marketing': user.sms_marketing,
             'email_marketing': user.email_marketing,
-            'profile_image': profile_image_url,
+            'profile_image_url': profile_image_url,
             'is_staff': user.is_staff,
         })
     elif request.method == 'PUT':
@@ -139,32 +139,26 @@ def user_info(request):
         user.contact = request.data.get('contact', user.contact)
         user.sms_marketing = request.data.get('sms_marketing') in ['true', True, '1', 1]
         user.email_marketing = request.data.get('email_marketing') in ['true', True, '1', 1]
-        
         if 'profile_image' in request.FILES:
-            profile_image = request.FILES['profile_image']
-            # 프로필 이미지를 로컬 파일 시스템에 저장
-            user_directory = os.path.join(settings.MEDIA_ROOT, 'profile_images', user.username)
-            os.makedirs(user_directory, exist_ok=True)  # 사용자 디렉토리를 생성
-            fs = FileSystemStorage(location=user_directory)
-            filename = fs.save(profile_image.name, profile_image)
-            file_path = os.path.join('profile_images', user.username, filename)
-            user.profile_image = file_path
-
+            user.profile_image = request.FILES['profile_image']
         user.save()
-        profile_image_url = user.profile_image.url if user.profile_image else None
-        return Response({
-            'email': user.email,
-            'username': user.username,
-            'nickname': user.nickname,
-            'company': user.company,
-            'contact': user.contact,
-            'sms_marketing': user.sms_marketing,
-            'email_marketing': user.email_marketing,
-            'profile_image_url': profile_image_url,
-            'is_staff': user.is_staff,
-            'file_name': filename,
-            'file_path': file_path
-        }, status=status.HTTP_201_CREATED)
+        return Response({'status': 'Profile updated successfully'})
+
+@api_view(['POST'])
+def change_password(request):
+    data = request.data
+    user = request.user
+
+    if not user.check_password(data['current_password']):
+        return Response({'error': 'Current password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if data['current_password'] == data['new_password']:
+        return Response({'error': 'New password cannot be the same as the current password'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(data['new_password'])
+    user.save()
+    return Response({'status': 'Password changed successfully'}, status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 def change_password(request):
