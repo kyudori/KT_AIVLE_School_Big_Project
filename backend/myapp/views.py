@@ -316,7 +316,7 @@ def upload_audio(request):
     try:
         response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url})
         response.raise_for_status()
-        result = response.json().get('result', '')
+        result = response.json().get('analysis_result', '')
         predictions = response.json().get('predictions', [])
     except requests.RequestException as e:
         result = "Fake(AI 서버 OFF, Test 데이터)"
