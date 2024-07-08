@@ -121,7 +121,10 @@ import os
 def user_info(request):
     user = request.user
     if request.method == 'GET':
-        profile_image_url = user.profile_image.url if user.profile_image else None
+        if user.profile_image:
+            profile_image_url = os.path.join(settings.MEDIA_URL, str(user.profile_image))
+        else:
+            profile_image_url = None
         return Response({
             'email': user.email,
             'username': user.username,
