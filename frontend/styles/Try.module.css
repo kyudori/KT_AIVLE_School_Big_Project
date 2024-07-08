@@ -1,199 +1,149 @@
 .previewContext { 
-    font-family: fontA, sans-serif;
-    color: #000;
-    display: flex;
-    min-height: 100vh;
-    min-width: 90vw;
-    width: 100%;
-    flex-direction: column;
-    text-align: center;
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.mainContent{
-  text-align: center;
+  font-family: fontA, sans-serif;
+  color: #000;
+  display: flex;
   min-height: 100vh;
-  margin: 0 200px;
+  min-width: 90vw;
+  width: 100%;
+  flex-direction: column;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
-.mainContent h1{
-    font-size: 48px;
-    font-weight: normal;
+.mainContent {
+text-align: center;
+min-height: 100vh;
+margin: 0 200px;
 }
 
-.mainContent h2{
-  font-weight: normal;
+.mainContent h1 {
+font-size: 48px;
+font-weight: normal;
+}
+
+.mainContent h2 {
+font-weight: normal;
 }
 
 .mainContent button {
-  background: inherit ;
-  border:none; 
-  box-shadow:none; 
-  border-radius:0; 
-  padding:0; 
-  overflow:visible; 
-  cursor:pointer;
-  color: white;
-  font-family: fontA;
-  font-size: large;
+background: inherit ;
+border: none; 
+box-shadow: none; 
+border-radius: 0; 
+padding: 0; 
+overflow: visible; 
+cursor: pointer;
+color: white;
+font-family: fontA;
+font-size: large;
 }
 
-.playcontent{
-  display: flex;
-  margin: 0px 200px 0px 200px;
-  flex-direction: column;
-  border-style: dashed;
-  border-radius: 15px;
+.playcontent {
+display: flex;
+margin: 0px 200px 0px 200px;
+flex-direction: column;
+border-style: dashed;
+border-radius: 15px;
 }
 
-.pbox{
-  display: flex;
-  justify-content: space-around;
-  margin: 30px;
-  align-items: center;
-}
-
-.profile{
-  background-color: rgba(59, 59, 59, 50);
-  height: 150px;
-  width: 200px;
-  display: flex;
-  justify-content: center;
-  border: solid;
-}
-
-.faceplay{
-  background-position: center;
-  background-size: cover;
-  position: relative;
-  left: 55px;
-  top: 40px;
-  height: 50px;
-  width: 50px;
-  padding: 10px;
-  background-image: url(./images/play.png);
-  opacity: 50%;
-}
-
-.faceplay:hover{
-  background-image: url(./images/playafter.png);
-}
-
-
-.block{
-  display: block;
-}
-
-.play{
-  display: block;
-  height: 55px;
-  width: 210px;
-  background-image: url(./images/playicon.png);
-  background-position: center;
-  background-size: cover;
-}
-
-.play button{
-  padding: 10px;
-  margin: 2px;
-  background: none;
-  display: flex;
-  height: 50px;
-  width: 50px;
-}
-
-.play button:hover {
-  background-position: center;
-  background-size: cover;
-  height: 50px;
-  width: 50px;
-  background-image: url(./images/playafter.png);
+.pbox {
+display: flex;
+justify-content: space-around;
+margin: 30px;
+align-items: center;
 }
 
 .fileupload {
-    text-align: center;
-    height: 500px;
-    background-image: linear-gradient(rgba(255, 255, 255, 0) 0% ,black 20% 60%, rgba(255, 255, 255, 0) 100%);
+text-align: center;
+height: 500px;
+background-image: linear-gradient(rgba(255, 255, 255, 0) 0% , black 20% 60%, rgba(255, 255, 255, 0) 100%);
 }
 
-.mainContent .form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    margin: 0px 200px 0px 200px;
-    text-align: center;
-    height: 300px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 31px;
-    border: 1px dashed #000;
+.mainContent .form {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: space-evenly;
+margin: 0px 200px 0px 200px;
+text-align: center;
+height: 300px;
+background: rgba(255, 255, 255, 0.6);
+border-radius: 31px;
+border: 1px dashed #000;
 }
 
-.mainContent button{
-  color: #fff;
-  background-color: rgb(155, 144, 210);
-  border-radius: 60px;
-  width: 300px;
-  height: 50px;
-  margin: 20px 0 100px 0;
+.mainContent button {
+color: #fff;
+background-color: rgb(155, 144, 210);
+border-radius: 60px;
+width: 300px;
+height: 50px;
+margin: 20px 0 100px 0;
 }
 
 .mainContent input[type="file"] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip:rect(0,0,0,0);
-  border: 0;
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+margin: -1px;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+border: 0;
 }
 
 .mainContent label {
-  align-items: center;
-  width: 80px;
-  height: 80px;
-  background-image: url(./images/upload.png);
-  background-position: top center;
-  background-size: cover;
-  cursor: pointer;
+align-items: center;
+width: 80px;
+height: 80px;
+background-image: url(./images/upload.png);
+background-position: top center;
+background-size: cover;
+cursor: pointer;
 }
 
 .mainContent .uploadname {
-  display: inline-block;
-  padding: .5em .75em;  /* label의 패딩값과 일치 */
-  font-size: inherit;
-  font-family: inherit;
-  line-height: normal;
-  vertical-align: middle;
-  background-color: #f5f5f5;
-  border: 1px solid #ebebeb;
-  border-bottom-color: #e2e2e2;
-  border-radius: .25em;
-  -webkit-appearance: none; /* 네이티브 외형 감추기 */
-  -moz-appearance: none;
-  appearance: none;
+display: inline-block;
+padding: .5em .75em;  /* label의 패딩값과 일치 */
+font-size: inherit;
+font-family: inherit;
+line-height: normal;
+vertical-align: middle;
+background-color: #f5f5f5;
+border: 1px solid #ebebeb;
+border-bottom-color: #e2e2e2;
+border-radius: .25em;
+-webkit-appearance: none; /* 네이티브 외형 감추기 */
+-moz-appearance: none;
+appearance: none;
 }
 
-
-
-.resultContext div{
-    margin: 50px;
+.resultContext {
+margin: 50px;
 }
 
-.previewContext hr{
-  align-self: center;
-  margin: 0px;
-  height: 15px;
+.chartContainer {
+display: flex;
+justify-content: space-around;
 }
 
-.previewContext li{
-  margin: 10px;
+.chart {
+width: 10%; /* 차트를 좌우로 작게 조정 */
 }
 
-.fontsize{
-  font-size: 40px;
-  font-weight: normal;
+.previewContext hr {
+align-self: center;
+margin: 0px;
+height: 15px;
+}
+
+.previewContext li {
+margin: 10px;
+}
+
+.fontsize {
+font-size: 40px;
+font-weight: normal;
 }

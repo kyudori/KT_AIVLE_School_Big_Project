@@ -319,8 +319,8 @@ def upload_audio(request):
         result = response.json().get('result', 'Error')
         predictions = response.json().get('predictions', [])
     except requests.RequestException as e:
-        result = "Error in Flask server response"
-        predictions = []
+        result = "Fake(AI 서버 OFF, Test 데이터)"
+        predictions = [0.1, 0.1, 0.1, 0.1, 0.9, 0.9]
 
     # DB에 저장
     audio_file = AudioFile(
