@@ -28,7 +28,7 @@
 }
 
 .signupBox p, .checkboxContainer span,
-.signupBox a{
+.signupBox a {
   font-size: 20px;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .progressFilled {
-  width: 50%;
+  width: 100%;
   height: 100%;
   background: #666;
   border-radius: 30px;
@@ -127,13 +127,17 @@
   color: #000;
 }
 
+.termsList a:hover {
+  text-decoration: underline;
+}
+
 .signupButton {
   font-family: fontA;
   font-size: 20px;
   width: 100%;
   padding: 10px;
-  background-color: #d9d9d9;
-  color: #000;
+  background-color: #000000;
+  color: #ffffff;
   border: none;
   border-radius: 15px;
   cursor: pointer;
@@ -142,4 +146,47 @@
 
 .signupButton:hover {
   background-color: #444;
+}
+
+.backButton {
+  font-family: fontA;
+  font-size: 20px;
+  width: 100%;
+  padding: 10px;
+  background-color: #ccc;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.backButton:hover {
+  background-color: #999;
+}
+
+@font-face {
+  font-family: fontA;
+  src: local("Y 너만을 비춤체"), url(Y너만을비춤체.ttf);
+}
+
+.subtitle {
+  margin: 10px 0;
+}
+
+.signupBox form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputField {
+  font-family: fontA;
+  width: 80%;
+  height: 50px;
+  padding: 0 16px;
+  margin: 5px 0px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 20px;
 }
