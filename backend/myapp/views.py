@@ -318,10 +318,13 @@ def upload_audio(request):
         response.raise_for_status()
         result = response.json().get('analysis_result', '')
         predictions = response.json().get('predictions', [])
+        fake_cnt = response.json().get('fake_cnt', '')
+        real_cnt = response.json().get('real_cnt', '')
     except requests.RequestException as e:
-        result = "Fake(AI 서버 OFF, Test 데이터)"
+        result = "AI 서버 OFF, Test 데이터"
         predictions = [0.1, 0.1, 0.1, 0.1, 0.9, 0.9]
-
+        fake_cnt = 2
+        real_cnt = 4
     # DB에 저장
     audio_file = AudioFile(
         user=request.user,
@@ -341,7 +344,9 @@ def upload_audio(request):
         'file_name': file.name,
         'file_path': file_url,
         'analysis_result': result,
-        'predictions': predictions
+        'predictions': predictions,
+        'real_cnt': real_cnt,
+        'fake_cnt': fake_cnt
     }, status=status.HTTP_201_CREATED)
     
 def generate_api_key():

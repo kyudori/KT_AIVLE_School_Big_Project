@@ -1,4 +1,3 @@
-// pages/try.js
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -17,6 +16,8 @@ export default function TryVoice() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const [predictions, setPredictions] = useState([]);
+  const [fakeCount, setFakeCount] = useState(0);
+  const [realCount, setRealCount] = useState(0);
   const lineChartRef = useRef(null);
   const pieChartRef = useRef(null);
   const router = useRouter();
@@ -76,8 +77,14 @@ export default function TryVoice() {
         }
       );
       const analysisResult = response.data.analysis_result;
+      const predictions = response.data.predictions;
+      const fakeCount = response.data.fake_cnt;
+      const realCount = response.data.real_cnt;
+      
       setResult(analysisResult);
-      setPredictions(response.data.predictions);
+      setPredictions(predictions);
+      setFakeCount(fakeCount);
+      setRealCount(realCount);
       setLoading(false); // 로딩 종료
     } catch (error) {
       console.error("Error uploading file", error);
@@ -143,8 +150,6 @@ export default function TryVoice() {
       if (pieChartRef.current) {
         pieChartRef.current.destroy();
       }
-      const fakeCount = predictions.filter((p) => p > 0.89).length;
-      const realCount = predictions.length - fakeCount;
       const ctx2 = document.getElementById("pieChart").getContext("2d");
       pieChartRef.current = new Chart(ctx2, {
         type: "pie",
@@ -161,16 +166,8 @@ export default function TryVoice() {
           responsive: false,
         },
       });
-
-    //   //임시 Logic
-    //   const fakeRatio = (fakeCount / predictions.length) * 100;
-    //   if (fakeRatio > 30) {
-    //     setResult("Fake");
-    //   } else {
-    //     setResult("Real");
-    //   }
     }
-  }, [predictions]);
+  }, [predictions, fakeCount, realCount]);
 
   return (
     <div className={styles.previewContext}>
