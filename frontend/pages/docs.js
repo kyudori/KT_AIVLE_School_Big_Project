@@ -35,6 +35,11 @@ export default function Documentation() {
   };
 
   const handleNavigateToSetting = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
     router.push("/setting");
   };
 
@@ -170,6 +175,16 @@ export default function Documentation() {
               <p>플랫폼에 회원가입 및 로그인하여 API 키를 발급받습니다.</p>
               <hr />
               <div className={styles.codeEX}>
+                <div className={styles.codetop}>
+                  <p>JSON</p>
+                  <span
+                    onClick={() =>
+                      handleCopyClick(`Authorization: Bearer YOUR_API_KEY`)
+                    }
+                  >
+                    📋
+                  </span>
+                </div>
                 <pre>Authorization: Bearer YOUR_API_KEY</pre>
               </div>
             </section>
@@ -190,15 +205,15 @@ export default function Documentation() {
                 <h3 style={{ color: "#5B5B5B" }}>Request 요청 본문(json)</h3>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
-                    <p>JS</p>
+                    <p>ON</p>
                     <span
                       onClick={() =>
                         handleCopyClick(`{
-  'data': [
+  "data": [
     {
-      'feature1': value1,
-      'feature2': value2,
-      'feature3': value3
+      "feature1": value1,
+      "feature2": value2,
+      "feature3": value3
     }
   ]
 }`)
@@ -225,7 +240,7 @@ export default function Documentation() {
                 <h3 style={{ color: "#5B5B5B" }}>Response 응답(json)</h3>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
-                    <p>JS</p>
+                    <p>JSON</p>
                     <span
                       onClick={() =>
                         handleCopyClick(`{
@@ -254,7 +269,7 @@ export default function Documentation() {
               <h3 style={{ color: "#5B5B5B" }}>Response 응답(json)</h3>
               <div className={styles.codeEX}>
                 <div className={styles.codetop}>
-                  <p>JS</p>
+                  <p>JSON</p>
                   <span
                     onClick={() =>
                       handleCopyClick(`{
