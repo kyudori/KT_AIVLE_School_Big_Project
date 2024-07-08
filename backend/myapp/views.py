@@ -107,6 +107,15 @@ def find_id(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+from .models import CustomUser
+from rest_framework import status
+import os
+
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def user_info(request):
@@ -132,11 +141,10 @@ def user_info(request):
         user.email_marketing = request.data.get('email_marketing') in ['true', True, '1', 1]
         
         if 'profile_image' in request.FILES:
-            # 프로필 이미지를 S3에 저장
             profile_image = request.FILES['profile_image']
-            file_name = f"profile_images/{user.username}/{profile_image.name}"
-            file_path = default_storage.save(file_name, profile_image)
-            user.profile_image.name = file_path  # 여기에서 경로를 할당
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'profile_images', user.username))
+            filename = fs.save(profile_image.name, profile_image)
+            user.profile_image = os.path.join('profile_images', user.username, filename)
 
         user.save()
         profile_image_url = user.profile_image.url if user.profile_image else None
@@ -150,8 +158,6 @@ def user_info(request):
             'email_marketing': user.email_marketing,
             'profile_image_url': profile_image_url,
             'is_staff': user.is_staff,
-            'file_name': file_name,
-            'file_path': file_path
         }, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
