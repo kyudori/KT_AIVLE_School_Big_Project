@@ -1,7 +1,7 @@
+// pages/try.js
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import ReactAudioPlayer from "react-audio-player";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Chart from "chart.js/auto"; // 차트 라이브러리 추가
@@ -9,7 +9,7 @@ import styles from "../styles/Try.module.css";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const ALLOWED_EXTENSIONS = [".wav", ".mp3", ".mp4"];
-const MAX_FILE_SIZE_MB = 500;
+const MAX_FILE_SIZE_MB = 10;
 
 export default function TryVoice() {
   const [file, setFile] = useState(null);
@@ -35,6 +35,8 @@ export default function TryVoice() {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
     const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
     const fileSizeMB = selectedFile.size / (1024 * 1024);
 
@@ -44,7 +46,7 @@ export default function TryVoice() {
     }
 
     if (fileSizeMB > MAX_FILE_SIZE_MB) {
-      alert("File size exceeds the 20MB limit.");
+      alert("File size exceeds the 10MB limit.");
       return;
     }
 
@@ -151,7 +153,7 @@ export default function TryVoice() {
           datasets: [
             {
               data: [realCount, fakeCount],
-              backgroundColor: ["#CCCCCC", "#9B90D2"],
+              backgroundColor: ["#9B90D2", "#CCCCCC"],
             },
           ],
         },
@@ -167,7 +169,6 @@ export default function TryVoice() {
       } else {
         setResult("Real");
       }
-
     }
   }, [predictions]);
 
@@ -216,7 +217,7 @@ export default function TryVoice() {
               <h2>Voice Verity는 이렇게 분석했어요.</h2>
               <div className={styles.chartContainer}>
                 <div>
-                  <p>구간별 Fake 확률 그래프</p>
+                  <p>구간별 Fake 확률 그래프(0(R) ~ 1(F))</p>
                   <canvas
                     id="lineChart"
                     style={{
@@ -227,15 +228,17 @@ export default function TryVoice() {
                     className={styles.chart}
                   ></canvas>
                 </div>
-                <div className={styles.piechart}><p>Real/Fake Ratio</p>
-                <div>
-                  <canvas
-                    id="pieChart"
-                    width="200px"
-                    height="200px"
-                    float= "right"
-                    className={styles.chart}
-                  ></canvas></div>
+                <div className={styles.piechart}>
+                  <p>Real/Fake Ratio</p>
+                  <div>
+                    <canvas
+                      id="pieChart"
+                      width="200px"
+                      height="200px"
+                      float="right"
+                      className={styles.chart}
+                    ></canvas>
+                  </div>
                 </div>
               </div>
               <div style={{ margin: "20px", fontSize: "24px" }}>▼</div>

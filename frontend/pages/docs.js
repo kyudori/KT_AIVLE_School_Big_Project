@@ -43,14 +43,31 @@ export default function Documentation() {
   };
 
   const handleCopyClick = (textToCopy) => {
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          alert("복사되었습니다.");
+        })
+        .catch((error) => {
+          console.error("복사 실패:", error);
+        });
+    } else {
+      // HTTPS가 아닌 환경에서는 execCommand를 사용
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      textArea.style.position = "fixed";  // avoid scrolling to bottom
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand("copy");
         alert("복사되었습니다.");
-      })
-      .catch((error) => {
-        console.error("복사 실패:", error);
-      });
+      } catch (err) {
+        console.error("복사 실패:", err);
+      }
+      document.body.removeChild(textArea);
+    }
   };
 
   return (
@@ -115,8 +132,8 @@ export default function Documentation() {
                     <div className={styles.cardicon}></div>
                     <div className={styles.cardtext}>
                       <h2>시작 하기</h2>
-                      <p style={{color:'#444', fontSize:'20px'}}>Get start</p>
-                      <p style={{color:'blue'}}>Read documentation &gt;</p>
+                      <p style={{ color: "#444", fontSize: "20px" }}>Get start</p>
+                      <p style={{ color: "blue" }}>Read documentation &gt;</p>
                     </div>
                   </div>
                   <div
@@ -126,8 +143,8 @@ export default function Documentation() {
                     <div className={styles.cardicon2}></div>
                     <div className={styles.cardtext}>
                       <h2>Key 발급</h2>
-                      <p style={{color:'#444', fontSize:'20px'}}>Get Key</p>
-                      <p style={{color:'blue'}}>Go to Setting &gt;</p>
+                      <p style={{ color: "#444", fontSize: "20px" }}>Get Key</p>
+                      <p style={{ color: "blue" }}>Go to Setting &gt;</p>
                     </div>
                   </div>
                 </div>
@@ -226,7 +243,7 @@ export default function Documentation() {
                   </pre>
                 </div>
               </div>
-              <div style={{height:'20px'}}/>
+              <div style={{ height: "20px" }} />
               <h3>2. 상태(Status)</h3>
               <ul>
                 <li>URL: /api/status</li>

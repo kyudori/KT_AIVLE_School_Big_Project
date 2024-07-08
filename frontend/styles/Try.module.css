@@ -61,6 +61,17 @@ height: 500px;
 background-image: linear-gradient(rgba(255, 255, 255, 0) 0% , black 20% 60%, rgba(255, 255, 255, 0) 100%);
 }
 
+.fileName {
+  cursor: pointer; /* 커서를 손가락 모양 */
+  color: #000000; /* 링크와 같은 색상 */
+  font-size: 2.0em; /* 폰트 크기 키움 (2.0배) */
+}
+
+.fileName:hover {
+  color: #4d4d4d;
+  text-decoration: underline; /* 밑줄 추가 */
+}
+
 .mainContent .form {
 display: flex;
 flex-direction: column;
