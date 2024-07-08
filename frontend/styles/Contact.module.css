@@ -1,0 +1,35 @@
+.container {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .main h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .main p {
+    font-size: 18px;
+    color: #666;
+    text-align: center;
+  }
+  
