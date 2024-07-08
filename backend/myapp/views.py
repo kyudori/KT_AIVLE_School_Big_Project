@@ -140,7 +140,10 @@ def user_info(request):
         user.sms_marketing = request.data.get('sms_marketing') in ['true', True, '1', 1]
         user.email_marketing = request.data.get('email_marketing') in ['true', True, '1', 1]
         if 'profile_image' in request.FILES:
-            user.profile_image = request.FILES['profile_image']
+            profile_image = request.FILES['profile_image']
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'profile_images'))
+            filename = fs.save(profile_image.name, profile_image)
+            user.profile_image = os.path.join('profile_images', filename)
         user.save()
         return Response({'status': 'Profile updated successfully'})
 
