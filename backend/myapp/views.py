@@ -142,7 +142,10 @@ def user_info(request):
         
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
-            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'profile_images', user.username))
+            # 프로필 이미지를 로컬 파일 시스템에 저장
+            user_directory = os.path.join(settings.MEDIA_ROOT, 'profile_images', user.username)
+            os.makedirs(user_directory, exist_ok=True)  # 사용자 디렉토리를 생성
+            fs = FileSystemStorage(location=user_directory)
             filename = fs.save(profile_image.name, profile_image)
             user.profile_image = os.path.join('profile_images', user.username, filename)
 
