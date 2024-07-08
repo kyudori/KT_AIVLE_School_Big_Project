@@ -132,16 +132,27 @@ def user_info(request):
         user.email_marketing = request.data.get('email_marketing') in ['true', True, '1', 1]
         
         if 'profile_image' in request.FILES:
-            # 파일을 S3에 저장
+            # 프로필 이미지를 S3에 저장
             profile_image = request.FILES['profile_image']
             file_name = f"profile_images/{user.username}/{profile_image.name}"
             file_path = default_storage.save(file_name, profile_image)
-            file_url = default_storage.url(file_path)
-            
-            user.profile_image = file_path
+            user.profile_image.name = file_path  # 여기에서 경로를 할당
 
         user.save()
-        return Response({'status': 'Profile updated successfully'})
+        profile_image_url = user.profile_image.url if user.profile_image else None
+        return Response({
+            'email': user.email,
+            'username': user.username,
+            'nickname': user.nickname,
+            'company': user.company,
+            'contact': user.contact,
+            'sms_marketing': user.sms_marketing,
+            'email_marketing': user.email_marketing,
+            'profile_image_url': profile_image_url,
+            'is_staff': user.is_staff,
+            'file_name': file_name,
+            'file_path': file_path
+        }, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 def change_password(request):
