@@ -8,7 +8,7 @@ import Chart from "chart.js/auto"; // 차트 라이브러리 추가
 import styles from "../styles/Try.module.css";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const ALLOWED_EXTENSIONS = ['.wav', '.mp3', '.mp4'];
+const ALLOWED_EXTENSIONS = [".wav", ".mp3", ".mp4"];
 const MAX_FILE_SIZE_MB = 20;
 
 export default function TryVoice() {
@@ -29,9 +29,13 @@ export default function TryVoice() {
     }
   }, [router]);
 
+  const handleSubscriptionPlan = () => {
+    router.push("/plan");
+  };
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+    const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
     const fileSizeMB = selectedFile.size / (1024 * 1024);
 
     if (!ALLOWED_EXTENSIONS.includes(`.${fileExtension}`)) {
@@ -90,48 +94,70 @@ export default function TryVoice() {
         type: "line",
         data: {
           labels: predictions.map((_, index) => index + 1),
-          datasets: [{
-            label: "Real/Fake Probability",
-            data: predictions,
-            borderColor: "rgba(75, 192, 192, 1)",
-            fill: false
-          }]
+          datasets: [
+            {
+              label: "Real/Fake Probability",
+              data: predictions,
+              borderColor: "rgba(75, 192, 192, 1)",
+              fill: false,
+              pointRadius: 0,
+              borderColor: "rgb(155, 144, 210)",
+            },
+          ],
         },
         options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+          responsive: false,
           scales: {
             x: {
               title: {
-                display: true,
-                text: "Seconds"
-              }
+                display: false,
+                text: "Seconds",
+              },
+              grid: {
+                display: false,
+              },
             },
             y: {
+              grace: "100%",
               title: {
-                display: true,
-                text: "Probability (Real)"
+                display: false,
+                text: "Probability (Real)",
+              },
+              grid: {
+                display: false,
               },
               min: 0,
-              max: 1
-            }
-          }
-        }
+              max: 1,
+            },
+          },
+        },
       });
 
       if (pieChartRef.current) {
         pieChartRef.current.destroy();
       }
-      const realCount = predictions.filter(p => p > 0.5).length;
+      const realCount = predictions.filter((p) => p > 0.5).length;
       const fakeCount = predictions.length - realCount;
       const ctx2 = document.getElementById("pieChart").getContext("2d");
       pieChartRef.current = new Chart(ctx2, {
         type: "pie",
         data: {
           labels: ["Real", "Fake"],
-          datasets: [{
-            data: [realCount, fakeCount],
-            backgroundColor: ["#9B90D2", "#CCCCCC"]
-          }]
-        }
+          datasets: [
+            {
+              data: [realCount, fakeCount],
+              backgroundColor: ["#9B90D2", "#CCCCCC"],
+            },
+          ],
+        },
+        options: {
+          responsive: false,
+        },
       });
     }
   }, [predictions]);
@@ -150,7 +176,10 @@ export default function TryVoice() {
           <form onSubmit={handleSubmit}>
             <div className={styles.form}>
               {fileName ? (
-                <span className={styles.fileName} onClick={() => document.getElementById("upload").click()}>
+                <span
+                  className={styles.fileName}
+                  onClick={() => document.getElementById("upload").click()}
+                >
                   {fileName}
                 </span>
               ) : (
@@ -166,7 +195,9 @@ export default function TryVoice() {
               />
             </div>
             <h2>음성파일을 업로드한 뒤, Start Detection 버튼을 눌러주세요</h2>
-            <p style={{ color: "#666" }}>10MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)</p>
+            <p style={{ color: "#666" }}>
+              10MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)
+            </p>
             <button type="submit">▶ Start Detection</button>
           </form>
           {loading && <p>분석중...</p>}
@@ -175,12 +206,39 @@ export default function TryVoice() {
               <h1>Detect Report</h1>
               <h2>Voice Verity는 이렇게 분석했어요.</h2>
               <div className={styles.chartContainer}>
-                <canvas id="lineChart" className={styles.chart}></canvas>
-                <canvas id="pieChart" className={styles.chart}></canvas>
+                <div>
+                  <p>구간별 Real/Fake 그래프</p>
+                  <canvas
+                    id="lineChart"
+                    style={{
+                      width: "400px",
+                      height: "200px",
+                      border: "solid 1px #000",
+                    }}
+                    className={styles.chart}
+                  ></canvas>
+                </div>
+                <div className={styles.piechart}><p>Real/Fake Ratio</p>
+                <div>
+                  <canvas
+                    id="pieChart"
+                    width="200px"
+                    height="200px"
+                    float= "right"
+                    className={styles.chart}
+                  ></canvas></div>
+                </div>
               </div>
-              <p>이 음성은 {result} 입니다.</p>
+              <div style={{ margin: "20px", fontSize: "24px" }}>▼</div>
+              <div className={styles.resultTxt}>
+                <h2>이 음성은 {result} 입니다.</h2>
+              </div>
             </div>
           )}
+          <div className={styles.plan}>
+            <h2>우리의 더 나은 서비스를 원하시나요?</h2>
+            <button onClick={handleSubscriptionPlan}>구독플랜 보기</button>
+          </div>
         </div>
       </div>
       <Footer />

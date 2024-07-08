@@ -124,13 +124,39 @@ appearance: none;
 margin: 50px;
 }
 
+.chartContainer p{
+  text-align: left;
+}
+
+
 .chartContainer {
 display: flex;
 justify-content: space-around;
+height: 350px;
+border: solid 1px #000;
+border-radius: 30px;
+align-items: center;
 }
 
 .chart {
 width: 10%; /* 차트를 좌우로 작게 조정 */
+}
+
+.chartContainer div{
+  width: 400px;
+}
+
+.resultTxt {
+  background-color: #d9d9d9;
+  border-radius: 30px;
+  border: solid 1px #000;
+  height: fit-content;
+  padding: 20px;
+}
+
+.piechart {
+  width: 300px;
+  text-align: -webkit-center;
 }
 
 .previewContext hr {
@@ -146,4 +172,17 @@ margin: 10px;
 .fontsize {
 font-size: 40px;
 font-weight: normal;
+}
+
+.plan {
+  margin-top: 100px;
+}
+
+.plan button {
+  width: 200px;
+  font-size: 20px;
+  margin: 0;
+  margin-bottom: 50px;
+  background-color: #d9d9d9;
+  color: #000;
 }
