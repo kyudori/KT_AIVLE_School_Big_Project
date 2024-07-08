@@ -1,78 +1,212 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  
-  .sidebar {
-    width: 200px;
-    background: #f8f8f8;
-    padding: 20px;
-    position: fixed;
-    height: 100%;
-  }
-  
-  .logo {
-    text-align: center;
-    margin-bottom: 50px;
-  }
-  
-  .menu {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .menu a {
-    padding: 10px 0;
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  .content {
-    margin-left: 220px;
-    padding: 20px;
-    flex: 1;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .header h1 {
-    margin: 0;
-  }
-  
-  .userInfo {
-    display: flex;
-    align-items: center;
-  }
-  
-  .userProfile {
-    display: flex;
-    align-items: center;
-  }
-  
-  .userProfile img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-  
-  .main {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  
-  .chartSection {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dashboard {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.logo {
+  cursor: pointer;
+}
+
+.logo img {
+  width: 100%;
+}
+
+.menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 20px 0 0 0;
+}
+
+.menu li {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.active {
+  border-right: 4px solid black;
+  padding-right: 10px;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerTitle {
+  display: flex;
+  flex-direction: column;
+}
+
+.headerTitle h1 {
+  font-size: 36px;
+  margin: 0;
+}
+
+.headerTitle span {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.profileImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.dropdownIcon {
+  margin-left: 10px;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.dropdownMenu ul {
+  list-style-type: none;
+  padding: 10px;
+  margin: 0;
+}
+
+.dropdownMenu li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdownMenu li:hover {
+  background-color: #f4f4f4;
+}
+
+.user > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.user > div span {
+  font-size: 14px;
+}
+
+.userName {
+  font-weight: bold;
+}
+
+.userEmail {
+  font-size: 12px;
+  color: gray;
+}
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  flex-grow: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  margin: 0;
+}
+
+.credit {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.status {
+  background-color: green;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}
+
+.trafficSummary {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.traffic, .summary {
+  width: 48%;
+}
+
+.graph {
+  background-color: #f0f0f0;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer {
+  background: rgba(221, 221, 221, 0.5);
+  color: #000;
+  min-height: 5vh;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.end {
+  font-size: 20px;
+}
+
+.right {
+  font-size: 20px;
+}
