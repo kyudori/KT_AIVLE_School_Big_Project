@@ -121,7 +121,7 @@ import os
 def user_info(request):
     user = request.user
     if request.method == 'GET':
-        profile_image_url = request.build_absolute_uri(user.profile_image.url) if user.profile_image else None
+        profile_image_url = user.profile_image.url if user.profile_image else None
         return Response({
             'email': user.email,
             'username': user.username,
@@ -130,7 +130,7 @@ def user_info(request):
             'contact': user.contact,
             'sms_marketing': user.sms_marketing,
             'email_marketing': user.email_marketing,
-            'profile_image_url': profile_image_url,
+            'profile_image': profile_image_url,
             'is_staff': user.is_staff,
         })
     elif request.method == 'PUT':
@@ -147,10 +147,11 @@ def user_info(request):
             os.makedirs(user_directory, exist_ok=True)  # 사용자 디렉토리를 생성
             fs = FileSystemStorage(location=user_directory)
             filename = fs.save(profile_image.name, profile_image)
-            user.profile_image = os.path.join('profile_images', user.username, filename)
+            file_path = os.path.join('profile_images', user.username, filename)
+            user.profile_image = file_path
 
         user.save()
-        profile_image_url = request.build_absolute_uri(user.profile_image.url) if user.profile_image else None
+        profile_image_url = user.profile_image.url if user.profile_image else None
         return Response({
             'email': user.email,
             'username': user.username,
@@ -161,6 +162,8 @@ def user_info(request):
             'email_marketing': user.email_marketing,
             'profile_image_url': profile_image_url,
             'is_staff': user.is_staff,
+            'file_name': filename,
+            'file_path': file_path
         }, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
