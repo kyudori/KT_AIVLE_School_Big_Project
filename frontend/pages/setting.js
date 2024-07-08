@@ -101,7 +101,7 @@ export default function Setting() {
                 </div>
               )}
               {apiKeyIssued && (
-                <button onClick={handleTryVoiceVerity} className={styles.button}>Voice Verity 시도</button>
+                <button onClick={handleTryVoiceVerity} className={styles.button}>Voice Verity 체험하기</button>
               )}
             </div>
           )}
