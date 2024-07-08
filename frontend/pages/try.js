@@ -141,8 +141,8 @@ export default function TryVoice() {
       if (pieChartRef.current) {
         pieChartRef.current.destroy();
       }
-      const realCount = predictions.filter((p) => p > 0.5).length;
-      const fakeCount = predictions.length - realCount;
+      const fakeCount = predictions.filter((p) => p > 0.89).length;
+      const realCount = predictions.length - fakeCount;
       const ctx2 = document.getElementById("pieChart").getContext("2d");
       pieChartRef.current = new Chart(ctx2, {
         type: "pie",
@@ -151,7 +151,7 @@ export default function TryVoice() {
           datasets: [
             {
               data: [realCount, fakeCount],
-              backgroundColor: ["#9B90D2", "#CCCCCC"],
+              backgroundColor: ["#CCCCCC", "#9B90D2"],
             },
           ],
         },
@@ -159,6 +159,15 @@ export default function TryVoice() {
           responsive: false,
         },
       });
+
+      //임시 Logic
+      const fakeRatio = (fakeCount / predictions.length) * 100;
+      if (fakeRatio > 30) {
+        setResult("Fake");
+      } else {
+        setResult("Real");
+      }
+
     }
   }, [predictions]);
 
@@ -207,7 +216,7 @@ export default function TryVoice() {
               <h2>Voice Verity는 이렇게 분석했어요.</h2>
               <div className={styles.chartContainer}>
                 <div>
-                  <p>구간별 Real/Fake 그래프</p>
+                  <p>구간별 Fake 확률 그래프</p>
                   <canvas
                     id="lineChart"
                     style={{
