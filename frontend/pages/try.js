@@ -162,13 +162,13 @@ export default function TryVoice() {
         },
       });
 
-      //임시 Logic
-      const fakeRatio = (fakeCount / predictions.length) * 100;
-      if (fakeRatio > 30) {
-        setResult("Fake");
-      } else {
-        setResult("Real");
-      }
+    //   //임시 Logic
+    //   const fakeRatio = (fakeCount / predictions.length) * 100;
+    //   if (fakeRatio > 30) {
+    //     setResult("Fake");
+    //   } else {
+    //     setResult("Real");
+    //   }
     }
   }, [predictions]);
 
