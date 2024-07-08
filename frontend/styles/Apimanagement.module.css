@@ -191,6 +191,58 @@
   justify-content: center;
 }
 
+.apiCard {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.apiCard h2 {
+  margin-top: 0;
+}
+
+.keySection {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.keyValue {
+  flex-grow: 1;
+  font-size: 18px;
+}
+
+.button {
+  margin-left: 20px;
+  padding: 8px 12px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.statusSection {
+  margin-bottom: 20px;
+}
+
+.statusSection label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.deleteButton {
+  padding: 8px 12px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .footer {
   background: rgba(221, 221, 221, 0.5);
   color: #000;

@@ -44,7 +44,7 @@ export default function Navbar() {
           <div className={styles.userSection}>
             <div className={styles.navLinks}>
               {user && user.is_staff && <a href={`${BACKEND_URL}/admin`} target="_blank" rel="noopener noreferrer">Admin</a>}
-              <Link href="/api-status">API</Link>
+              <Link href="/api-management">API</Link>
               <Link href="/team">Team</Link>
               <Link href="/docs">Docs</Link>
             </div>
@@ -60,7 +60,7 @@ export default function Navbar() {
           </div>
         ) : (
           <div className={styles.navLinks}>
-            <Link href="/api-status">API</Link>
+            <Link href="/api-management">API</Link>
             <Link href="/team">Team</Link>
             <Link href="/docs">Docs</Link>
             <Link href="/login">Login</Link>
