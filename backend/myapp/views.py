@@ -278,58 +278,71 @@ def fail_payment(request):
 
 load_dotenv()
 
-FLASK_URL = os.getenv('FLASK_URL')
+FLASK_URL = 'http://220.149.235.232:8000'
+
+ALLOWED_EXTENSIONS = ['.wav', '.mp3', '.m4a']
+MAX_FILE_SIZE_MB = 100
+MAX_UPLOADS_PER_DAY = 6060
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_audio(request):
-    file = request.FILES['file']
-    fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'audio_files'))
-    filename = fs.save(file.name, file)
-    file_url = fs.url(filename)
+    file = request.FILES.get('file')
 
-    # 사용자 API 키 가져오기
-    try:
-        api_key_obj = APIKey.objects.get(user=request.user)
-    except APIKey.DoesNotExist:
-        return Response({'error': 'User does not have an API key'}, status=status.HTTP_400_BAD_REQUEST)
+    if not file:
+        return Response({'error': 'No file uploaded'}, status=status.HTTP_400_BAD_REQUEST)
 
-    if api_key_obj.credits <= 0:
-        return Response({'error': 'Insufficient credits'}, status=401)
+    # 파일 확장자 및 크기 검증
+    file_extension = os.path.splitext(file.name)[1].lower()
+    file_size_mb = file.size / (1024 * 1024)
 
-    api_key_obj.credits -= 1
-    api_key_obj.last_used_at = timezone.now()
-    api_key_obj.save()
+    if file_extension not in ALLOWED_EXTENSIONS:
+        return Response({'error': 'Invalid file extension. Allowed extensions are: .wav, .mp3, .m4a'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if file_size_mb > MAX_FILE_SIZE_MB:
+        return Response({'error': f'File size exceeds {MAX_FILE_SIZE_MB} MB limit'}, status=status.HTTP_400_BAD_REQUEST)
+
+    today = timezone.now().date()
+    upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
+
+    if upload_history.upload_count >= MAX_UPLOADS_PER_DAY:
+        return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # S3에 파일 업로드
+    file_path = default_storage.save(f'audio_files/{file.name}', file)
+    file_url = default_storage.url(file_path)
 
     # Flask 서버에 파일 경로 전송
     try:
-        response = requests.post(f"{FLASK_URL}/api/web-analyze", json={'file_path': os.path.join(settings.MEDIA_ROOT, 'audio_files', filename)}, headers={'Authorization': f'Bearer {api_key_obj.key}'})
+        response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url})
         response.raise_for_status()
         result = response.json().get('result', 'Error')
+        predictions = response.json().get('predictions', [])
     except requests.RequestException as e:
-        print(f"Error contacting Flask server: {e}")
         result = "Error in Flask server response"
+        predictions = []
 
     # DB에 저장
     audio_file = AudioFile(
         user=request.user,
         file_name=file.name,
         file_path=file_url,
+        file_size=file.size,
+        file_extension=file_extension,
         analysis_result=result
     )
     audio_file.save()
 
     # 업로드 기록 업데이트
-    today = date.today()
-    upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
     upload_history.upload_count += 1
     upload_history.save()
 
     return Response({
         'file_name': file.name,
         'file_path': file_url,
-        'analysis_result': result
-    }, status=201)
+        'analysis_result': result,
+        'predictions': predictions
+    }, status=status.HTTP_201_CREATED)
     
 def generate_api_key():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=32))

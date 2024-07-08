@@ -84,10 +84,12 @@ class AudioFile(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     file_name = models.CharField(max_length=255)
     file_path = models.CharField(max_length=255)
+    file_size = models.PositiveIntegerField()
+    file_extension = models.CharField(max_length=10)
     analysis_result = models.CharField(max_length=255)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def str(self):
         return self.file_name
 
 class UploadHistory(models.Model):
