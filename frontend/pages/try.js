@@ -23,15 +23,20 @@ export default function TryVoice() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("You must be logged in to access this page");
-      router.push("/login");
-    }
+    // No need to check for token here
   }, [router]);
 
   const handleSubscriptionPlan = () => {
     router.push("/plan");
+  };
+
+  const handleUploadClick = (e) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("로그인 후, 이용 가능합니다.");
+      e.preventDefault();
+      return;
+    }
   };
 
   const handleFileChange = (e) => {
@@ -197,6 +202,7 @@ export default function TryVoice() {
               <input
                 id="upload"
                 type="file"
+                onClick={handleUploadClick}
                 onChange={handleFileChange}
                 className={styles.uploadHidden}
               />
