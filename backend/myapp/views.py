@@ -121,7 +121,7 @@ import os
 def user_info(request):
     user = request.user
     if request.method == 'GET':
-        profile_image_url = user.profile_image.url if user.profile_image else None
+        profile_image_url = request.build_absolute_uri(user.profile_image.url) if user.profile_image else None
         return Response({
             'email': user.email,
             'username': user.username,
@@ -150,7 +150,7 @@ def user_info(request):
             user.profile_image = os.path.join('profile_images', user.username, filename)
 
         user.save()
-        profile_image_url = user.profile_image.url if user.profile_image else None
+        profile_image_url = request.build_absolute_uri(user.profile_image.url) if user.profile_image else None
         return Response({
             'email': user.email,
             'username': user.username,
