@@ -63,7 +63,7 @@ export default function TryVoice() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
-      alert("Please select a file");
+      alert("음성 파일을 업로드가 필요합니다.");
       return;
     }
     setLoading(true); // 로딩 시작
