@@ -264,12 +264,18 @@ def create_payment(request):
 @permission_classes([IsAuthenticated])
 def approve_payment(request):
     user = request.user
+    print("User:", user)  # 디버깅 로그
 
     # 세션에서 tid 가져오기
     tid = request.session.get('tid')
     print("Retrieved TID from session:", tid)  # 디버깅 로그
     if not tid:
         return Response({'error': 'Transaction ID not found in session'}, status=status.HTTP_400_BAD_REQUEST)
+
+    pg_token = request.GET.get('pg_token')
+    print("PG Token:", pg_token)  # 디버깅 로그
+    if not pg_token:
+        return Response({'error': 'pg_token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
     kakao_api_url = 'https://open-api.kakaopay.com/online/v1/payment/approve'
     headers = {
@@ -281,12 +287,13 @@ def approve_payment(request):
         'tid': tid,
         'partner_order_id': user.email,
         'partner_user_id': user.username,
-        'pg_token': request.GET.get('pg_token'),
+        'pg_token': pg_token,
     }
 
     try:
         response = requests.post(kakao_api_url, headers=headers, data=json.dumps(params))
         response_data = response.json()
+        print("Response Data:", response_data)  # 디버깅 로그
 
         if 'aid' not in response_data:
             return Response({'error': 'Failed to approve payment', 'details': response_data}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
