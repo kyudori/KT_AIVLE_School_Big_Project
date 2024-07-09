@@ -40,7 +40,7 @@ const PlanSuccess = () => {
     <div className={styles.container}>
       <Navbar />
       <div className={styles.main}>
-        <h1>Payment Success</h1>
+        <h1>결제 성공</h1>
         {paymentDetails ? (
           <div>
             <p>결제가 완료되었어요.</p>
@@ -61,7 +61,9 @@ const PlanSuccess = () => {
       </div>
       <div className={styles.contactUs}>
         <h2>Contact Us</h2>
-        <button className={styles.button}>Contact Support</button>
+        <Link href="/contact">
+          <button className={styles.button}>Contact Support</button>
+        </Link>
       </div>
       <Footer />
     </div>
