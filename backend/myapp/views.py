@@ -285,7 +285,7 @@ def approve_payment(request):
 
     kakao_api_url = 'https://open-api.kakaopay.com/online/v1/payment/approve'
     headers = {
-        'Authorization': f'SECRET_KEY {settings.KAKAO_SECRET_KEY}',
+        'Authorization': f'SECRET_KEY {settings.KAKAO_DEV_SECRET_KEY}',
         'Content-Type': 'application/json',
     }
     params = {
