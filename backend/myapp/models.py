@@ -66,6 +66,7 @@ class Payment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, default='initiated')
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user} - {self.plan} - {self.tid}"
