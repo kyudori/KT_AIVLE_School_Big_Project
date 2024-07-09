@@ -23,7 +23,6 @@ const PlanCard = ({ plan }) => {
           headers: {
             Authorization: `Token ${token}`,
           },
-          withCredentials: true, // 세션 인증을 위해 필요
         }
       );
       const { next_redirect_pc_url, tid } = response.data;

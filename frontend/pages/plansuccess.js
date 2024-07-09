@@ -21,7 +21,6 @@ const PlanSuccess = () => {
             headers: {
               Authorization: `Token ${token}`,
             },
-            withCredentials: true, // 세션 인증을 위해 필요
           });
           setPaymentDetails(response.data);
         } catch (error) {
