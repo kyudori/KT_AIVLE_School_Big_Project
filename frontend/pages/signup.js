@@ -115,7 +115,7 @@ export default function Signup() {
       <div style={{ padding: "0 200px", background: "#fff" }}>
         <Navbar />
       </div>
-      <div style={{ height: "50px" }} />
+      <div style={{ height: "150px" }} />
       <div className={styles.main}>
         <div className={styles.logoContainer}>
           <Image
@@ -212,7 +212,7 @@ export default function Signup() {
             <div className={styles.progress}>
               <span style={{ margin: "0 15px" }}>2 / 2</span>
               <div className={styles.progressBar}>
-                <div className={styles.progressFilled} />
+                <div className={styles.progressFilled2} />
               </div>
             </div>
             <h1 className={styles.title}>Voice Verity</h1>
@@ -288,7 +288,7 @@ export default function Signup() {
           </div>
         )}
       </div>
-      <div style={{ height: "50px" }} />
+      <div style={{ height: "150px" }} />
       <Footer />
     </div>
   );
