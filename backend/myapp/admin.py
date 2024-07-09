@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, SubscriptionPlan, UserSubscription, PaymentHistory, APIKey, AudioFile, UploadHistory
+from .models import CustomUser, SubscriptionPlan, UserSubscription, PaymentHistory, APIKey, AudioFile, UploadHistory, Payment
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -42,4 +42,9 @@ class UploadHistoryAdmin(admin.ModelAdmin):
     list_display = ('user', 'upload_date', 'upload_count')
     search_fields = ('user__username',)
     list_filter = ('upload_date',)
-    unique_together = ('user', 'upload_date')
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'plan', 'tid', 'status', 'amount', 'created_at', 'updated_at')
+    search_fields = ('user__username', 'tid')
+    list_filter = ('status', 'created_at', 'updated_at')
