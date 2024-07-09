@@ -17,7 +17,8 @@ export default function Navbar() {
       axios.get(`${BACKEND_URL}/api/user-info/`, {
         headers: {
           'Authorization': `Token ${token}`
-        }
+        },
+        withCredentials: true,  // 세션 인증을 위해 필요
       })
       .then(response => {
         setUser(response.data);
