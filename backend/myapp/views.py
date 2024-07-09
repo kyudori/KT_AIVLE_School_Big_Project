@@ -206,6 +206,8 @@ def subscription_plans(request):
 # 설정된 로거 사용
 logger = logging.getLogger(__name__)
 
+import uuid
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_payment(request):
@@ -246,6 +248,7 @@ def create_payment(request):
             user=request.user,
             plan=plan,
             tid=response_data['tid'],
+            partner_order_id=partner_order_id,
             amount=plan.price,
             status='initiated'
         )
@@ -263,7 +266,7 @@ def create_payment(request):
         })
     except requests.RequestException as e:
         return Response({'error': 'Failed to initiate payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -273,7 +276,7 @@ def approve_payment(request):
     if not pg_token:
         return Response({'error': 'pg_token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # 가장 최근의 initiated 상태의 payment를 가져오기
+    # tid를 DB에서 가져오기
     payment = Payment.objects.filter(user=user, status='initiated').order_by('-created_at').first()
     if not payment:
         return Response({'error': 'Transaction ID not found'}, status=status.HTTP_400_BAD_REQUEST)
@@ -282,13 +285,13 @@ def approve_payment(request):
 
     kakao_api_url = 'https://open-api.kakaopay.com/online/v1/payment/approve'
     headers = {
-        'Authorization': f'SECRET_KEY {settings.KAKAO_DEV_SECRET_KEY}',
+        'Authorization': f'SECRET_KEY {settings.KAKAO_SECRET_KEY}',
         'Content-Type': 'application/json',
     }
     params = {
         'cid': 'TC0ONETIME',
         'tid': tid,
-        'partner_order_id': user.email,
+        'partner_order_id': payment.partner_order_id,
         'partner_user_id': user.username,
         'pg_token': pg_token,
     }
@@ -311,6 +314,7 @@ def approve_payment(request):
         return Response({'status': 'Payment approved successfully'})
     except requests.RequestException as e:
         return Response({'error': 'Failed to approve payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 @api_view(['GET'])
