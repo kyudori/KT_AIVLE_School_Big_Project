@@ -311,11 +311,14 @@ def approve_payment(request):
         UserSubscription.objects.create(user=user, plan=payment.plan, daily_credits=payment.plan.api_calls_per_day, total_credits=payment.plan.credits)
         PaymentHistory.objects.create(user=user, plan=payment.plan, amount=payment.amount)
 
-        return Response({'status': 'Payment approved successfully'})
+        return Response({
+            'status': 'Payment approved successfully',
+            'plan_name': payment.plan.name,
+            'amount': payment.amount,
+            'payment_date': payment.updated_at
+        })
     except requests.RequestException as e:
         return Response({'error': 'Failed to approve payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

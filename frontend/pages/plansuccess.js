@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import Link from 'next/link';
+import '../styles/Planafter.module.css';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -35,9 +37,9 @@ const PlanSuccess = () => {
   }, [pg_token, router]);
 
   return (
-    <div>
+    <div className="container">
       <Navbar />
-      <div>
+      <div className="main">
         <h1>Payment Success</h1>
         {paymentDetails ? (
           <div>
@@ -49,6 +51,7 @@ const PlanSuccess = () => {
             {paymentDetails.payment_date && (
               <p>Date: {new Date(paymentDetails.payment_date).toLocaleString()}</p>
             )}
+            <Link href="/docs">Go to Docs</Link>
           </div>
         ) : (
           <p>Loading your payment details...</p>
