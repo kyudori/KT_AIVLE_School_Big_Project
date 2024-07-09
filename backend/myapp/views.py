@@ -224,9 +224,9 @@ def create_payment(request):
         'quantity': 1,
         'total_amount': int(plan.price),
         'tax_free_amount': 0,
-        'approval_url': settings.APPROVAL_URL,
-        'cancel_url': settings.CANCEL_URL,
-        'fail_url': settings.FAIL_URL,
+        'approval_url': 'http://voice-verity.com/plansuccess',
+        'cancel_url': 'http://voice-verity.com/plancancel',
+        'fail_url': 'http://voice-verity.com/planfail',
     }
 
     try:
@@ -252,6 +252,8 @@ def create_payment(request):
 
         # Return all possible redirect URLs for flexibility
         return Response({
+            'next_redirect_app_url': response_data.get('next_redirect_app_url'),
+            'next_redirect_mobile_url': response_data.get('next_redirect_mobile_url'),
             'next_redirect_pc_url': response_data.get('next_redirect_pc_url')
         })
     except requests.RequestException as e:
