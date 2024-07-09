@@ -68,6 +68,13 @@
 }
 
 .progressFilled {
+  width: 50%;
+  height: 100%;
+  background: #666;
+  border-radius: 30px;
+}
+
+.progressFilled2 {
   width: 100%;
   height: 100%;
   background: #666;

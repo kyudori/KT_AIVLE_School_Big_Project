@@ -85,7 +85,7 @@ export default function TryVoice() {
       const predictions = response.data.predictions;
       const fakeCount = response.data.fake_cnt;
       const realCount = response.data.real_cnt;
-      
+
       setResult(analysisResult);
       setPredictions(predictions);
       setFakeCount(fakeCount);
@@ -176,8 +176,10 @@ export default function TryVoice() {
 
   return (
     <div className={styles.previewContext}>
-      <div className={styles.mainContent}>
+      <div style={{ padding: "0 200px", background: "#fff" }}>
         <Navbar />
+      </div>
+      <div className={styles.mainContent}>
         <div className={styles.block}>
           <div style={{ height: "100px" }} />
           <h1>Try Voice Verity</h1>
