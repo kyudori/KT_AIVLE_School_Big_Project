@@ -1,6 +1,9 @@
 import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 class MyApp extends App {
   render() {
