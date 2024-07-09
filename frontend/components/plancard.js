@@ -12,7 +12,7 @@ const PlanCard = ({ plan }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        alert("Please log in to continue.");
+        alert("로그인이 필요합니다.");
         return;
       }
 
