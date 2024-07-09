@@ -11,6 +11,11 @@ const PlanCard = ({ plan }) => {
   const handlePayment = async (price, planId) => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please log in to continue.");
+        return;
+      }
+
       const response = await axios.post(
         `${BACKEND_URL}/api/payments/create/`,
         { plan_id: planId },

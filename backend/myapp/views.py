@@ -250,7 +250,10 @@ def create_payment(request):
         request.session.modified = True  # 세션이 변경되었음을 명시적으로 표시
         print("Session TID:", request.session['tid'])  # 디버깅 로그
 
-        return Response({'next_redirect_pc_url': response_data['next_redirect_pc_url']})
+        # Return all possible redirect URLs for flexibility
+        return Response({
+            'next_redirect_pc_url': response_data.get('next_redirect_pc_url')
+        })
     except requests.RequestException as e:
         return Response({'error': 'Failed to initiate payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     

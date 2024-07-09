@@ -13,21 +13,26 @@ const PlanSuccess = () => {
 
   useEffect(() => {
     const approvePayment = async () => {
-      if (pg_token) {
+      const token = localStorage.getItem('token');
+      if (pg_token && token) {
         try {
           const response = await axios.get(`${BACKEND_URL}/api/payments/approval/`, {
             params: { pg_token },
+            headers: {
+              Authorization: `Token ${token}`,
+            },
             withCredentials: true, // 세션 인증을 위해 필요
           });
           setPaymentDetails(response.data);
         } catch (error) {
           console.error('Failed to approve payment:', error);
+          router.push('/planfail'); // 결제 실패 페이지로 이동
         }
       }
     };
 
     approvePayment();
-  }, [pg_token]);
+  }, [pg_token, router]);
 
   return (
     <div>
@@ -38,7 +43,7 @@ const PlanSuccess = () => {
           <div>
             <p>Your payment was successful.</p>
             <p>Plan: {paymentDetails.plan_name}</p>
-            <p>Amount: {(paymentDetails.amount / 100).toLocaleString('ko-KR')}원</p>
+            <p>Amount: {paymentDetails.amount.toLocaleString('ko-KR')}원</p>
             <p>Date: {new Date(paymentDetails.payment_date).toLocaleString()}</p>
           </div>
         ) : (
