@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
-import uuid 
+
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=150, unique=False)
     email = models.EmailField(unique=True)
@@ -62,11 +62,12 @@ class Payment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
     tid = models.CharField(max_length=100, unique=True)
-    partner_order_id = models.CharField(max_length=100, default=uuid.uuid4, unique=True)  # default 값 추가
+    partner_order_id = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, default='initiated')
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user} - {self.plan} - {self.tid}"
