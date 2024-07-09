@@ -27,6 +27,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import redirect, render
 import logging
+import uuid
 from urllib.parse import urlencode
 from django.contrib.auth import login as django_login
 
@@ -216,9 +217,13 @@ def create_payment(request):
         'Authorization': f'SECRET_KEY {settings.KAKAO_DEV_SECRET_KEY}',
         'Content-Type': 'application/json',
     }
+    
+    # 고유한 partner_order_id 생성
+    partner_order_id = f"{request.user.email}_{uuid.uuid4()}"
+
     payload = {
         'cid': 'TC0ONETIME',  # 테스트용 가맹점 코드
-        'partner_order_id': request.user.email,
+        'partner_order_id': partner_order_id,
         'partner_user_id': request.user.username,
         'item_name': plan.name,
         'quantity': 1,
@@ -245,6 +250,11 @@ def create_payment(request):
             status='initiated'
         )
 
+        # 세션에 tid 저장
+        request.session['tid'] = response_data['tid']
+        request.session.modified = True  # 세션이 변경되었음을 명시적으로 표시
+        print("Session TID:", request.session['tid'])  # 디버깅 로그
+
         # Return all possible redirect URLs for flexibility
         return Response({
             'next_redirect_app_url': response_data.get('next_redirect_app_url'),
@@ -263,11 +273,12 @@ def approve_payment(request):
     if not pg_token:
         return Response({'error': 'pg_token is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # tid를 DB에서 가져오기
-    payment = get_object_or_404(Payment, user=user, status='initiated')
-    tid = payment.tid
-    if not tid:
+    # 가장 최근의 initiated 상태의 payment를 가져오기
+    payment = Payment.objects.filter(user=user, status='initiated').order_by('-created_at').first()
+    if not payment:
         return Response({'error': 'Transaction ID not found'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    tid = payment.tid
 
     kakao_api_url = 'https://open-api.kakaopay.com/online/v1/payment/approve'
     headers = {
@@ -300,6 +311,7 @@ def approve_payment(request):
         return Response({'status': 'Payment approved successfully'})
     except requests.RequestException as e:
         return Response({'error': 'Failed to approve payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
