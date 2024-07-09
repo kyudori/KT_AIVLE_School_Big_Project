@@ -43,8 +43,12 @@ const PlanSuccess = () => {
           <div>
             <p>Your payment was successful.</p>
             <p>Plan: {paymentDetails.plan_name}</p>
-            <p>Amount: {paymentDetails.amount.toLocaleString('ko-KR')}원</p>
-            <p>Date: {new Date(paymentDetails.payment_date).toLocaleString()}</p>
+            {paymentDetails.amount !== undefined && (
+              <p>Amount: {paymentDetails.amount.toLocaleString('ko-KR')}원</p>
+            )}
+            {paymentDetails.payment_date && (
+              <p>Date: {new Date(paymentDetails.payment_date).toLocaleString()}</p>
+            )}
           </div>
         ) : (
           <p>Loading your payment details...</p>
