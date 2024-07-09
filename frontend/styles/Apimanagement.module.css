@@ -1,7 +1,14 @@
 .container {
+  font-family: fontA;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+
+  min-width: 90vw;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .dashboard {
@@ -9,40 +16,78 @@
   flex: 1;
 }
 
+.dashboard h3 {
+  font-size: 28px;
+  font-weight: normal;
+  margin: 15px 0;
+}
+
 .sidebar {
-  width: 200px;
-  background-color: #f4f4f4;
+  min-width: 200px;
+  width: 250px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border: solid 1px;
+  margin: 20px 0;
 }
 
 .logo {
+  text-align: center;
   cursor: pointer;
 }
 
 .logo img {
-  width: 100%;
+  width: 50%;
+}
+
+.logo h2 {
+  margin: 0;
+  margin-top: 5px;
+  font-size: 28px;
+  font-weight: normal;
 }
 
 .menu {
+  font-size: 20px;
+  font-weight: normal;
   list-style-type: none;
   padding: 0;
   margin: 20px 0 0 0;
 }
 
 .menu li {
+  height: 80px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
   margin: 10px 0;
+  margin-left: -20px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.activeli {
+  outline: solid 1px;
 }
 
 .active {
-  border-right: 4px solid black;
-  padding-right: 10px;
+  text-align: end;
+  left: 200px;
+  height: 50px;
+  position: absolute;
+  width: 5px;
+  border-radius: 10px;
+  background-color: #9c9c9c;
 }
 
 .main {
+  width: 100%;
+  height: 100%;
   flex-grow: 1;
   padding: 20px;
   display: flex;
@@ -52,7 +97,7 @@
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .headerTitle {
@@ -61,13 +106,15 @@
 }
 
 .headerTitle h1 {
+  font-weight: normal;
   font-size: 36px;
   margin: 0;
+  margin-top: 30px;
 }
 
 .headerTitle span {
+  margin: 10px 0;
   font-size: 24px;
-  font-weight: bold;
 }
 
 .user {
@@ -142,16 +189,18 @@
 .row {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  border-radius: 10px;
+  border: solid 1px;
+  min-width: 800px;
 }
 
 .card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
   padding: 20px;
   flex-grow: 1;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.cardcontent {
+  border-right: dashed 2px;
+  height: 100%;
 }
 
 .card h3 {
@@ -176,27 +225,36 @@
 .trafficSummary {
   display: flex;
   justify-content: space-between;
+  min-width: 800px;
   width: 100%;
+  height: 500px;
+  border-radius: 10px;
+  border: solid 1px;
 }
 
-.traffic, .summary {
-  width: 48%;
+.traffic {
+  margin: 10px 20px 0 40px;
+  width: 70%;
+}
+
+.summary {
+  margin: 10px 40px 0 20px;
+  width: 30%;
 }
 
 .graph {
   background-color: #f0f0f0;
-  height: 200px;
+  height: 380px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .apiCard {
-  background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #000000;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 800px;
 }
 
 .apiCard h2 {
@@ -204,35 +262,62 @@
 }
 
 .keySection {
+  margin: 20px;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  width: 600px;
+  justify-content: space-between;
 }
 
 .keyValue {
-  flex-grow: 1;
+  font-family: fontA;
   font-size: 18px;
+  border: none;
+  border-bottom: solid 1px #717171;
 }
 
 .button {
+  font-family: fontA;
+  font-size: 16px;
   margin-left: 20px;
   padding: 8px 12px;
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  background: none;
+  border: solid 1px;
+  border-radius: 15px;
   cursor: pointer;
 }
 
 .statusSection {
-  margin-bottom: 20px;
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  width: 500px;
+  justify-content: space-between;
+  font-size: 20px;
 }
 
-.statusSection label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
+.statusSection input[type="radio"] {
+  background-color: #fff;
+  border: 2px solid #ccc;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  margin-right: 10px;
+  appearance: none;
+  border-radius: 50%;
 }
+
+.statusSection input[type="radio"]:checked {
+  background-color: #717171;
+}
+
+.use {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 
 .deleteButton {
   padding: 8px 12px;
