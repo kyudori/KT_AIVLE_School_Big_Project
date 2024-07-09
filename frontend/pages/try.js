@@ -187,62 +187,66 @@ export default function TryVoice() {
             Voice Verity에서는 실시간 통화 중 딥보이스를 감지할 수 있습니다.
           </h2>
           <h2>Fake Voice를 탐지하는 순간을 체험해보세요.</h2>
-          <form onSubmit={handleSubmit}>
-            <div className={styles.form}>
-              {fileName ? (
-                <span
-                  className={styles.fileName}
-                  onClick={() => document.getElementById("upload").click()}
-                >
-                  {fileName}
-                </span>
-              ) : (
-                <label htmlFor="upload" className={styles.uploadLabel}>
-                  <span className={styles.uploadIcon}></span>
-                </label>
-              )}
-              <input
-                id="upload"
-                type="file"
-                onClick={handleUploadClick}
-                onChange={handleFileChange}
-                className={styles.uploadHidden}
-              />
-            </div>
-            <h2>음성파일을 업로드한 뒤, Start Detection 버튼을 눌러주세요</h2>
-            <p style={{ color: "#666" }}>
-              10MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)
-            </p>
-            <button type="submit">▶ Start Detection</button>
-          </form>
+          <div style={{ textAlign: "-webkit-center" }}>
+            <form onSubmit={handleSubmit}>
+              <div className={styles.form}>
+                {fileName ? (
+                  <span
+                    className={styles.fileName}
+                    onClick={() => document.getElementById("upload").click()}
+                  >
+                    {fileName}
+                  </span>
+                ) : (
+                  <label htmlFor="upload" className={styles.uploadLabel}>
+                    <span className={styles.uploadIcon}></span>
+                  </label>
+                )}
+                <input
+                  id="upload"
+                  type="file"
+                  onClick={handleUploadClick}
+                  onChange={handleFileChange}
+                  className={styles.uploadHidden}
+                />
+              </div>
+              <h2>음성파일을 업로드한 뒤, Start Detection 버튼을 눌러주세요</h2>
+              <p style={{ color: "#666" }}>
+                10MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)
+              </p>
+              <button type="submit">▶ Start Detection</button>
+            </form>
+          </div>
           {loading && <p>분석중...</p>}
           {predictions.length > 0 && (
             <div className={styles.resultContext}>
               <h1>Detect Report</h1>
               <h2>Voice Verity는 이렇게 분석했어요.</h2>
-              <div className={styles.chartContainer}>
-                <div>
-                  <p>구간별 Fake 확률 그래프(0(R) ~ 1(F))</p>
-                  <canvas
-                    id="lineChart"
-                    style={{
-                      width: "400px",
-                      height: "200px",
-                      border: "solid 1px #000",
-                    }}
-                    className={styles.chart}
-                  ></canvas>
-                </div>
-                <div className={styles.piechart}>
-                  <p>Real/Fake Ratio</p>
+              <div style={{ textAlign: "-webkit-center" }}>
+                <div className={styles.chartContainer}>
                   <div>
+                    <p>구간별 Fake 확률 그래프(0(R) ~ 1(F))</p>
                     <canvas
-                      id="pieChart"
-                      width="200px"
-                      height="200px"
-                      float="right"
+                      id="lineChart"
+                      style={{
+                        width: "400px",
+                        height: "200px",
+                        border: "solid 1px #000",
+                      }}
                       className={styles.chart}
                     ></canvas>
+                  </div>
+                  <div className={styles.piechart}>
+                    <p>Real/Fake Ratio</p>
+                    <div>
+                      <canvas
+                        id="pieChart"
+                        width="200px"
+                        height="200px"
+                        float="right"
+                        className={styles.chart}
+                      ></canvas>
+                    </div>
                   </div>
                 </div>
               </div>
