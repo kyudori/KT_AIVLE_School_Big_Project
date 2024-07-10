@@ -8,78 +8,78 @@ import styles from '../styles/Write.module.css';
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Write() {
-  const [newPost, setNewPost] = useState({ title: '', content: '', is_notice: false, is_public: true });
-  const [user, setUser] = useState(null);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [isNotice, setIsNotice] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const router = useRouter();
+  const { id } = router.query;
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      axios.get(`${BACKEND_URL}/api/user-info/`, {
-        headers: { 'Authorization': `Token ${token}` }
-      })
-      .then(response => setUser(response.data))
-      .catch(error => console.error('Error fetching user info', error));
-    } else {
-      router.push('/login');
+    if (id) {
+      setIsEditMode(true);
+      fetchPost(id);
     }
-  }, []);
+  }, [id]);
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setNewPost({ ...newPost, [name]: type === 'checkbox' ? checked : value });
+  const fetchPost = (id) => {
+    const token = localStorage.getItem('token');
+    axios.get(`${BACKEND_URL}/api/posts/${id}/`, {
+      headers: { 'Authorization': `Token ${token}` }
+    })
+    .then(response => {
+      const post = response.data;
+      setTitle(post.title);
+      setContent(post.content);
+      setIsNotice(post.is_notice);
+    })
+    .catch(error => console.error('Error fetching post', error));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+    const data = { title, content, is_notice: isNotice };
     const headers = { 'Authorization': `Token ${token}` };
 
-    axios.post(`${BACKEND_URL}/api/posts/`, newPost, { headers })
-      .then(() => router.push('/contact'))
-      .catch(error => console.error('Error creating post', error));
+    if (isEditMode) {
+      axios.put(`${BACKEND_URL}/api/posts/${id}/`, data, { headers })
+        .then(() => router.push(`/posts/${id}`))
+        .catch(error => console.error('Error updating post', error));
+    } else {
+      axios.post(`${BACKEND_URL}/api/posts/`, data, { headers })
+        .then(response => router.push(`/posts/${response.data.id}`))
+        .catch(error => console.error('Error creating post', error));
+    }
   };
 
   return (
     <div className={styles.container}>
       <Navbar />
-      <div className={styles.main}>
-        <h1>글쓰기</h1>
+      <div className={styles.content}>
+        <h1>{isEditMode ? 'Edit Post' : 'Write a Post'}</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
           <input 
             type="text" 
-            name="title" 
-            value={newPost.title} 
-            onChange={handleInputChange} 
             placeholder="Title" 
+            value={title} 
+            onChange={(e) => setTitle(e.target.value)} 
             required 
           />
           <textarea 
-            name="content" 
-            value={newPost.content} 
-            onChange={handleInputChange} 
             placeholder="Content" 
+            value={content} 
+            onChange={(e) => setContent(e.target.value)} 
             required 
-          ></textarea>
-          {user && user.is_staff && (
-            <label>
-              <input 
-                type="checkbox" 
-                name="is_notice" 
-                checked={newPost.is_notice} 
-                onChange={handleInputChange} 
-              /> 공지사항으로 설정
-            </label>
-          )}
+          />
           <label>
             <input 
               type="checkbox" 
-              name="is_public" 
-              checked={newPost.is_public} 
-              onChange={handleInputChange} 
-            /> 전체 공개
+              checked={isNotice} 
+              onChange={(e) => setIsNotice(e.target.checked)} 
+            /> 공지사항
           </label>
-          <button type="submit">Post</button>
+          <button type="submit">{isEditMode ? 'Update' : 'Submit'}</button>
         </form>
       </div>
       <Footer />

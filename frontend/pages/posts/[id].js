@@ -101,7 +101,7 @@ export default function PostDetail() {
       <Navbar />
       <div className={styles.main}>
         <button onClick={handleBackClick} className={styles.backButton}>뒤로가기</button>
-        <h1>{post.title}</h1>
+        <h1 className={post.is_notice ? styles.noticeTitle : ''}>{post.title}</h1>
         <div className={styles.meta}>
           <span>By {post.author_name}</span>
           <span>{new Date(post.created_at).toLocaleString()}</span>
@@ -120,20 +120,43 @@ export default function PostDetail() {
           <h2>Comments</h2>
           {post.comments.map(comment => (
             <div key={comment.id} className={styles.comment}>
-              <p>{comment.content}</p>
-              <div className={styles.meta}>
-                <span>By {comment.author_name}</span>
-                <span>{new Date(comment.created_at).toLocaleString()}</span>
-                {user && (user.is_staff || user.id === comment.author_id) && (
-                  <div className={styles.actions}>
-                    <button onClick={() => handleCommentEdit(comment)}>Edit</button>
-                    <button onClick={() => handleCommentDelete(comment.id)}>Delete</button>
+              {editingComment && editingComment.id === comment.id ? (
+                <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
+                  <textarea 
+                    name="content" 
+                    value={newComment.content} 
+                    onChange={handleCommentChange} 
+                    required 
+                  ></textarea>
+                  <label>
+                    <input 
+                      type="checkbox" 
+                      name="is_public" 
+                      checked={newComment.is_public} 
+                      onChange={handleCommentChange} 
+                    /> 전체 공개
+                  </label>
+                  <button type="submit">Update Comment</button>
+                  <button type="button" onClick={() => setEditingComment(null)}>Cancel</button>
+                </form>
+              ) : (
+                <div>
+                  <p>{comment.content}</p>
+                  <div className={styles.meta}>
+                    <span>By {comment.author_name}</span>
+                    <span>{new Date(comment.created_at).toLocaleString()}</span>
+                    {user && (user.is_staff || user.id === comment.author_id) && (
+                      <div className={styles.actions}>
+                        <button onClick={() => handleCommentEdit(comment)}>Edit</button>
+                        <button onClick={() => handleCommentDelete(comment.id)}>Delete</button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           ))}
-          {user && (
+          {user && !editingComment && (
             <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
               <textarea 
                 name="content" 
@@ -150,7 +173,7 @@ export default function PostDetail() {
                   onChange={handleCommentChange} 
                 /> 전체 공개
               </label>
-              <button type="submit">{editingComment ? 'Update Comment' : 'Post Comment'}</button>
+              <button type="submit">Post Comment</button>
             </form>
           )}
         </div>
