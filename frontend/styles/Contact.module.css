@@ -10,33 +10,35 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-}
-
-.main {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 20px;
 }
 
-.main h1 {
+.content h1 {
   font-size: 32px;
   margin-bottom: 20px;
   color: #333;
 }
 
-.main p {
-  font-size: 18px;
-  color: #666;
-  text-align: center;
+.writeButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+  align-self: flex-end;
+}
+
+.writeButton:hover {
+  background-color: #0056b3;
 }
 
 .table {
   width: 100%;
   max-width: 800px;
-  margin: 20px 0;
   border-collapse: collapse;
 }
 
@@ -48,43 +50,17 @@
 
 .table th {
   background-color: #f2f2f2;
+  color: black;
 }
 
-.noticeRow {
-  background-color: #ffeb3b;
-}
-
-.writeButtonContainer {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  max-width: 800px;
-}
-
-.writeButton {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
+.table tr {
   cursor: pointer;
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
+.table tr:hover {
+  background-color: #ddd;
 }
 
-.pageButton {
-  padding: 10px;
-  margin: 0 5px;
-  cursor: pointer;
-  border: 1px solid #ddd;
-  background-color: white;
-}
-
-.pageButton:disabled {
-  background-color: #f0f0f0;
-  cursor: not-allowed;
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
 }

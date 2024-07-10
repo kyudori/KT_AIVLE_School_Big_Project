@@ -77,6 +77,19 @@ export default function PostDetail() {
       .catch(error => console.error('Error deleting comment', error));
   };
 
+  const handlePostEdit = () => {
+    router.push(`/write?id=${post.id}`);
+  };
+
+  const handlePostDelete = () => {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+
+    axios.delete(`${BACKEND_URL}/api/posts/${id}/`, { headers })
+      .then(() => router.push('/contact'))
+      .catch(error => console.error('Error deleting post', error));
+  };
+
   if (!post) return <div>Loading...</div>;
 
   return (
@@ -88,6 +101,12 @@ export default function PostDetail() {
           <span>By {post.author_name}</span>
           <span>{new Date(post.created_at).toLocaleString()}</span>
           <span>Views: {post.views}</span>
+          {user && (user.is_staff || user.id === post.author_id) && (
+            <div className={styles.actions}>
+              <button onClick={handlePostEdit}>Edit</button>
+              <button onClick={handlePostDelete}>Delete</button>
+            </div>
+          )}
         </div>
         <div className={styles.content}>
           <p>{post.content}</p>
@@ -100,7 +119,7 @@ export default function PostDetail() {
               <div className={styles.meta}>
                 <span>By {comment.author_name}</span>
                 <span>{new Date(comment.created_at).toLocaleString()}</span>
-                {user && (user.is_staff || user.id === comment.author) && (
+                {user && (user.is_staff || user.id === comment.author_id) && (
                   <div className={styles.actions}>
                     <button onClick={() => handleCommentEdit(comment)}>Edit</button>
                     <button onClick={() => handleCommentDelete(comment.id)}>Delete</button>
