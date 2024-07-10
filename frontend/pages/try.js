@@ -7,7 +7,7 @@ import Chart from "chart.js/auto"; // 차트 라이브러리 추가
 import styles from "../styles/Try.module.css";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const ALLOWED_EXTENSIONS = [".wav", ".mp3", ".mp4"];
+const ALLOWED_EXTENSIONS = [".wav", ".m4a", ".mp3"];
 const MAX_FILE_SIZE_MB = 200;
 
 export default function TryVoice() {
