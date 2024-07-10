@@ -1,9 +1,14 @@
+@font-face {
+  font-family: fontA;
+  src: local("Y 너만을 비춤체"),
+  url(Y너만을비춤체.ttf);
+}
+
 .container {
   font-family: fontA;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-
   min-width: 90vw;
   width: 100%;
   position: absolute;
@@ -261,6 +266,13 @@
   margin-top: 0;
 }
 
+.keydlete {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
 .keySection {
   margin: 20px;
   display: flex;
@@ -320,11 +332,13 @@
 
 
 .deleteButton {
+  font-family: fontA;
+  font-size: 20px;
+  margin-right: 20px;
   padding: 8px 12px;
-  background-color: red;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  background: none;
+  border: solid 1px;
+  border-radius: 15px;
   cursor: pointer;
 }
 
