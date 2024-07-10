@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, SubscriptionPlan, UserSubscription, PaymentHistory, APIKey, AudioFile, UploadHistory, Payment
+from .models import CustomUser, SubscriptionPlan, UserSubscription, PaymentHistory, APIKey, AudioFile, UploadHistory, Payment, Post, Comment
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -48,3 +48,15 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ('user', 'plan', 'tid', 'status', 'amount', 'created_at', 'updated_at')
     search_fields = ('user__username', 'tid')
     list_filter = ('status', 'created_at', 'updated_at')
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'created_at', 'updated_at', 'is_notice', 'views', 'is_public')
+    search_fields = ('title', 'author__username')
+    list_filter = ('created_at', 'updated_at', 'is_notice', 'is_public')
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('post', 'author', 'created_at', 'updated_at', 'is_public')
+    search_fields = ('post__title', 'author__username', 'content')
+    list_filter = ('created_at', 'updated_at', 'is_public')
