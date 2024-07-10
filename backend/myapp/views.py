@@ -511,16 +511,16 @@ def user_files(request):
 @permission_classes([AllowAny])
 def posts_list_create(request):
     if request.method == 'GET':
-        if request.user.is_authenticated and request.user.is_staff:
-            posts = Post.objects.all().order_by('-is_notice', '-created_at')
-        else:
-            posts = Post.objects.filter(is_public=True).order_by('-is_notice', '-created_at')
+        posts = Post.objects.all().order_by('-is_notice', '-created_at')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
     
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+        
         data = request.data
-        serializer = PostSerializer(data=data)
+        serializer = PostSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             serializer.save(author=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -544,17 +544,17 @@ def post_detail(request, pk):
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
     
     if request.method == 'PUT':
-        if request.user != post.author and not request.user.is_staff:
+        if not request.user.is_authenticated or (request.user != post.author and not request.user.is_staff):
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
         data = request.data
-        serializer = PostSerializer(post, data=data, partial=True)
+        serializer = PostSerializer(post, data=data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     if request.method == 'DELETE':
-        if request.user != post.author and not request.user.is_staff:
+        if not request.user.is_authenticated or (request.user != post.author and not request.user.is_staff):
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

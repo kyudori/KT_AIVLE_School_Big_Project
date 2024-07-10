@@ -3,6 +3,7 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import styles from '../styles/Contact.module.css';
+import { useRouter } from 'next/router';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -12,6 +13,7 @@ export default function Contact() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingPostId, setEditingPostId] = useState(null);
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     fetchPosts();
@@ -43,14 +45,22 @@ export default function Contact() {
 
     if (isEditing) {
       axios.put(`${BACKEND_URL}/api/posts/${editingPostId}/`, newPost, { headers })
-        .then(fetchPosts)
+        .then(() => {
+          fetchPosts();
+          resetForm();
+        })
         .catch(error => console.error('Error editing post', error));
     } else {
       axios.post(`${BACKEND_URL}/api/posts/`, newPost, { headers })
-        .then(fetchPosts)
+        .then(() => {
+          fetchPosts();
+          resetForm();
+        })
         .catch(error => console.error('Error creating post', error));
     }
+  };
 
+  const resetForm = () => {
     setNewPost({ title: '', content: '', is_notice: false, is_public: true });
     setIsEditing(false);
     setEditingPostId(null);
@@ -71,13 +81,17 @@ export default function Contact() {
       .catch(error => console.error('Error deleting post', error));
   };
 
+  const handlePostClick = (id) => {
+    router.push(`/posts/${id}`);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <Navbar />
         <div className={styles.main}>
           <h1>Contact Us</h1>
-          {user && (
+          {user ? (
             <form onSubmit={handleSubmit} className={styles.form}>
               <input 
                 type="text" 
@@ -114,10 +128,12 @@ export default function Contact() {
               </label>
               <button type="submit">{isEditing ? 'Update' : 'Post'}</button>
             </form>
+          ) : (
+            <p>로그인 후 글을 작성할 수 있습니다.</p>
           )}
           <div className={styles.posts}>
             {posts.map(post => (
-              <div key={post.id} className={`${styles.post} ${post.is_notice ? styles.notice : ''}`}>
+              <div key={post.id} className={`${styles.post} ${post.is_notice ? styles.notice : ''}`} onClick={() => handlePostClick(post.id)}>
                 <h2>{post.title}</h2>
                 <p>{post.content}</p>
                 <div className={styles.meta}>
@@ -127,8 +143,8 @@ export default function Contact() {
                 </div>
                 {user && (user.is_staff || user.id === post.author) && (
                   <div className={styles.actions}>
-                    <button onClick={() => handleEdit(post)}>Edit</button>
-                    <button onClick={() => handleDelete(post.id)}>Delete</button>
+                    <button onClick={(e) => { e.stopPropagation(); handleEdit(post); }}>Edit</button>
+                    <button onClick={(e) => { e.stopPropagation(); handleDelete(post.id); }}>Delete</button>
                   </div>
                 )}
                 <div className={styles.comments}>
