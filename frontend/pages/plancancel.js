@@ -2,16 +2,24 @@ import React from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import '../styles/Planafter.module.css';
+import styles from '../styles/Planafter.module.css';
 
 const PlanCancel = () => {
   return (
-    <div className="container">
+    <div className={styles.container}>
       <Navbar />
-      <div className="main">
-        <h1>Payment Canceled</h1>
-        <p>Your payment was canceled.</p>
-        <Link href="/plan">Go back to Plans</Link>
+      <div className={styles.main}>
+        <h1>결제 취소</h1>
+        <p>결제가 취소되었습니다.</p>
+        <Link href="/plan">
+          <button className={styles.button}>Go back to Plans</button>
+        </Link>
+      </div>
+      <div className={styles.contactUs}>
+        <h2>Contact Us</h2>
+        <Link href="/contact">
+          <button className={styles.button}>Contact Support</button>
+        </Link>
       </div>
       <Footer />
     </div>

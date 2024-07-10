@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Link from 'next/link';
-import '../styles/Planafter.module.css';
+import styles from '../styles/Planafter.module.css';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -37,13 +37,13 @@ const PlanSuccess = () => {
   }, [pg_token, router]);
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       <Navbar />
-      <div className="main">
-        <h1>Payment Success</h1>
+      <div className={styles.main}>
+        <h1>결제 성공</h1>
         {paymentDetails ? (
           <div>
-            <p>Your payment was successful.</p>
+            <p>결제가 완료되었어요.</p>
             <p>Plan: {paymentDetails.plan_name}</p>
             {paymentDetails.amount !== undefined && (
               <p>Amount: {paymentDetails.amount.toLocaleString('ko-KR')}원</p>
@@ -51,11 +51,19 @@ const PlanSuccess = () => {
             {paymentDetails.payment_date && (
               <p>Date: {new Date(paymentDetails.payment_date).toLocaleString()}</p>
             )}
-            <Link href="/docs">Go to Docs</Link>
+            <Link href="/docs">
+              <button className={styles.button}>Go to Docs</button>
+            </Link>
           </div>
         ) : (
           <p>Loading your payment details...</p>
         )}
+      </div>
+      <div className={styles.contactUs}>
+        <h2>Contact Us</h2>
+        <Link href="/contact">
+          <button className={styles.button}>Contact Support</button>
+        </Link>
       </div>
       <Footer />
     </div>
