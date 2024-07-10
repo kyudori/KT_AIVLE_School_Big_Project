@@ -91,7 +91,7 @@ export default function PostDetail() {
   };
 
   const handleBackClick = () => {
-    router.back();
+    router.push('/contact');
   };
 
   if (!post) return <div>Loading...</div>;
@@ -100,7 +100,7 @@ export default function PostDetail() {
     <div className={styles.container}>
       <Navbar />
       <div className={styles.main}>
-        <button onClick={handleBackClick} className={styles.backButton}>뒤로가기</button>
+        <button onClick={handleBackClick} className={styles.backButton}>글 목록으로 가기</button>
         <h1 className={post.is_notice ? styles.noticeTitle : ''}>{post.title}</h1>
         <div className={styles.meta}>
           <span>By {post.author_name}</span>

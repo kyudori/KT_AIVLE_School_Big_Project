@@ -44,11 +44,15 @@ export default function Contact() {
           </thead>
           <tbody>
             {posts.map((post, index) => (
-              <tr key={post.id} onClick={() => router.push(`/posts/${post.id}`)}>
+              <tr 
+                key={post.id} 
+                onClick={() => router.push(`/posts/${post.id}`)} 
+                className={post.is_notice ? styles.notice : ''}
+              >
                 <td>{index + 1}</td>
                 <td>{post.title}</td>
                 <td>{post.author_name}</td>
-                <td>{new Date(post.created_at).toLocaleDateString()}</td>
+                <td>{new Date(post.created_at).toLocaleString()}</td>
                 <td>{post.views}</td>
               </tr>
             ))}

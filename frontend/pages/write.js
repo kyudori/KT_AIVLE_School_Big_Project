@@ -53,6 +53,10 @@ export default function Write() {
     }
   };
 
+  const handleCancel = () => {
+    router.push('/contact');
+  };
+
   return (
     <div className={styles.container}>
       <Navbar />
@@ -79,7 +83,10 @@ export default function Write() {
               onChange={(e) => setIsNotice(e.target.checked)} 
             /> 공지사항
           </label>
-          <button type="submit">{isEditMode ? 'Update' : 'Submit'}</button>
+          <div className={styles.buttonGroup}>
+            <button type="submit">{isEditMode ? 'Update' : 'Submit'}</button>
+            <button type="button" onClick={handleCancel}>Cancel</button>
+          </div>
         </form>
       </div>
       <Footer />
