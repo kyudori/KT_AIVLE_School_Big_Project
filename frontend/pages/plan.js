@@ -10,17 +10,16 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const plans = [
   {
-    id: 1,
     name: "Pay As You Go",
     options: [
-      { price: 9.99, credits: 10 },
-      { price: 45.99, credits: 65 },
+      { id: 1, price: 9.99, credits: 10 },
+      { id: 2, price: 45.99, credits: 65 },
     ],
     description1: "구독이 필요하지 않습니다. 사용할 만큼만 비용을 지불하세요.",
     description2: "오래 사용할 수 있습니다. 90일 동안 자유롭게 사용하세요.",
   },
   {
-    id: 2,
+    id: 3,
     name: "Basic",
     price: 9,
     dailyCalls: 10,
@@ -28,7 +27,7 @@ const plans = [
     description2: "30일 구독 상품",
   },
   {
-    id: 3,
+    id: 4,
     name: "Associate",
     price: 29,
     dailyCalls: 50,
@@ -36,7 +35,7 @@ const plans = [
     description2: "30일 구독 상품",
   },
   {
-    id: 4,
+    id: 5,
     name: "Professional",
     price: 79,
     dailyCalls: 200,

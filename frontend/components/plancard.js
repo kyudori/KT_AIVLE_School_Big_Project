@@ -47,7 +47,7 @@ const PlanCard = ({ plan }) => {
             <div key={index} className={styles.option}>
               <div
                 className={styles.textbtn}
-                onClick={() => handlePayment(option.price, plan.id)}
+                onClick={() => handlePayment(option.price, option.id)}
               >
                 <p>
                   {option.price.toLocaleString("ko-KR")} / {option.credits}{" "}
