@@ -204,7 +204,7 @@ export default function Documentation() {
                 <h3 style={{ color: "#5B5B5B" }}>Request 요청 본문(json)</h3>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
-                    <p>ON</p>
+                    <p>JSON</p>
                     <span
                       onClick={() =>
                         handleCopyClick(`{

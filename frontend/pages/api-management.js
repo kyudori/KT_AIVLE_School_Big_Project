@@ -12,6 +12,7 @@ const ApiManagement = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState("dashboard");
   const router = useRouter();
+  const [isOpen, setMenu] = useState(true); 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -43,6 +44,10 @@ const ApiManagement = () => {
   const handleLogoClick = () => {
     router.push("/home");
   };
+
+  const toggleMenu = () => {
+    setMenu(isOpen => !isOpen);
+}
 
   const renderContent = () => {
     switch (currentPage) {
@@ -130,9 +135,10 @@ const ApiManagement = () => {
   return (
     <div className={styles.container}>
       <div className={styles.dashboard}>
-        <div className={styles.sidebar}>
-          <div className={styles.logo} onClick={handleLogoClick}>
-            <img src="/images/logo.png" alt="Voice Verity Logo" />
+        <p className={ isOpen ? styles.open : styles.hide} onClick={toggleMenu}>◁</p>
+        <div className={ isOpen ? styles.sidebar : styles.sidebaroff}>
+          <div className={styles.logo}>
+            <img src="/images/logo.png" alt="Voice Verity Logo" onClick={handleLogoClick}/>
             <h2>Voice Verity</h2>
           </div>
           <ul className={styles.menu}>
