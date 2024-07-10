@@ -1,35 +1,103 @@
 .container {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f0f0f0;
-  }
-  
-  .content {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-  
-  .main {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .main h1 {
-    font-size: 32px;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .main p {
-    font-size: 18px;
-    color: #666;
-    text-align: center;
-  }
-  
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.main h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.main p {
+  font-size: 18px;
+  color: #666;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form input,
+.form textarea {
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.form label {
+  margin-bottom: 10px;
+}
+
+.posts {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px 0;
+}
+
+.post {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.notice {
+  border: 2px solid #007bff;
+}
+
+.meta {
+  font-size: 14px;
+  color: #777;
+}
+
+.actions {
+  margin-top: 10px;
+}
+
+.comments {
+  margin-top: 20px;
+}
+
+.comment {
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.comment .meta {
+  font-size: 12px;
+  color: #999;
+}

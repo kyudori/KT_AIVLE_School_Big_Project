@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import signup, login, find_id, reset_password, user_info, change_password, upload_audio, get_api_key, regenerate_api_key, delete_api_key, get_credits, validate_key, api_usage_weekly, group_usage, user_files, delete_account, subscription_plans, create_payment, approve_payment, cancel_payment, fail_payment
+from .views import signup, login, find_id, reset_password, user_info, change_password, upload_audio, get_api_key, regenerate_api_key, delete_api_key, get_credits, validate_key, api_usage_weekly, group_usage, user_files, delete_account, subscription_plans, create_payment, approve_payment, cancel_payment, fail_payment, posts_list_create, post_detail, create_comment, comment_detail, user_posts, user_comments
 
 
 urlpatterns = [
@@ -24,4 +24,10 @@ urlpatterns = [
     path('payments/approval/', approve_payment, name='approve_payment'),
     path('payments/cancel/', cancel_payment, name='cancel_payment'),
     path('payments/fail/', fail_payment, name='fail_payment'),
+    path('posts/', posts_list_create, name='posts_list_create'),
+    path('posts/<int:pk>/', post_detail, name='post_detail'),
+    path('posts/<int:post_pk>/comments/', create_comment, name='create_comment'),
+    path('comments/<int:pk>/', comment_detail, name='comment_detail'),
+    path('user/posts/', user_posts, name='user_posts'),
+    path('user/comments/', user_comments, name='user_comments'),
 ]

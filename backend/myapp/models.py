@@ -104,3 +104,27 @@ class UploadHistory(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.upload_date}: {self.upload_count} uploads"
+
+class Post(models.Model):
+    title = models.CharField(max_length=255)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_notice = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=True)
+    views = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.title
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_public = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.content

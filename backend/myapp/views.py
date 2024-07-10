@@ -16,7 +16,8 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory, Payment
+from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory, Payment, Post, Comment
+from .serializers import PostSerializer, CommentSerializer
 from django.db import models 
 import requests
 from datetime import date
@@ -505,3 +506,113 @@ def user_files(request):
     files = AudioFile.objects.filter(user=user)
     data = [{"file_name": f.file_name, "file_path": f.file_path, "result": f.analysis_result} for f in files]
     return Response(data)
+
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
+def posts_list_create(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated and request.user.is_staff:
+            posts = Post.objects.all().order_by('-is_notice', '-created_at')
+        else:
+            posts = Post.objects.filter(is_public=True).order_by('-is_notice', '-created_at')
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+    
+    if request.method == 'POST':
+        data = request.data
+        serializer = PostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(author=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([AllowAny])
+def post_detail(request, pk):
+    try:
+        post = Post.objects.get(pk=pk)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        if post.is_public or (request.user.is_authenticated and (request.user == post.author or request.user.is_staff)):
+            post.views += 1
+            post.save()
+            serializer = PostSerializer(post)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    if request.method == 'PUT':
+        if request.user != post.author and not request.user.is_staff:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        data = request.data
+        serializer = PostSerializer(post, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'DELETE':
+        if request.user != post.author and not request.user.is_staff:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_comment(request, post_pk):
+    try:
+        post = Post.objects.get(pk=post_pk)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    if post.is_public or request.user == post.author or request.user.is_staff:
+        data = request.data
+        serializer = CommentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(author=request.user, post=post)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+
+@api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def comment_detail(request, pk):
+    try:
+        comment = Comment.objects.get(pk=pk)
+    except Comment.DoesNotExist:
+        return Response({'error': 'Comment not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'PUT':
+        if request.user != comment.author and not request.user.is_staff:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        data = request.data
+        serializer = CommentSerializer(comment, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'DELETE':
+        if request.user != comment.author and not request.user.is_staff:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_posts(request):
+    user = request.user
+    posts = Post.objects.filter(author=user)
+    serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_comments(request):
+    user = request.user
+    comments = Comment.objects.filter(author=user)
+    serializer = CommentSerializer(comments, many=True)
+    return Response(serializer.data)
