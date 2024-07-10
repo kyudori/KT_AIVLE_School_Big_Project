@@ -2,7 +2,7 @@
   font-family: fontA, sans-serif;
   background-position: top;
   background-size: cover;
-  background: #d9d9d9;
+  background: rgba(217, 217, 217, 0.5);
   color: black;
   min-height: 100vh;
   display: flex;
