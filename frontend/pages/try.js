@@ -47,7 +47,7 @@ export default function TryVoice() {
     const fileSizeMB = selectedFile.size / (1024 * 1024);
 
     if (!ALLOWED_EXTENSIONS.includes(`.${fileExtension}`)) {
-      alert("Invalid file type. Allowed extensions are: .wav, .mp3, .mp4");
+      alert("Invalid file type. Allowed extensions are: .wav, .mp3, .m4a");
       return;
     }
 
