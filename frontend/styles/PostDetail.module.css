@@ -75,6 +75,10 @@
     border-radius: 4px;
   }
   
+  .adminComment {
+    background-color: yellow;
+  }
+  
   .comment .meta {
     font-size: 12px;
     color: #999;

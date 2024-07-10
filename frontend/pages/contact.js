@@ -10,10 +10,19 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Contact() {
   const [posts, setPosts] = useState([]);
+  const [user, setUser] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     fetchPosts();
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.get(`${BACKEND_URL}/api/user-info/`, {
+        headers: { 'Authorization': `Token ${token}` }
+      })
+      .then(response => setUser(response.data))
+      .catch(error => console.error('Error fetching user info', error));
+    }
   }, []);
 
   const fetchPosts = () => {
@@ -23,6 +32,10 @@ export default function Contact() {
   };
 
   const handleWriteClick = () => {
+    if (!user) {
+      alert('로그인 후 이용해 주세요.');
+      return;
+    }
     router.push('/write');
   };
 

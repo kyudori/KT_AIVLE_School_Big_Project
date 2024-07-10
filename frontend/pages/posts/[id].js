@@ -119,7 +119,7 @@ export default function PostDetail() {
         <div className={styles.commentsSection}>
           <h2>Comments</h2>
           {post.comments.map(comment => (
-            <div key={comment.id} className={styles.comment}>
+            <div key={comment.id} className={`${styles.comment} ${comment.author_name === '관리자' ? styles.adminComment : ''}`}>
               {editingComment && editingComment.id === comment.id ? (
                 <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
                   <textarea 

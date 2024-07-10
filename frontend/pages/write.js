@@ -12,15 +12,28 @@ export default function Write() {
   const [content, setContent] = useState('');
   const [isNotice, setIsNotice] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
   const { id } = router.query;
 
   useEffect(() => {
+    fetchUser();
     if (id) {
       setIsEditMode(true);
       fetchPost(id);
     }
   }, [id]);
+
+  const fetchUser = () => {
+    const token = localStorage.getItem('token');
+    axios.get(`${BACKEND_URL}/api/user-info/`, {
+      headers: { 'Authorization': `Token ${token}` }
+    })
+    .then(response => {
+      setIsAdmin(response.data.is_staff);
+    })
+    .catch(error => console.error('Error fetching user info', error));
+  };
 
   const fetchPost = (id) => {
     const token = localStorage.getItem('token');
@@ -76,13 +89,15 @@ export default function Write() {
             onChange={(e) => setContent(e.target.value)} 
             required 
           />
-          <label>
-            <input 
-              type="checkbox" 
-              checked={isNotice} 
-              onChange={(e) => setIsNotice(e.target.checked)} 
-            /> 공지사항
-          </label>
+          {isAdmin && (
+            <label>
+              <input 
+                type="checkbox" 
+                checked={isNotice} 
+                onChange={(e) => setIsNotice(e.target.checked)} 
+              /> 공지사항
+            </label>
+          )}
           <div className={styles.buttonGroup}>
             <button type="submit" className={styles.button}>{isEditMode ? 'Update' : 'Submit'}</button>
             <button type="button" className={`${styles.button} ${styles.cancelButton}`} onClick={handleCancel}>Cancel</button>
