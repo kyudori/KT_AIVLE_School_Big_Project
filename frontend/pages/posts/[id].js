@@ -90,12 +90,17 @@ export default function PostDetail() {
       .catch(error => console.error('Error deleting post', error));
   };
 
+  const handleBackClick = () => {
+    router.back();
+  };
+
   if (!post) return <div>Loading...</div>;
 
   return (
     <div className={styles.container}>
       <Navbar />
       <div className={styles.main}>
+        <button onClick={handleBackClick} className={styles.backButton}>뒤로가기</button>
         <h1>{post.title}</h1>
         <div className={styles.meta}>
           <span>By {post.author_name}</span>
