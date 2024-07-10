@@ -84,8 +84,8 @@ export default function Write() {
             /> 공지사항
           </label>
           <div className={styles.buttonGroup}>
-            <button type="submit">{isEditMode ? 'Update' : 'Submit'}</button>
-            <button type="button" onClick={handleCancel}>Cancel</button>
+            <button type="submit" className={styles.button}>{isEditMode ? 'Update' : 'Submit'}</button>
+            <button type="button" className={`${styles.button} ${styles.cancelButton}`} onClick={handleCancel}>Cancel</button>
           </div>
         </form>
       </div>
