@@ -573,15 +573,12 @@ def create_comment(request, post_pk):
     except Post.DoesNotExist:
         return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
     
-    if post.is_public or request.user == post.author or request.user.is_staff:
-        data = request.data
-        serializer = CommentSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save(author=request.user, post=post)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    data = request.data
+    serializer = CommentSerializer(data=data, context={'request': request, 'post_id': post_pk})
+    if serializer.is_valid():
+        serializer.save(author=request.user, post=post)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
