@@ -89,32 +89,36 @@ const ApiManagement = () => {
         return (
           <div className={styles.content}>
             <div className={styles.apiCard}>
-              <h3>내 API Key</h3>
-              <div className={styles.keySection}>
-                <h3>Key Value</h3>
-                <div>
-                  <input
-                    className={styles.keyValue}
-                    value="sk-kdjlkjafij921uij"
-                    disabled
-                  />
-                  <button className={styles.button}>재발급</button>
+              <div className={styles.keydlete}>
+                <h3>내 API Key</h3>
+                <button className={styles.deleteButton}>키 삭제</button>
+              </div>
+              <div>
+                <div className={styles.keySection}>
+                  <h3>Key Value</h3>
+                  <div>
+                    <input
+                      className={styles.keyValue}
+                      value="sk-kdjlkjafij921uij"
+                      disabled
+                    />
+                    <button className={styles.button}>재발급</button>
+                  </div>
+                </div>
+                <div className={styles.statusSection}>
+                  <h3>Activate Status</h3>
+                  <div className={styles.use}>
+                    <input type="radio" name="status" value="사용함" /> 사용함
+                    <input
+                      type="radio"
+                      name="status"
+                      value="사용 안함"
+                      style={{ marginLeft: "20px" }}
+                    />{" "}
+                    사용 안함
+                  </div>
                 </div>
               </div>
-              <div className={styles.statusSection}>
-                <h3>Activate Status</h3>
-                <div className={styles.use}>
-                  <input type="radio" name="status" value="사용함" /> 사용함
-                  <input
-                    type="radio"
-                    name="status"
-                    value="사용 안함"
-                    style={{ marginLeft: "20px" }}
-                  />{" "}
-                  사용 안함
-                </div>
-              </div>
-              <button className={styles.deleteButton}>키 삭제</button>
             </div>
           </div>
         );
