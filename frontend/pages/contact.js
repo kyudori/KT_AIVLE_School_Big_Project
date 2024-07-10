@@ -4,19 +4,19 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import styles from '../styles/Contact.module.css';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Contact() {
   const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState({ title: '', content: '', is_notice: false, is_public: true });
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingPostId, setEditingPostId] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [user, setUser] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(page);
     const token = localStorage.getItem('token');
     if (token) {
       axios.get(`${BACKEND_URL}/api/user-info/`, {
@@ -25,145 +25,63 @@ export default function Contact() {
       .then(response => setUser(response.data))
       .catch(error => console.error('Error fetching user info', error));
     }
-  }, []);
+  }, [page]);
 
-  const fetchPosts = () => {
-    axios.get(`${BACKEND_URL}/api/posts/`)
-      .then(response => setPosts(response.data))
+  const fetchPosts = (page) => {
+    axios.get(`${BACKEND_URL}/api/posts/?page=${page}`)
+      .then(response => {
+        setPosts(response.data.results);
+        setTotalPages(Math.ceil(response.data.count / 10));
+      })
       .catch(error => console.error('Error fetching posts', error));
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setNewPost({ ...newPost, [name]: type === 'checkbox' ? checked : value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-    const headers = { 'Authorization': `Token ${token}` };
-
-    if (isEditing) {
-      axios.put(`${BACKEND_URL}/api/posts/${editingPostId}/`, newPost, { headers })
-        .then(() => {
-          fetchPosts();
-          resetForm();
-        })
-        .catch(error => console.error('Error editing post', error));
-    } else {
-      axios.post(`${BACKEND_URL}/api/posts/`, newPost, { headers })
-        .then(() => {
-          fetchPosts();
-          resetForm();
-        })
-        .catch(error => console.error('Error creating post', error));
-    }
-  };
-
-  const resetForm = () => {
-    setNewPost({ title: '', content: '', is_notice: false, is_public: true });
-    setIsEditing(false);
-    setEditingPostId(null);
-  };
-
-  const handleEdit = (post) => {
-    setNewPost({ title: post.title, content: post.content, is_notice: post.is_notice, is_public: post.is_public });
-    setIsEditing(true);
-    setEditingPostId(post.id);
-  };
-
-  const handleDelete = (id) => {
-    const token = localStorage.getItem('token');
-    const headers = { 'Authorization': `Token ${token}` };
-
-    axios.delete(`${BACKEND_URL}/api/posts/${id}/`, { headers })
-      .then(fetchPosts)
-      .catch(error => console.error('Error deleting post', error));
-  };
-
-  const handlePostClick = (id) => {
-    router.push(`/posts/${id}`);
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.content}>
-        <Navbar />
-        <div className={styles.main}>
-          <h1>Contact Us</h1>
-          {user ? (
-            <form onSubmit={handleSubmit} className={styles.form}>
-              <input 
-                type="text" 
-                name="title" 
-                value={newPost.title} 
-                onChange={handleInputChange} 
-                placeholder="Title" 
-                required 
-              />
-              <textarea 
-                name="content" 
-                value={newPost.content} 
-                onChange={handleInputChange} 
-                placeholder="Content" 
-                required 
-              ></textarea>
-              {user.is_staff && (
-                <label>
-                  <input 
-                    type="checkbox" 
-                    name="is_notice" 
-                    checked={newPost.is_notice} 
-                    onChange={handleInputChange} 
-                  /> 공지사항으로 설정
-                </label>
-              )}
-              <label>
-                <input 
-                  type="checkbox" 
-                  name="is_public" 
-                  checked={newPost.is_public} 
-                  onChange={handleInputChange} 
-                /> 전체 공개
-              </label>
-              <button type="submit">{isEditing ? 'Update' : 'Post'}</button>
-            </form>
-          ) : (
-            <p>로그인 후 글을 작성할 수 있습니다.</p>
-          )}
-          <div className={styles.posts}>
-            {posts.map(post => (
-              <div key={post.id} className={`${styles.post} ${post.is_notice ? styles.notice : ''}`} onClick={() => handlePostClick(post.id)}>
-                <h2>{post.title}</h2>
-                <p>{post.content}</p>
-                <div className={styles.meta}>
-                  <span>By {post.author_name}</span>
-                  <span>{new Date(post.created_at).toLocaleString()}</span>
-                  <span>Views: {post.views}</span>
-                </div>
-                {user && (user.is_staff || user.id === post.author) && (
-                  <div className={styles.actions}>
-                    <button onClick={(e) => { e.stopPropagation(); handleEdit(post); }}>Edit</button>
-                    <button onClick={(e) => { e.stopPropagation(); handleDelete(post.id); }}>Delete</button>
-                  </div>
-                )}
-                <div className={styles.comments}>
-                  {post.comments.map(comment => (
-                    <div key={comment.id} className={styles.comment}>
-                      <p>{comment.content}</p>
-                      <div className={styles.meta}>
-                        <span>By {comment.author_name}</span>
-                        <span>{new Date(comment.created_at).toLocaleString()}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+      <Navbar />
+      <div className={styles.main}>
+        <h1>Contact Us</h1>
+        {user && (
+          <div className={styles.writeButtonContainer}>
+            <Link href="/write">
+              <button className={styles.writeButton}>글쓰기</button>
+            </Link>
           </div>
+        )}
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>제목</th>
+              <th>글쓴이</th>
+              <th>작성시간</th>
+            </tr>
+          </thead>
+          <tbody>
+            {posts.map((post, index) => (
+              <tr key={post.id} onClick={() => router.push(`/posts/${post.id}`)} className={post.is_notice ? styles.noticeRow : ''}>
+                <td>{(page - 1) * 10 + index + 1}</td>
+                <td>{post.title}</td>
+                <td>{post.author_name}</td>
+                <td>{new Date(post.created_at).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className={styles.pagination}>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNumber => (
+            <button
+              key={pageNumber}
+              className={styles.pageButton}
+              onClick={() => setPage(pageNumber)}
+              disabled={pageNumber === page}
+            >
+              {pageNumber}
+            </button>
+          ))}
         </div>
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 }

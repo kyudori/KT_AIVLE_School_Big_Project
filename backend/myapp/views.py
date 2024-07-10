@@ -29,6 +29,7 @@ from django.shortcuts import redirect
 from django.shortcuts import redirect, render
 import logging
 import uuid
+from rest_framework.pagination import PageNumberPagination
 from urllib.parse import urlencode
 from django.contrib.auth import login as django_login
 
@@ -507,13 +508,18 @@ def user_files(request):
     data = [{"file_name": f.file_name, "file_path": f.file_path, "result": f.analysis_result} for f in files]
     return Response(data)
 
+class PostPagination(PageNumberPagination):
+    page_size = 10
+
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def posts_list_create(request):
     if request.method == 'GET':
+        paginator = PostPagination()
         posts = Post.objects.all().order_by('-is_notice', '-created_at')
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
+        result_page = paginator.paginate_queryset(posts, request)
+        serializer = PostSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
     
     if request.method == 'POST':
         if not request.user.is_authenticated:

@@ -33,21 +33,36 @@
   text-align: center;
 }
 
-.form {
+.table {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px 0;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+
+.noticeRow {
+  background-color: #ffeb3b;
+}
+
+.writeButtonContainer {
   display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 800px;
 }
 
-.form input,
-.form textarea {
-  margin-bottom: 10px;
-  padding: 10px;
-  font-size: 16px;
-}
-
-.form button {
-  padding: 10px;
+.writeButton {
+  padding: 10px 20px;
   font-size: 16px;
   background-color: #007bff;
   color: white;
@@ -55,50 +70,21 @@
   cursor: pointer;
 }
 
-.form label {
-  margin-bottom: 10px;
-}
-
-.posts {
-  width: 100%;
-  max-width: 800px;
+.pagination {
+  display: flex;
+  justify-content: center;
   margin: 20px 0;
 }
 
-.post {
-  background-color: white;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-}
-
-.notice {
-  border: 2px solid #007bff;
-}
-
-.meta {
-  font-size: 14px;
-  color: #777;
-}
-
-.actions {
-  margin-top: 10px;
-}
-
-.comments {
-  margin-top: 20px;
-}
-
-.comment {
-  background-color: #f9f9f9;
+.pageButton {
   padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 4px;
+  margin: 0 5px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  background-color: white;
 }
 
-.comment .meta {
-  font-size: 12px;
-  color: #999;
+.pageButton:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
 }
