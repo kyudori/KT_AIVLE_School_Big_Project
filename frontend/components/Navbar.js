@@ -54,7 +54,7 @@ export default function Navbar() {
               <div className={styles.triangle}></div>
               <div className={`${styles.dropdown} ${dropdownVisible ? styles.show : ''}`}>
                 <Link href="/user-info"><button>내 정보</button></Link>
-                <Link href="/plan"><button>내 구독</button></Link>
+                <Link href="/myplan"><button>내 구독</button></Link>
                 <button onClick={handleLogout}>로그아웃</button>
               </div>
             </div>

@@ -111,8 +111,8 @@ export default function Home() {
           <h2>독보적인 AI 음성 탐지 기술, Voice Verity</h2>
           <p>Voice Verity는 짧은 시간의 통화음으로도 목소리를 구별하는 기술을 갖추고 있습니다.</p>
           <div>
-            <div className={styles.dataicon} /><ul>Building a Deep voice dataset
-            <li>생성형 AI를 이용한 고품질 한국어 딥보이스 데이터셋 자체 구축했습니다.</li>
+            <div className={styles.dataicon} /><ul>Building a Deep Voice Dataset
+            <li>생성형 AI를 이용한 고품질 한국어 딥보이스 데이터셋을 자체 구축했습니다.</li>
             </ul>
           </div>
           <div>
@@ -121,8 +121,8 @@ export default function Home() {
             </ul>
           </div>
           <div>
-            <div className={styles.timeicon} /><ul>Real-time Deep voice Classifier
-            <li>최신 딥러닝 모델을 이용하여 높은 정확성과 빠른 추론 속도의 모델을 이용하여 통화 상태에서의 실시간 딥보이스 분류 지원합니다.</li>
+            <div className={styles.timeicon} /><ul>Real-Time Deep Voice Classifier
+            <li>최신 딥러닝 모델을 이용하여 높은 정확성과 빠른 추론 속도의 모델을 이용하여 통화 상태에서의 실시간 딥보이스 분류를 지원합니다.</li>
             </ul>
           </div>
         </div>
@@ -202,8 +202,8 @@ export default function Home() {
                <section>
                 <div className={styles.space}><div className={styles.icon}><div className={styles.media} /></div></div>
                 <h2 style={{margin:"0px 0px 0px 20px", fontSize:'34px', textAlign:'left'}}>Media literacy</h2>
-                <ul><li>뉴스나 팟캐스트의 음성 진위 여부 확인</li>
-                <li>영화나 TV 프로그램에서 사용된 음성의 진실성 검증</li></ul>
+                <ul><li>뉴스나 라디오의 음성 진위 여부 확인</li>
+                <li>영화나 TV 프로그램에서 사용된 음성의 진위 여부 검증</li></ul>
                </section>
               </div>
             </div>
@@ -213,7 +213,7 @@ export default function Home() {
         <div className={styles.youtubeSection}>
           <div>
             <h2>우리의 Dev Story</h2>
-            <p>Voice Verity의 시작은 어디서부터였을까? Voice Volice의 이야기를 만나보세요.<br />
+            <p>Voice Verity의 시작은 어디서부터였을까? Voice Verity의 이야기를 만나보세요.<br />
             <span>우리의 이야기는 끝나지 않았습니다.</span></p>
           </div>
           <div className={styles.youtubeContainer}>

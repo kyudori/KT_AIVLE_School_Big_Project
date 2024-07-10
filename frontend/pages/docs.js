@@ -197,8 +197,7 @@ export default function Documentation() {
                   <li>URL: /api/decision</li>
                   <li>Method: POST</li>
                   <li>
-                    설명: 업로드한 음성 파일을 기반으로 AI 모델로부터 Fake
-                    여부를 판단합니다.
+                    설명: 업로드한 음성 파일을 기반으로 AI 모델로부터 Deep Fake 여부를 판단합니다.
                   </li>
                 </ul>
                 <h3>Example</h3>
