@@ -592,7 +592,7 @@ def comment_detail(request, pk):
         if request.user != comment.author and not request.user.is_staff:
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
         data = request.data
-        serializer = CommentSerializer(comment, data=data, partial=True)
+        serializer = CommentSerializer(comment, data=data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

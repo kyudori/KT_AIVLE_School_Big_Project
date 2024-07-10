@@ -59,6 +59,23 @@
   .comment .meta {
     font-size: 12px;
     color: #999;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .actions {
+    margin-left: auto;
+  }
+  
+  .actions button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
   }
   
   .commentForm {
@@ -81,5 +98,9 @@
     color: white;
     border: none;
     cursor: pointer;
+  }
+  
+  .commentForm label {
+    margin-bottom: 10px;
   }
   

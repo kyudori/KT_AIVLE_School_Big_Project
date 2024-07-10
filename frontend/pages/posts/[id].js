@@ -9,7 +9,8 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function PostDetail() {
   const [post, setPost] = useState(null);
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState({ content: '', is_public: true });
+  const [editingComment, setEditingComment] = useState(null);
   const [user, setUser] = useState(null);
   const router = useRouter();
   const { id } = router.query;
@@ -35,20 +36,45 @@ export default function PostDetail() {
   };
 
   const handleCommentChange = (e) => {
-    setNewComment(e.target.value);
+    const { name, value, type, checked } = e.target;
+    setNewComment({ ...newComment, [name]: type === 'checkbox' ? checked : value });
   };
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     const headers = { 'Authorization': `Token ${token}` };
-    
-    axios.post(`${BACKEND_URL}/api/posts/${id}/comments/`, { content: newComment }, { headers })
-      .then(() => {
-        fetchPost(id);
-        setNewComment('');
-      })
-      .catch(error => console.error('Error posting comment', error));
+
+    if (editingComment) {
+      axios.put(`${BACKEND_URL}/api/comments/${editingComment.id}/`, newComment, { headers })
+        .then(() => {
+          fetchPost(id);
+          setNewComment({ content: '', is_public: true });
+          setEditingComment(null);
+        })
+        .catch(error => console.error('Error editing comment', error));
+    } else {
+      axios.post(`${BACKEND_URL}/api/posts/${id}/comments/`, newComment, { headers })
+        .then(() => {
+          fetchPost(id);
+          setNewComment({ content: '', is_public: true });
+        })
+        .catch(error => console.error('Error posting comment', error));
+    }
+  };
+
+  const handleCommentEdit = (comment) => {
+    setNewComment({ content: comment.content, is_public: comment.is_public });
+    setEditingComment(comment);
+  };
+
+  const handleCommentDelete = (commentId) => {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+
+    axios.delete(`${BACKEND_URL}/api/comments/${commentId}/`, { headers })
+      .then(() => fetchPost(id))
+      .catch(error => console.error('Error deleting comment', error));
   };
 
   if (!post) return <div>Loading...</div>;
@@ -74,19 +100,33 @@ export default function PostDetail() {
               <div className={styles.meta}>
                 <span>By {comment.author_name}</span>
                 <span>{new Date(comment.created_at).toLocaleString()}</span>
+                {user && (user.is_staff || user.id === comment.author) && (
+                  <div className={styles.actions}>
+                    <button onClick={() => handleCommentEdit(comment)}>Edit</button>
+                    <button onClick={() => handleCommentDelete(comment.id)}>Delete</button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
           {user && (
             <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
               <textarea 
-                name="comment" 
-                value={newComment} 
+                name="content" 
+                value={newComment.content} 
                 onChange={handleCommentChange} 
                 placeholder="Add a comment" 
                 required 
               ></textarea>
-              <button type="submit">Post Comment</button>
+              <label>
+                <input 
+                  type="checkbox" 
+                  name="is_public" 
+                  checked={newComment.is_public} 
+                  onChange={handleCommentChange} 
+                /> 전체 공개
+              </label>
+              <button type="submit">{editingComment ? 'Update Comment' : 'Post Comment'}</button>
             </form>
           )}
         </div>
