@@ -1,211 +1,225 @@
-// pages/api-management.js
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useRouter } from "next/router";
-import styles from "../styles/Apimanagement.module.css";
-import Footer from "../components/Footer";
+import axios from 'axios';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import { Line, Bar } from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
+import { CategoryScale } from 'chart.js'; 
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import styles from '../styles/ApiStatus.module.css';
+
+Chart.register(CategoryScale);
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-const ApiManagement = () => {
-  const [user, setUser] = useState(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState("dashboard");
+export default function ApiStatus() {
+  const [dailyUsage, setDailyUsage] = useState([]);
+  const [userFiles, setUserFiles] = useState([]);
+  const [totalApiCalls, setTotalApiCalls] = useState(0);
+  const [successRate, setSuccessRate] = useState({ success: 0, failure: 0 });
+  const [avgResponseTime, setAvgResponseTime] = useState(0);
+  const [responseTimeDistribution, setResponseTimeDistribution] = useState([]);
+  const [monthlyApiCalls, setMonthlyApiCalls] = useState([]);
   const router = useRouter();
-  const [isOpen, setMenu] = useState(true); 
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .get(`${BACKEND_URL}/api/user-info/`, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        })
-        .then((response) => {
-          setUser(response.data);
-        })
-        .catch((error) => {
-          console.error("사용자 정보 가져오기 오류", error);
-        });
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인한 회원만 이용 가능합니다.');
+      router.push('/home');
+    } else {
+      axios.get(`${BACKEND_URL}/api/api-usage-daily/`, {
+        headers: {
+          'Authorization': `Token ${token}`
+        }
+      })
+      .then(response => {
+        setDailyUsage(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching daily usage', error);
+      });
+
+      axios.get(`${BACKEND_URL}/api/user-files/`, {
+        headers: {
+          'Authorization': `Token ${token}`
+        }
+      })
+      .then(response => {
+        setUserFiles(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching user files', error);
+      });
+
+      axios.get(`${BACKEND_URL}/api/total-api-calls/`, {
+        headers: {
+          'Authorization': `Token ${token}`
+        }
+      })
+      .then(response => {
+        setTotalApiCalls(response.data.total);
+      })
+      .catch(error => {
+        console.error('Error fetching total API calls', error);
+      });
+
+      axios.get(`${BACKEND_URL}/api/success-rate/`, {
+        headers: {
+          'Authorization': `Token ${token}`
+        }
+      })
+      .then(response => {
+        setSuccessRate(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching success rate', error);
+      });
+
+      axios.get(`${BACKEND_URL}/api/average-response-time/`, {
+        headers: {
+          'Authorization': `Token ${token}`
+        }
+      })
+      .then(response => {
+        setAvgResponseTime(response.data.avg_response_time);
+      })
+      .catch(error => {
+        console.error('Error fetching average response time', error);
+      });
+
+      axios.get(`${BACKEND_URL}/api/response-time-distribution/`, {
+        headers: {
+          'Authorization': `Token ${token}`
+        }
+      })
+      .then(response => {
+        setResponseTimeDistribution(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching response time distribution', error);
+      });
+
+      axios.get(`${BACKEND_URL}/api/monthly-api-calls/`, {
+        headers: {
+          'Authorization': `Token ${token}`
+        }
+      })
+      .then(response => {
+        setMonthlyApiCalls(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching monthly API calls', error);
+      });
     }
-  }, []);
+  }, [router]);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const dailyData = {
+    labels: dailyUsage.map(data => data.upload_date),
+    datasets: [
+      {
+        label: 'Daily Usage',
+        data: dailyUsage.map(data => data.total_uploads),
+        fill: false,
+        backgroundColor: 'rgba(75,192,192,0.2)',
+        borderColor: 'rgba(75,192,192,1)',
+      },
+    ],
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/login");
+  const successRateData = {
+    labels: ['Success', 'Failure'],
+    datasets: [
+      {
+        label: 'API Success Rate',
+        data: [successRate.success, successRate.failure],
+        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+        borderWidth: 1,
+      },
+    ],
   };
 
-  const handleLogoClick = () => {
-    router.push("/home");
+  const responseTimeData = {
+    labels: responseTimeDistribution.map(data => data.response_time),
+    datasets: [
+      {
+        label: 'Response Time Distribution',
+        data: responseTimeDistribution.map(data => data.count),
+        fill: false,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+      },
+    ],
   };
 
-  const toggleMenu = () => {
-    setMenu(isOpen => !isOpen);
-}
+  const monthlyData = {
+    labels: monthlyApiCalls.map(data => data.month),
+    datasets: [
+      {
+        label: 'Monthly API Calls',
+        data: monthlyApiCalls.map(data => data.total_calls),
+        fill: false,
+        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+        borderColor: 'rgba(255, 206, 86, 1)',
+      },
+    ],
+  };
 
-  const renderContent = () => {
-    switch (currentPage) {
-      case "dashboard":
-        return (
-          <div className={styles.content}>
-            <div className={styles.row}>
-              <div className={styles.card}>
-                <div className={styles.cardcontent}>
-                  <h3>Daily Credit</h3>
-                  <div className={styles.credit}>38%</div>
-                </div>
-              </div>
-              <div className={styles.card}>
-                <div className={styles.cardcontent}>
-                  <h3>Additional Credit</h3>
-                  <div className={styles.credit}>38%</div>
-                </div>
-              </div>
-              <div className={styles.card}>
-                <h3>API Status</h3>
-                <p>내 API Key : sk-kdjlkjafij921uij</p>
-                <p>
-                  현재 API 상태 : 정상 <span className={styles.status}></span>
-                </p>
-                <p>마지막 사용 시간 : 2000/00/00 00:00:00</p>
-              </div>
-            </div>
-            <div className={styles.trafficSummary}>
-              <div className={styles.traffic}>
-                <h3>Traffic</h3>
-                <div className={styles.graph}>
-                  시간별 / 일별 / 월별 / 년별 API 응답 요청 수 그래프
-                </div>
-              </div>
-              <div className={styles.summary}>
-                <h3>Summary</h3>
-                <div className={styles.graph}>오류율 그래프</div>
-              </div>
-            </div>
-          </div>
-        );
-      case "apiManagement":
-        return (
-          <div className={styles.content}>
-            <div className={styles.apiCard}>
-              <div className={styles.keydlete}>
-                <h3>내 API Key</h3>
-                <button className={styles.deleteButton}>키 삭제</button>
-              </div>
-              <div>
-                <div className={styles.keySection}>
-                  <h3>Key Value</h3>
-                  <div>
-                    <input
-                      className={styles.keyValue}
-                      value="sk-kdjlkjafij921uij"
-                      disabled
-                    />
-                    <button className={styles.button}>재발급</button>
-                  </div>
-                </div>
-                <div className={styles.statusSection}>
-                  <h3>Activate Status</h3>
-                  <div className={styles.use}>
-                    <input type="radio" name="status" value="사용함" /> 사용함
-                    <input
-                      type="radio"
-                      name="status"
-                      value="사용 안함"
-                      style={{ marginLeft: "20px" }}
-                    />{" "}
-                    사용 안함
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
+  const options = {
+    maintainAspectRatio: false, 
+    responsive: true,
   };
 
   return (
-    <div className={styles.container}>
+    <div>
+      <Navbar />
       <div className={styles.dashboard}>
-        <p className={ isOpen ? styles.open : styles.hide} onClick={toggleMenu}>◁</p>
-        <div className={ isOpen ? styles.sidebar : styles.sidebaroff}>
-          <div className={styles.logo}>
-            <img src="/images/logo.png" alt="Voice Verity Logo" onClick={handleLogoClick}/>
-            <h2>Voice Verity</h2>
-          </div>
-          <ul className={styles.menu}>
-            <li
-              className={currentPage === "dashboard" ? styles.activeli : ""}
-              onClick={() => setCurrentPage("dashboard")}
-            >
-              Dashboard
-              <div
-                className={currentPage === "dashboard" ? styles.active : ""}
-              />
-            </li>
-            <li
-              className={currentPage === "apiManagement" ? styles.activeli : ""}
-              onClick={() => setCurrentPage("apiManagement")}
-            >
-              API 관리
-              <div
-                className={currentPage === "apiManagement" ? styles.active : ""}
-              />
-            </li>
-            <li>보안 및 인증</li>
-            <li>알림 설정</li>
-          </ul>
-        </div>
-        <div className={styles.main}>
-          <div className={styles.header}>
-            <div className={styles.headerTitle}>
-              <h1>{currentPage === "dashboard" ? "DashBoard" : "API 관리"}</h1>
-              <span>Welcome! {user ? user.username : "[User name]"}!</span>
-            </div>
-            <div className={styles.user} onClick={toggleDropdown}>
-              <img
-                src={
-                  user
-                    ? `${BACKEND_URL}${user.profile_image_url}`
-                    : "/images/userinfo/profile_default.png"
-                }
-                alt="Profile"
-                className={styles.profileImage}
-              />
-              <div>
-                <span className={styles.userName}>
-                  {user ? user.username : "User Name"}
-                </span>
-                <span className={styles.userEmail}>
-                  {user ? user.email : "User ID"}
-                </span>
-              </div>
-              <div className={styles.dropdownIcon}>▼</div>
-              {isDropdownOpen && (
-                <div className={styles.dropdownMenu}>
-                  <ul>
-                    <li onClick={() => setCurrentPage("user-info")}>내정보</li>
-                    <li onClick={() => setCurrentPage("plan")}>내구독</li>
-                    <li onClick={handleLogout}>로그아웃</li>
-                  </ul>
-                </div>
-              )}
+        <h1 className={styles.heading}>API Status</h1>
+        <div className={styles.chartContainer}>
+          <div className={styles.chartItem}>
+            <h2 className={styles.subHeading}>Daily API Usage</h2>
+            <div style={{ height: '300px', width: '100%' }}>
+              <Line data={dailyData} options={options} />
             </div>
           </div>
-          {renderContent()}
+          <div className={styles.chartItem}>
+            <h2 className={styles.subHeading}>API Success Rate</h2>
+            <div style={{ height: '300px', width: '100%' }}>
+              <Bar data={successRateData} options={options} />
+            </div>
+          </div>
+          <div className={styles.chartItem}>
+            <h2 className={styles.subHeading}>Response Time Distribution</h2>
+            <div style={{ height: '300px', width: '100%' }}>
+              <Line data={responseTimeData} options={options} />
+            </div>
+          </div>
+          <div className={styles.chartItem}>
+            <h2 className={styles.subHeading}>Monthly API Calls</h2>
+            <div style={{ height: '300px', width: '100%' }}>
+              <Bar data={monthlyData} options={options} />
+            </div>
+          </div>
+          <div className={styles.chartItem}>
+            <h2 className={styles.subHeading}>Total API Calls</h2>
+            <p>{totalApiCalls}</p>
+          </div>
+          <div className={styles.chartItem}>
+            <h2 className={styles.subHeading}>Average Response Time</h2>
+            <p>{avgResponseTime} ms</p>
+          </div>
         </div>
+        <h2 className={styles.subHeading}>User Files</h2>
+        <ul className={styles.userFilesList}>
+          {userFiles.map((file, index) => (
+            <li key={index} className={styles.userFilesListItem}>
+              {file.file_name}: {file.file_path} - {file.analysis_result}
+            </li>
+          ))}
+        </ul>
       </div>
       <Footer />
     </div>
   );
-};
-
-export default ApiManagement;
+}
