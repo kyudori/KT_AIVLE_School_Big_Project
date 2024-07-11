@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/Plan.module.css";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -7,6 +7,31 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const PlanCard = ({ plan }) => {
   const router = useRouter();
+  const [generalCredits, setGeneralCredits] = useState(null);
+  const [dailyCredits, setDailyCredits] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+      fetchUserCredits(token);
+    }
+  }, []);
+
+  const fetchUserCredits = async (token) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/get-credits/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      setGeneralCredits(response.data.total_general_credits);
+      setDailyCredits(response.data.total_daily_credits);
+    } catch (error) {
+      console.error("Failed to fetch user credits:", error);
+    }
+  };
 
   const handlePayment = async (price, planId) => {
     try {
@@ -23,7 +48,7 @@ const PlanCard = ({ plan }) => {
           headers: {
             Authorization: `Token ${token}`,
           },
-          withCredentials: true,  // 세션 인증을 위해 필요
+          withCredentials: true, // 세션 인증을 위해 필요
         }
       );
       const { next_redirect_pc_url, tid } = response.data;
@@ -56,10 +81,12 @@ const PlanCard = ({ plan }) => {
               </div>
             </div>
           ))}
-          <div style={{ margin: "3px 10px" }}>
-            <p>현재 00개의 Credit이 남아있습니다.</p>
-            <p>구매한 Credit은 90일 후 만료됩니다.</p>
-          </div>
+          {isLoggedIn && (
+            <div style={{ margin: "3px 10px" }}>
+              <p>현재 {generalCredits}개의 Additional Credit이 남아있습니다.</p>
+              <p>구매한 Credit은 90일 후 만료됩니다.</p>
+            </div>
+          )}
           <div style={{ width: "80%", marginTop: "20px" }}>
             <hr style={{ border: "solid 1px #A0A0A0", margin: "-2px" }} />
           </div>
@@ -98,6 +125,11 @@ const PlanCard = ({ plan }) => {
           >
             Buy Now
           </button>
+          {isLoggedIn && (
+            <div style={{ margin: "3px 10px" }}>
+              <p>현재 {dailyCredits}개의 Daily Credit이 남아있습니다.</p>
+            </div>
+          )}
           <ul>
             <li>{plan.description1}</li>
             <li>{plan.description2}</li>
