@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import styles from "../styles/UserInfo.module.css";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const MAX_FILE_SIZE_MB = 10;
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif"];
 
 export default function UserInfo() {
   const [user, setUser] = useState(null);
@@ -140,6 +142,16 @@ export default function UserInfo() {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      alert("이미지 파일만 업로드해주세요 (jpg, jpeg, png, gif).");
+      return;
+    }
+
+    if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
+      alert("파일 크기가 10MB를 초과합니다.");
+      return;
+    }
 
     reader.onloadend = () => {
       setProfileImage(file);
