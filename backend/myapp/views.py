@@ -209,12 +209,21 @@ def subscription_plans(request):
 logger = logging.getLogger(__name__)
 
 import uuid
+from datetime import timedelta
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_payment(request):
     data = request.data
     plan = get_object_or_404(SubscriptionPlan, pk=data['plan_id'])
+
+    # 현재 유저의 활성 구독 확인
+    current_subscription = UserSubscription.objects.filter(user=request.user, is_active=True).first()
+
+    # 정기 결제 플랜인 경우, 상위 플랜을 구독 중일 때 하위 플랜 결제 방지
+    if plan.is_recurring:
+        if current_subscription and current_subscription.plan.price > plan.price:
+            return Response({'error': 'Cannot downgrade subscription plan while an active higher plan exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
     kakao_api_url = 'https://open-api.kakaopay.com/online/v1/payment/ready'
     headers = {
@@ -228,7 +237,7 @@ def create_payment(request):
     payload = {
         'cid': 'TC0ONETIME',  # 테스트용 가맹점 코드
         'partner_order_id': partner_order_id,
-        'partner_user_id': request.user.username,
+        'partner_user_id': request.user.email,
         'item_name': plan.name,
         'quantity': 1,
         'total_amount': int(plan.price),
@@ -294,7 +303,7 @@ def approve_payment(request):
         'cid': 'TC0ONETIME',
         'tid': tid,
         'partner_order_id': payment.partner_order_id,
-        'partner_user_id': user.username,
+        'partner_user_id': user.email,
         'pg_token': pg_token,
     }
 
@@ -310,7 +319,34 @@ def approve_payment(request):
         payment.approved = True
         payment.save()
 
-        UserSubscription.objects.create(user=user, plan=payment.plan, daily_credits=payment.plan.api_calls_per_day, total_credits=payment.plan.credits)
+        if payment.plan.is_recurring:
+            # 정기 결제 플랜인 경우 기존 구독 처리
+            current_subscription = UserSubscription.objects.filter(user=user, is_active=True).first()
+            if current_subscription:
+                current_subscription.is_active = False
+                current_subscription.end_date = timezone.now()
+                current_subscription.save()
+
+            # 새로운 구독 생성
+            UserSubscription.objects.create(
+                user=user,
+                plan=payment.plan,
+                daily_credits=payment.plan.api_calls_per_day,
+                total_credits=payment.plan.credits,
+                start_date=timezone.now(),
+                end_date=timezone.now() + timedelta(days=30)
+            )
+        else:
+            # 단건 결제 플랜인 경우
+            UserSubscription.objects.create(
+                user=user,
+                plan=payment.plan,
+                daily_credits=0,
+                total_credits=payment.plan.credits,
+                start_date=timezone.now(),
+                end_date=timezone.now() + timedelta(days=90)
+            )
+
         PaymentHistory.objects.create(user=user, plan=payment.plan, amount=payment.amount)
 
         return Response({
@@ -331,6 +367,7 @@ def cancel_payment(request):
 @permission_classes([IsAuthenticated])
 def fail_payment(request):
     return redirect(f'{settings.FRONTEND_URL}/planfail')
+
 
 load_dotenv()
 
