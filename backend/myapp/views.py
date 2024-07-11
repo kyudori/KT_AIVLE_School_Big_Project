@@ -775,9 +775,20 @@ def voice_verity(request):
         key.last_used_at = timezone.now()
         key.save()
 
+        # 파일 처리
+        file = request.FILES.get('file')
+        if not file:
+            return Response({'error': 'No file uploaded'}, status=400)
+
+        # S3에 파일 업로드 (여기서는 로컬 파일 시스템에 저장하는 예를 들었지만, S3에 저장하는 로직을 추가할 수 있습니다)
+        file_path = default_storage.save(f'audio_files/{file.name}', file)
+        file_url = default_storage.url(file_path)
+
         # AI 서버 호출
         try:
-            response = requests.post(FLASK_URL, json=request.data)
+            with open(file_path, 'rb') as f:
+                files = {'file': f}
+                response = requests.post(FLASK_URL, files=files)
             response.raise_for_status()
             ai_result = response.json()
             return Response(ai_result)
