@@ -225,14 +225,18 @@ const ApiManagement = () => {
                 <h3>API Status</h3>
                 <p>내 API Key : {apiKey || "현재 키 없음"}</p>
                 <p>
-                  현재 API 상태 : {apiStatus ? "On" : "Off"}{" "}
+                  현재 API 상태 :{" "}
+                  {isApiServerOn ? (
+                    <span style={{ color: "green" }}>ON</span>
+                  ) : (
+                    <span style={{ color: "red" }}>OFF</span>
+                  )}{" "}
                   <span
                     className={styles.status}
                     style={{
                       backgroundColor: isApiServerOn ? "green" : "red",
                     }}
                   ></span>
-                  {isApiServerOn ? "Server On" : "Server Off"}
                 </p>
                 <p>마지막 사용 시간 : 2000/00/00 00:00:00</p>
               </div>
