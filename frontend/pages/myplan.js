@@ -65,13 +65,14 @@ const MyPlan = () => {
   const confirmPlanChange = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`${BACKEND_URL}/api/payments/create/`, {
+      const response = await axios.post(`${BACKEND_URL}/api/payments/create/`, {
         plan_id: selectedPlan.id,
       }, {
         headers: { Authorization: `Token ${token}` },
       });
-      setShowModal(false);
-      router.push("/plansuccess");
+      const { next_redirect_pc_url, tid } = response.data;
+      sessionStorage.setItem("tid", tid); // 세션 스토리지에 TID 저장
+      window.location.href = next_redirect_pc_url;
     } catch (error) {
       console.error("Error changing plan", error);
     }
