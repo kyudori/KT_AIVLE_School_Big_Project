@@ -1,7 +1,7 @@
 # myapp/tasks.py
 from celery import shared_task
 from django.utils import timezone
-from myapp.models import UserSubscription
+from myapp.models import CustomUser, UserSubscription
 
 @shared_task
 def reset_daily_credits():
@@ -27,3 +27,13 @@ def expire_general_credits():
             subscription.save()
 
     return f'Expired general credits for {subscriptions.count()} subscriptions.'
+
+@shared_task
+def reset_free_credits():
+    users = CustomUser.objects.all()
+
+    for user in users:
+        user.free_credits = 5
+        user.save()
+
+    return f'Free credits reset for {users.count()} users.'

@@ -338,7 +338,7 @@ def approve_payment(request):
                 user=user,
                 plan=payment.plan,
                 daily_credits=payment.plan.api_calls_per_day,
-                total_credits=payment.plan.credits,
+                additional_credits=payment.plan.credits,
                 start_date=timezone.now(),
                 end_date=timezone.now() + timedelta(days=30)
             )
@@ -348,7 +348,7 @@ def approve_payment(request):
                 user=user,
                 plan=payment.plan,
                 daily_credits=0,
-                total_credits=payment.plan.credits,
+                additional_credits=payment.plan.credits,
                 start_date=timezone.now(),
                 end_date=timezone.now() + timedelta(days=90)
             )
@@ -420,8 +420,10 @@ def upload_audio(request):
         fake_cnt = response.json().get('fake_cnt', '')
         real_cnt = response.json().get('real_cnt', '')
     except requests.RequestException as e:
-        return Response({'error': f'Error contacting AI server: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        result = "Fake (AI Server OFF, Ex Report)"
+        predictions = [0.1, 0.1, 0.9, 0.9, 0.9, 0.9]
+        fake_cnt = 4
+        real_cnt = 2
     # DB에 저장
     audio_file = AudioFile(
         user=request.user,
@@ -520,55 +522,77 @@ def toggle_api_status(request):
 @permission_classes([IsAuthenticated])
 def get_credits(request):
     user = request.user
-    active_subscriptions = UserSubscription.objects.filter(user=user, is_active=True)
-    
-    total_daily_credits = sum(sub.daily_credits for sub in active_subscriptions if sub.plan.is_recurring)
-    total_general_credits = sum(sub.total_credits for sub in active_subscriptions if not sub.plan.is_recurring)
+    subscriptions = UserSubscription.objects.filter(user=user, is_active=True)
+
+    # 기본적으로 제공되는 free_credits
+    free_credits = user.free_credits
+
+    # 유효한 추가 크레딧 계산 (만료되지 않은 추가 크레딧만 포함)
+    today = timezone.now().date()
+    valid_additional_subs = subscriptions.filter(plan__is_recurring=False, end_date__gt=today)
+    total_additional_credits = sum(sub.total_credits for sub in valid_additional_subs)
+    used_additional_credits = sum(sub.total_credits - sub.additional_credits for sub in valid_additional_subs)
+
+    # 유효한 일일 크레딧 계산
+    total_daily_credits = sum(sub.plan.api_calls_per_day for sub in subscriptions if sub.plan.is_recurring)
+    used_daily_credits = sum(sub.plan.api_calls_per_day - sub.daily_credits for sub in subscriptions if sub.plan.is_recurring)
+
+    # 남은 크레딧 계산
+    remaining_free_credits = free_credits
+    remaining_daily_credits = total_daily_credits - used_daily_credits
+    remaining_additional_credits = total_additional_credits - used_additional_credits
+
+    # 전체 크레딧 계산
+    total_credits = free_credits + total_daily_credits + total_additional_credits
+    remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
 
     return Response({
-        'total_daily_credits': total_daily_credits,
-        'total_general_credits': total_general_credits
-    }, status=status.HTTP_200_OK)
+        'remaining_free_credits': remaining_free_credits,
+        'remaining_daily_credits': remaining_daily_credits,
+        'remaining_additional_credits': remaining_additional_credits,
+        'remaining_credits': remaining_credits,
+        'total_credits': total_credits
+    })
     
-@csrf_exempt
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def validate_key(request):
-    api_key = request.headers.get('Authorization')
-    if not api_key:
-        return Response({'valid': False, 'error': 'Missing API key'}, status=401)
+# @csrf_exempt
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# def validate_key(request):
+#     api_key = request.headers.get('Authorization')
+#     if not api_key:
+#         return Response({'valid': False, 'error': 'Missing API key'}, status=401)
 
-    api_key = api_key.replace('Bearer ', '')
-    try:
-        key = APIKey.objects.get(key=api_key)
-        if key.credits <= 0:
-            return Response({'valid': False, 'error': 'Insufficient credits'}, status=401)
+#     api_key = api_key.replace('Bearer ', '')
+#     try:
+#         key = APIKey.objects.get(key=api_key)
+#         if key.credits <= 0:
+#             return Response({'valid': False, 'error': 'Insufficient credits'}, status=401)
 
-        key.credits -= 1
-        key.last_used_at = timezone.now()
-        key.save()
-        return Response({'valid': True})
-    except APIKey.DoesNotExist:
-        return Response({'valid': False, 'error': 'Invalid API key'}, status=401)
+#         key.credits -= 1
+#         key.last_used_at = timezone.now()
+#         key.save()
+#         return Response({'valid': True})
+#     except APIKey.DoesNotExist:
+#         return Response({'valid': False, 'error': 'Invalid API key'}, status=401)
     
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def api_usage_weekly(request):
-    user = request.user
-    one_week_ago = timezone.now() - timedelta(days=7)
-    history = UploadHistory.objects.filter(user=user, upload_date__gte=one_week_ago)
-    data = [{"date": h.upload_date, "count": h.upload_count} for h in history]
-    return Response(data)
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def api_usage_weekly(request):
+#     user = request.user
+#     one_week_ago = timezone.now() - timedelta(days=7)
+#     history = UploadHistory.objects.filter(user=user, upload_date__gte=one_week_ago)
+#     data = [{"date": h.upload_date, "count": h.upload_count} for h in history]
+#     return Response(data)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def group_usage(request):
-    group_data = (
-        UploadHistory.objects
-        .values('user__company')
-        .annotate(total_uploads=models.Sum('upload_count'))
-    )
-    return Response(group_data)
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def group_usage(request):
+#     group_data = (
+#         UploadHistory.objects
+#         .values('user__company')
+#         .annotate(total_uploads=models.Sum('upload_count'))
+#     )
+#     return Response(group_data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -699,3 +723,45 @@ def check_api_status(request):
         return Response(response.json(), status=status.HTTP_200_OK)
     except requests.RequestException as e:
         return Response({'status': 'Error', 'detail': 'FastAPI server is down'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# def voice_verity(request):
+#     api_key = request.headers.get('Authorization')
+#     if not api_key:
+#         return Response({'error': 'Missing API key'}, status=401)
+
+#     api_key = api_key.replace('Bearer ', '')
+#     try:
+#         key = APIKey.objects.get(key=api_key)
+#         user = key.user
+        
+#         # 크레딧 검증
+#         today = timezone.now().date()
+#         if key.last_used_at and key.last_used_at.date() != today:
+#             key.credits_used_today = 0
+
+#         if user.daily_credits > 0:
+#             user.daily_credits -= 1
+#         elif user.additional_credits > 0:
+#             user.additional_credits -= 1
+#         else:
+#             return Response({'error': 'Insufficient credits'}, status=403)
+        
+#         key.credits_used_today += 1
+#         key.last_used_at = timezone.now()
+#         key.save()
+#         user.save()
+
+#         # AI 서버 호출
+#         try:
+#             response = requests.post(FLASK_URL, json=request.data)
+#             response.raise_for_status()
+#             ai_result = response.json()
+#             return Response(ai_result)
+#         except requests.RequestException as e:
+#             return Response({'error': 'Failed to connect to AI server', 'details': str(e)}, status=404)
+#     except APIKey.DoesNotExist:
+#         return Response({'error': 'Invalid API key'}, status=402)
+#     except Exception as e:
+#         return Response({'error': str(e)}, status=500)

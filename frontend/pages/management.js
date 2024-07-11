@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { Doughnut } from "react-chartjs-2";
 import styles from "../styles/Apimanagement.module.css";
 import Footer from "../components/Footer";
 
@@ -8,15 +9,17 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const ApiManagement = () => {
   const [user, setUser] = useState(null);
+  const [dailyCredits, setDailyCredits] = useState(0);
+  const [additionalCredits, setAdditionalCredits] = useState(0);
+  const [freeCredits, setFreeCredits] = useState(0);
+  const [usedCredits, setUsedCredits] = useState(0);
+  const [totalCredits, setTotalCredits] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [apiKey, setApiKey] = useState(null);
   const [apiStatus, setApiStatus] = useState(false); // Activate status
   const [isApiServerOn, setIsApiServerOn] = useState(false); // API Server status
   const [isOpen, setMenu] = useState(true);
-  const [dailyCredits, setDailyCredits] = useState(0);
-  const [additionalCredits, setAdditionalCredits] = useState(0);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -27,13 +30,13 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${token}`,
           },
-          withCredentials: true,  // 세션 인증을 위해 필요
+          withCredentials: true, // 세션 인증을 위해 필요
         })
         .then((response) => {
           setUser(response.data);
           fetchApiKey(token);
+          fetchCredits(token);
           checkApiServerStatus(token); // Check API server status
-          fetchCredits(token); // Fetch credits information
         })
         .catch((error) => {
           console.error("사용자 정보 가져오기 오류", error);
@@ -52,7 +55,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
-        withCredentials: true,  // 세션 인증을 위해 필요
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setApiKey(response.data.api_key);
@@ -69,14 +72,22 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
-        withCredentials: true,  // 세션 인증을 위해 필요
+        withCredentials: true,
       })
       .then((response) => {
-        setDailyCredits(response.data.total_daily_credits);
-        setAdditionalCredits(response.data.total_general_credits);
+        setDailyCredits(response.data.remaining_daily_credits);
+        setAdditionalCredits(response.data.remaining_additional_credits);
+        setFreeCredits(response.data.remaining_free_credits);
+        setUsedCredits(
+          response.data.total_credits -
+            (response.data.remaining_daily_credits +
+              response.data.remaining_additional_credits +
+              response.data.remaining_free_credits)
+        );
+        setTotalCredits(response.data.total_credits);
       })
       .catch((error) => {
-        console.error("Credits 가져오기 오류", error);
+        console.error("크레딧 가져오기 오류", error);
       });
   };
 
@@ -86,7 +97,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
-        withCredentials: true,  // 세션 인증을 위해 필요
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setIsApiServerOn(response.data.status === "OK");
@@ -108,7 +119,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
-            withCredentials: true,  // 세션 인증을 위해 필요
+            withCredentials: true, // 세션 인증을 위해 필요
           }
         )
         .then((response) => {
@@ -136,7 +147,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
-            withCredentials: true,  // 세션 인증을 위해 필요
+            withCredentials: true, // 세션 인증을 위해 필요
           }
         )
         .then((response) => {
@@ -163,7 +174,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
-            withCredentials: true,  // 세션 인증을 위해 필요
+            withCredentials: true, // 세션 인증을 위해 필요
           }
         )
         .then(() => {
@@ -191,7 +202,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
-            withCredentials: true,  // 세션 인증을 위해 필요
+            withCredentials: true, // 세션 인증을 위해 필요
           }
         )
         .then((response) => {
@@ -221,25 +232,69 @@ const ApiManagement = () => {
   };
 
   const toggleMenu = () => {
-    setMenu(isOpen => !isOpen);
+    setMenu((isOpen) => !isOpen);
   };
 
   const renderContent = () => {
     switch (currentPage) {
       case "dashboard":
+        const data = {
+          labels: ["Free", "Daily", "Additional", "Used"],
+          datasets: [
+            {
+              data: [
+                freeCredits,
+                dailyCredits,
+                additionalCredits,
+                usedCredits,
+              ],
+              backgroundColor: ["#36A2EB", "#FFCE56", "#FF6384", "#CCCCCC"],
+            },
+          ],
+        };
+
+        const options = {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function (tooltipItem) {
+                  const label = data.labels[tooltipItem.dataIndex];
+                  const value =
+                    data.datasets[tooltipItem.datasetIndex].data[
+                      tooltipItem.dataIndex
+                    ];
+                  return `${label}: ${value}개`;
+                },
+              },
+            },
+          },
+        };
+
         return (
           <div className={styles.content}>
             <div className={styles.row}>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
-                  <h3>Daily Credit</h3>
-                  <div className={styles.credit}>{dailyCredits}</div>
+                  <h3>남은 총 Credit</h3>
+                  <div className={styles.credit}>
+                    {totalCredits}개
+                    <p>free: {freeCredits}개</p>
+                    {dailyCredits > 0 && <p>daily: {dailyCredits}개</p>}
+                    {additionalCredits > 0 && <p>addi: {additionalCredits}개</p>}
+                  </div>
                 </div>
               </div>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
-                  <h3>Additional Credit</h3>
-                  <div className={styles.credit}>{additionalCredits}</div>
+                  <h3>사용 현황</h3>
+                  <Doughnut data={data} options={options} />
+                  <p>{Math.round(((totalCredits - usedCredits) / totalCredits) * 100)}% 남음</p>
+                  <button
+                    className={styles.purchaseButton}
+                    onClick={() => router.push("/plan")}
+                  >
+                    Credit 구매하기
+                  </button>
                 </div>
               </div>
               <div className={styles.card}>

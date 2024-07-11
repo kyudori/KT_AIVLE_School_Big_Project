@@ -3,7 +3,7 @@ from .models import CustomUser, SubscriptionPlan, UserSubscription, PaymentHisto
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'nickname', 'company', 'contact', 'sms_marketing', 'email_marketing')
+    list_display = ('username', 'email', 'nickname', 'company', 'contact', 'sms_marketing', 'email_marketing', 'free_credits')
     search_fields = ('email', 'username', 'nickname', 'company', 'contact')
     list_filter = ('sms_marketing', 'email_marketing')
 
@@ -27,7 +27,7 @@ class PaymentHistoryAdmin(admin.ModelAdmin):
 
 @admin.register(APIKey)
 class APIKeyAdmin(admin.ModelAdmin):
-    list_display = ('user', 'key', 'created_at', 'last_used_at', 'credits')
+    list_display = ('user', 'key', 'created_at', 'last_used_at')
     search_fields = ('user__username', 'key')
     list_filter = ('created_at', 'last_used_at')
 

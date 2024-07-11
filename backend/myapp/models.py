@@ -15,6 +15,7 @@ class CustomUser(AbstractUser):
     sms_marketing = models.BooleanField(default=False)
     email_marketing = models.BooleanField(default=False)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    free_credits = models.IntegerField(default=5)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -82,7 +83,6 @@ class APIKey(models.Model):
     key = models.CharField(max_length=32, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_used_at = models.DateTimeField(null=True, blank=True)
-    credits = models.IntegerField(default=10)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
