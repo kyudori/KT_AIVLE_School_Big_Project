@@ -11,6 +11,8 @@ const MyPlan = () => {
   const [plans, setPlans] = useState([]);
   const [currentPlan, setCurrentPlan] = useState(null);
   const [nextPaymentDate, setNextPaymentDate] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -35,14 +37,31 @@ const MyPlan = () => {
   }, []);
 
   const handlePlanClick = (plan) => {
-    if (plan.id === currentPlan.id) {
+    if (!currentPlan) {
+      setSelectedPlan(plan);
+      setShowModal(true);
+    } else if (plan.id === currentPlan.id) {
       alert("현재 구독 중인 플랜입니다.");
     } else if (plan.id < currentPlan.id) {
       alert("현재 구독 중인 플랜이 더 좋은 플랜입니다.");
     } else {
-      if (confirm(`현재 플랜을 ${plan.name}(으)로 변경하시겠습니까?`)) {
-        // 플랜 변경 로직 구현
-      }
+      setSelectedPlan(plan);
+      setShowModal(true);
+    }
+  };
+
+  const confirmPlanChange = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(`${BACKEND_URL}/api/payments/create/`, {
+        plan_id: selectedPlan.id,
+      }, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      setShowModal(false);
+      router.push("/payment");
+    } catch (error) {
+      console.error("Error changing plan", error);
     }
   };
 
@@ -58,21 +77,25 @@ const MyPlan = () => {
           </div>
           <p>다음 결제일 : {nextPaymentDate ? new Date(nextPaymentDate).toLocaleDateString() : "정보 없음"}</p>
         </div>
-        <div className={styles.plans}>
-          {plans.map((plan) => (
-            <div 
-              key={plan.id} 
-              className={`${styles.planCard} ${plan.id === currentPlan?.id ? styles.currentPlan : ""}`}
-              onClick={() => handlePlanClick(plan)}
-            >
-              <h2>{plan.name}</h2>
-              <p>{plan.price.toLocaleString("ko-KR")} / {plan.is_recurring ? "월" : "회"}</p>
-              <ul>
-                <li>{plan.description}</li>
-              </ul>
-            </div>
-          ))}
-        </div>
+        {currentPlan ? (
+          <div className={styles.plans}>
+            {plans.map((plan) => (
+              <div 
+                key={plan.id} 
+                className={`${styles.planCard} ${plan.id === currentPlan?.id ? styles.currentPlan : ""}`}
+                onClick={() => handlePlanClick(plan)}
+              >
+                <h2>{plan.name}</h2>
+                <p>{plan.price.toLocaleString("ko-KR")} / {plan.is_recurring ? "월" : "회"}</p>
+                <ul>
+                  <li>{plan.description}</li>
+                </ul>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>현재 구독 중인 플랜이 없습니다.</p>
+        )}
       </div>
       <div className={styles.contactUs}>
         <h2>Voice Verity와 함께해요.</h2>
@@ -80,6 +103,18 @@ const MyPlan = () => {
         <button onClick={() => router.push("/contact")}>Contact Us</button>
       </div>
       <Footer />
+      {showModal && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h2>구독 변경 확인</h2>
+            <p>현재 구독 플랜: {currentPlan.name}</p>
+            <p>새로운 구독 플랜: {selectedPlan.name}</p>
+            <p>이 변경사항을 확인하면 새로운 구독으로 결제됩니다.</p>
+            <button onClick={confirmPlanChange}>확인</button>
+            <button onClick={() => setShowModal(false)}>취소</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
