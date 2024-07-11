@@ -117,3 +117,10 @@
     font-size: 16px;
     border-radius: 5px;
 }
+
+.doughnutWrapper {
+  width: 200px; /* 원하는 크기로 설정 */
+  height: 200px; /* 원하는 크기로 설정 */
+  margin: 0 auto;
+  position: relative;
+}

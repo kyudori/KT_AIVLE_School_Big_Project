@@ -22,7 +22,6 @@ const ApiManagement = () => {
   const [apiKey, setApiKey] = useState(null);
   const [apiStatus, setApiStatus] = useState(false); // Activate status
   const [isApiServerOn, setIsApiServerOn] = useState(false); // API Server status
-  const [lastUsedAt, setLastUsedAt] = useState("사용한 기록이 없습니다."); // 추가된 부분
   const [isOpen, setMenu] = useState(true);
   const router = useRouter();
 
@@ -64,7 +63,6 @@ const ApiManagement = () => {
       .then((response) => {
         setApiKey(response.data.api_key);
         setApiStatus(response.data.is_active); // API key status
-        setLastUsedAt(response.data.last_used_at); // 추가된 부분
       })
       .catch((error) => {
         console.error("API Key 가져오기 오류", error);
@@ -185,7 +183,6 @@ const ApiManagement = () => {
         .then(() => {
           setApiKey(null);
           setApiStatus(false); // 비활성화 상태
-          setLastUsedAt("사용한 기록이 없습니다."); // 추가된 부분
         })
         .catch((error) => {
           if (error.response && error.response.data.error) {
@@ -276,10 +273,16 @@ const ApiManagement = () => {
             title: {
               display: true,
               text: `${Math.round(((totalCredits - usedCredits) / totalCredits) * 100)}% 남음`,
-              position: 'center'
+              position: 'top',
+              align: 'center',
+              font: {
+                size: 18,
+              }
             }
           },
           cutout: '70%',
+          responsive: true,
+          maintainAspectRatio: false,
         };
 
         return (
@@ -299,7 +302,9 @@ const ApiManagement = () => {
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
                   <h3>사용 현황</h3>
-                  <Doughnut data={data} options={options} />
+                  <div className={styles.doughnutWrapper}>
+                    <Doughnut data={data} options={options} />
+                  </div>
                   <button
                     className={styles.purchaseButton}
                     onClick={() => router.push("/plan")}
@@ -325,7 +330,7 @@ const ApiManagement = () => {
                     }}
                   ></span>
                 </p>
-                <p>마지막 사용 시간 : {lastUsedAt}</p> {/* 수정된 부분 */}
+                <p>마지막 사용 시간 : {apiKey ? `${apiKey.last_used_at}` : "사용한 기록이 없습니다."}</p>
               </div>
             </div>
             <div className={styles.trafficSummary}>
