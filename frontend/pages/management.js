@@ -12,6 +12,7 @@ const ApiManagement = () => {
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [apiKey, setApiKey] = useState(null);
   const [apiStatus, setApiStatus] = useState(false); // Activate status
+  const [isApiServerOn, setIsApiServerOn] = useState(false); // API Server status
   const [isOpen, setMenu] = useState(true);
   const router = useRouter();
 
@@ -28,6 +29,7 @@ const ApiManagement = () => {
         .then((response) => {
           setUser(response.data);
           fetchApiKey(token);
+          checkApiServerStatus(token); // Check API server status
         })
         .catch((error) => {
           console.error("사용자 정보 가져오기 오류", error);
@@ -54,6 +56,23 @@ const ApiManagement = () => {
       })
       .catch((error) => {
         console.error("API Key 가져오기 오류", error);
+      });
+  };
+
+  const checkApiServerStatus = (token) => {
+    axios
+      .get(`${BACKEND_URL}/api/check-api-status/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+        withCredentials: true,  // 세션 인증을 위해 필요
+      })
+      .then((response) => {
+        setIsApiServerOn(response.data.status === "OK");
+      })
+      .catch((error) => {
+        setIsApiServerOn(false);
+        console.error("API 서버 상태 확인 오류", error);
       });
   };
 
@@ -207,7 +226,13 @@ const ApiManagement = () => {
                 <p>내 API Key : {apiKey || "현재 키 없음"}</p>
                 <p>
                   현재 API 상태 : {apiStatus ? "On" : "Off"}{" "}
-                  <span className={styles.status}></span>
+                  <span
+                    className={styles.status}
+                    style={{
+                      backgroundColor: isApiServerOn ? "green" : "red",
+                    }}
+                  ></span>
+                  {isApiServerOn ? "Server On" : "Server Off"}
                 </p>
                 <p>마지막 사용 시간 : 2000/00/00 00:00:00</p>
               </div>
@@ -355,8 +380,8 @@ const ApiManagement = () => {
               {isDropdownOpen && (
                 <div className={styles.dropdownMenu}>
                   <ul>
-                    <li onClick={() => router.push("/user-info")}>내정보</li>
-                    <li onClick={() => router.push("/myplan")}>내구독</li>
+                    <li onClick={() => router.push("/user-info")}>내 정보</li>
+                    <li onClick={() => router.push("/myplan")}>내 구독</li>
                     <li onClick={handleLogout}>로그아웃</li>
                   </ul>
                 </div>
