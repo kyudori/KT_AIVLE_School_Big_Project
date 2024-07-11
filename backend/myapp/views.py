@@ -188,6 +188,28 @@ def subscription_plans(request):
     ]
     return Response(plans_data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_plan(request):
+    user = request.user
+    current_subscription = UserSubscription.objects.filter(user=user, is_active=True).first()
+
+    if not current_subscription:
+        return Response({'plan': None, 'next_payment_date': None}, status=200)
+
+    next_payment_date = current_subscription.end_date
+
+    plan_data = {
+        'id': current_subscription.plan.id,
+        'name': current_subscription.plan.name,
+        'price': current_subscription.plan.price,
+        'api_calls_per_day': current_subscription.plan.api_calls_per_day,
+        'credits': current_subscription.plan.credits,
+        'is_recurring': current_subscription.plan.is_recurring,
+        'description': current_subscription.plan.description
+    }
+
+    return Response({'plan': plan_data, 'next_payment_date': next_payment_date}, status=200)
 
 # 설정된 로거 사용
 logger = logging.getLogger(__name__)

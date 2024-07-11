@@ -13,6 +13,8 @@ const MyPlan = () => {
   const [nextPaymentDate, setNextPaymentDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [user, setUser] = useState({});
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -24,13 +26,23 @@ const MyPlan = () => {
         });
         setPlans(plansResponse.data);
         
-        const currentPlanResponse = await axios.get(`${BACKEND_URL}/api/user/current-plan/`, {
+        const currentPlanResponse = await axios.get(`${BACKEND_URL}/api/current-plan/`, {
           headers: { Authorization: `Token ${token}` },
         });
         setCurrentPlan(currentPlanResponse.data.plan);
         setNextPaymentDate(currentPlanResponse.data.next_payment_date);
+
+        const userInfoResponse = await axios.get(`${BACKEND_URL}/api/user-info/`, {
+          headers: { Authorization: `Token ${token}` },
+        });
+        setUser(userInfoResponse.data);
+        setImagePreviewUrl(
+          userInfoResponse.data.profile_image_url
+            ? `${BACKEND_URL}${userInfoResponse.data.profile_image_url}`
+            : "/images/userinfo/profile_default.png"
+        );
       } catch (error) {
-        console.error("Error fetching plans", error);
+        console.error("Error fetching plans or user info", error);
       }
     };
     fetchPlans();
@@ -70,9 +82,11 @@ const MyPlan = () => {
       <Navbar />
       <div className={styles.main}>
         <div className={styles.userInfo}>
-          <div className={styles.userIcon} />
+          <div className={styles.userIcon}>
+            <img src={imagePreviewUrl} alt="User Icon" />
+          </div>
           <div>
-            <h2>User Name</h2>
+            <h2>{user.username || "User Name"}</h2>
             <p>현재 구독플랜</p>
           </div>
           <p>다음 결제일 : {nextPaymentDate ? new Date(nextPaymentDate).toLocaleDateString() : "정보 없음"}</p>
@@ -107,7 +121,7 @@ const MyPlan = () => {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h2>구독 변경 확인</h2>
-            <p>현재 구독 플랜: {currentPlan.name}</p>
+            <p>현재 구독 플랜: {currentPlan?.name || "없음"}</p>
             <p>새로운 구독 플랜: {selectedPlan.name}</p>
             <p>이 변경사항을 확인하면 새로운 구독으로 결제됩니다.</p>
             <button onClick={confirmPlanChange}>확인</button>

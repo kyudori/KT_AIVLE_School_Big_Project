@@ -1,77 +1,129 @@
-/* styles/Myplan.module.css */
 .container {
-    padding: 0 200px;
-    background: #fff;
-  }
-  
-  .main {
-    padding: 20px;
-  }
-  
-  .userInfo {
+    font-family: fontA, sans-serif;
+    background-position: top;
+    background-size: cover;
+    background: rgba(217, 217, 217, 0.5);
+    color: black;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.main {
+    flex: 1;
+    display: grid;    
+    text-align: center;
+    margin: 0 200px;
+    justify-content: center;
+}
+
+.userInfo {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 20px;
-  }
-  
-  .userIcon {
+}
+
+.userIcon {
     width: 80px;
     height: 80px;
+    background-color: #cdcdcd;
     border-radius: 50%;
-    background-color: #ccc;
-    margin-right: 20px;
-  }
-  
-  .plans {
+    overflow: hidden;
+}
+
+.userIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.plans {
     display: flex;
-    justify-content: space-between;
-  }
-  
-  .planCard {
-    width: 30%;
-    border: 1px solid #ddd;
-    padding: 20px;
+    justify-content: space-around;
+}
+
+.planCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: solid rgba(0, 0, 0, 0.3);
     border-radius: 10px;
+    width: 280px;
     text-align: center;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-  
-  .planCard:hover {
+}
+
+.planCard:hover {
     transform: scale(1.05);
-  }
-  
-  .currentPlan {
-    border-color: #0070f3;
-    background-color: #e0f7ff;
-  }
-  
-  .contactUs {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.planCard h2 {
+    font-weight: normal;
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.planCard p {
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.planCard ul {
+    padding: 0;
+    margin: 40px;
+    text-align: left;
+    list-style: none;
+}
+
+.currentPlan {
+    border: 2px solid #000;
+    position: relative;
+}
+
+.currentPlan::after {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
     text-align: center;
-    padding: 40px;
-    background: #f9f9f9;
-    border-top: 1px solid #ddd;
-  }
-  
-  .contactUs h2 {
-    margin-bottom: 20px;
-  }
-  
-  .contactUs button {
-    padding: 10px 20px;
-    background: #0070f3;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    line-height: 20px;
+    border: 2px solid black;
+}
+
+.contactUs {
+    text-align: center;
+    padding: 20px;
+}
+
+.contactUs button {
     cursor: pointer;
-  }
-  
-  .contactUs button:hover {
-    background: #005bb5;
-  }
-  
-  /* Modal styles */
-  .modal {
+    height: 45px;
+    width: 240px;
+    margin-bottom: 23px;
+    border: none;
+    font-family: fontA;
+    font-size: 20px;
+    background-color: rgba(0, 0, 0, 0);
+    color: #000;
+    outline: solid 1px #000;
+    border-radius: 40px;
+    transition: background 0.3s;
+}
+
+.contactUs button:hover {
+    background-color: #d9d9d9;
+}
+
+.modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -81,30 +133,25 @@
     align-items: center;
     justify-content: center;
     background: rgba(0, 0, 0, 0.5);
-  }
-  
-  .modalContent {
+}
+
+.modalContent {
     background: white;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-  }
-  
-  .modalContent h2 {
-    margin-bottom: 20px;
-  }
-  
-  .modalContent button {
+}
+
+.modalContent button {
+    margin: 10px;
     padding: 10px 20px;
-    background: #0070f3;
-    color: white;
     border: none;
+    font-family: fontA;
+    font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
-    margin: 0 10px;
-  }
-  
-  .modalContent button:hover {
-    background: #005bb5;
-  }
-  
+}
+
+.modalContent button:hover {
+    background-color: #d9d9d9;
+}
