@@ -380,8 +380,8 @@ load_dotenv()
 FLASK_URL = 'http://220.149.235.232:8000'
 
 ALLOWED_EXTENSIONS = ['.wav', '.mp3', '.m4a']
-MAX_FILE_SIZE_MB = 500
-MAX_UPLOADS_PER_DAY = 6060
+MAX_FILE_SIZE_MB = 200
+MAX_UPLOADS_PER_DAY = 100
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -411,11 +411,12 @@ def upload_audio(request):
     file_path = default_storage.save(f'audio_files/{file.name}', file)
     file_url = default_storage.url(file_path)
 
-    # Flask 서버에 파일 경로 전송
+    # AI 서버에 파일 경로 전송
     try:
         response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url})
         response.raise_for_status()
         result = response.json().get('analysis_result', '')
+        data_type = response.json().get('data_type', 'aws')
         predictions = response.json().get('predictions', [])
         fake_cnt = response.json().get('fake_cnt', '')
         real_cnt = response.json().get('real_cnt', '')
