@@ -23,6 +23,7 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${token}`,
           },
+          withCredentials: true,  // 세션 인증을 위해 필요
         })
         .then((response) => {
           setUser(response.data);
@@ -45,6 +46,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
+        withCredentials: true,  // 세션 인증을 위해 필요
       })
       .then((response) => {
         setApiKey(response.data.api_key);
@@ -66,6 +68,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
+            withCredentials: true,  // 세션 인증을 위해 필요
           }
         )
         .then((response) => {
@@ -93,6 +96,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
+            withCredentials: true,  // 세션 인증을 위해 필요
           }
         )
         .then((response) => {
@@ -119,6 +123,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
+            withCredentials: true,  // 세션 인증을 위해 필요
           }
         )
         .then(() => {
@@ -146,6 +151,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
+            withCredentials: true,  // 세션 인증을 위해 필요
           }
         )
         .then((response) => {
