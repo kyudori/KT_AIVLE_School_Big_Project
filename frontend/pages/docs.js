@@ -40,7 +40,7 @@ export default function Documentation() {
       alert("로그인이 필요합니다.");
       return;
     }
-    router.push("/setting");
+    router.push("/management");
   };
 
   const handleContactUs = () => {
@@ -149,7 +149,7 @@ export default function Documentation() {
                     <div className={styles.cardtext}>
                       <h2>Key 발급</h2>
                       <p style={{ color: "#444", fontSize: "20px" }}>Get Key</p>
-                      <p style={{ color: "blue" }}>Go to Setting &gt;</p>
+                      <p style={{ color: "blue" }}>Go to APIManagement &gt;</p>
                     </div>
                   </div>
                 </div>

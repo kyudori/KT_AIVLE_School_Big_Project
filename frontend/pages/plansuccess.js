@@ -70,8 +70,8 @@ const PlanSuccess = () => {
                 Date: {new Date(paymentDetails.payment_date).toLocaleString()}
               </p>
             )}
-            <Link href="/docs">
-              <button className={styles.button}>Go to Docs</button>
+            <Link href="/myplan">
+              <button className={styles.button}>내 구독 확인하기</button>
             </Link>
           </div>
         ) : (
