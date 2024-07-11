@@ -62,6 +62,12 @@ export default function TryVoice() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("로그인 후, 이용 가능합니다.");
+      return;
+    }
+
     if (!file) {
       alert("음성 파일을 업로드가 필요합니다.");
       return;
@@ -70,7 +76,6 @@ export default function TryVoice() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const token = localStorage.getItem("token");
       const response = await axios.post(
         `${BACKEND_URL}/api/upload-audio/`,
         formData,

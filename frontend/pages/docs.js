@@ -149,7 +149,7 @@ export default function Documentation() {
                     <div className={styles.cardtext}>
                       <h2>Key 발급</h2>
                       <p style={{ color: "#444", fontSize: "20px" }}>Get Key</p>
-                      <p style={{ color: "blue" }}>Go to APIManagement &gt;</p>
+                      <p style={{ color: "blue" }}>Go to API Management &gt;</p>
                     </div>
                   </div>
                 </div>
