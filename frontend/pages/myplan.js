@@ -21,20 +21,29 @@ const MyPlan = () => {
     const fetchPlans = async () => {
       try {
         const token = localStorage.getItem("token");
-        const plansResponse = await axios.get(`${BACKEND_URL}/api/subscription-plans/`, {
-          headers: { Authorization: `Token ${token}` },
-        });
-        setPlans(plansResponse.data.filter(plan => plan.is_recurring)); // 구독 플랜만 필터링
-        
-        const currentPlanResponse = await axios.get(`${BACKEND_URL}/api/current-plan/`, {
-          headers: { Authorization: `Token ${token}` },
-        });
+        const plansResponse = await axios.get(
+          `${BACKEND_URL}/api/subscription-plans/`,
+          {
+            headers: { Authorization: `Token ${token}` },
+          }
+        );
+        setPlans(plansResponse.data.filter((plan) => plan.is_recurring)); // 구독 플랜만 필터링
+
+        const currentPlanResponse = await axios.get(
+          `${BACKEND_URL}/api/current-plan/`,
+          {
+            headers: { Authorization: `Token ${token}` },
+          }
+        );
         setCurrentPlan(currentPlanResponse.data.plan);
         setNextPaymentDate(currentPlanResponse.data.next_payment_date);
 
-        const userInfoResponse = await axios.get(`${BACKEND_URL}/api/user-info/`, {
-          headers: { Authorization: `Token ${token}` },
-        });
+        const userInfoResponse = await axios.get(
+          `${BACKEND_URL}/api/user-info/`,
+          {
+            headers: { Authorization: `Token ${token}` },
+          }
+        );
         setUser(userInfoResponse.data);
         setImagePreviewUrl(
           userInfoResponse.data.profile_image_url
@@ -65,11 +74,15 @@ const MyPlan = () => {
   const confirmPlanChange = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(`${BACKEND_URL}/api/payments/create/`, {
-        plan_id: selectedPlan.id,
-      }, {
-        headers: { Authorization: `Token ${token}` },
-      });
+      const response = await axios.post(
+        `${BACKEND_URL}/api/payments/create/`,
+        {
+          plan_id: selectedPlan.id,
+        },
+        {
+          headers: { Authorization: `Token ${token}` },
+        }
+      );
       const { next_redirect_pc_url, tid } = response.data;
       sessionStorage.setItem("tid", tid); // 세션 스토리지에 TID 저장
       window.location.href = next_redirect_pc_url;
@@ -80,28 +93,41 @@ const MyPlan = () => {
 
   return (
     <div className={styles.container}>
-      <Navbar />
+      <div style={{ padding: "0 200px", background: "#fff" }}>
+        <Navbar />
+      </div>
+      <div style={{ height: "50px" }} />
       <div className={styles.main}>
         <div className={styles.userInfo}>
           <div className={styles.userIcon}>
             <img src={imagePreviewUrl} alt="User Icon" />
           </div>
-          <div>
-            <h2>{user.username || "User Name"}</h2>
-            <p>현재 구독플랜</p>
-          </div>
-          <p className={styles.paymentDate}>다음 결제일 : {nextPaymentDate ? new Date(nextPaymentDate).toLocaleDateString() : "정보 없음"}</p>
+          <h2>{user.username || "User Name"}</h2>
+        </div>
+        <div className={styles.text}>
+          <h1>현재 구독플랜</h1>
+          <p className={styles.paymentDate}>
+            다음 결제일 :{" "}
+            {nextPaymentDate
+              ? new Date(nextPaymentDate).toLocaleDateString()
+              : "정보 없음"}
+          </p>
         </div>
         {currentPlan ? (
           <div className={styles.plans}>
             {plans.map((plan) => (
-              <div 
-                key={plan.id} 
-                className={`${styles.planCard} ${plan.id === currentPlan?.id ? styles.currentPlan : ""}`}
+              <div
+                key={plan.id}
+                className={`${styles.planCard} ${
+                  plan.id === currentPlan?.id ? styles.currentPlan : ""
+                }`}
                 onClick={() => handlePlanClick(plan)}
               >
                 <h2>{plan.name}</h2>
-                <p>{plan.price.toLocaleString("ko-KR")} / {plan.is_recurring ? "월" : "회"}</p>
+                <p>
+                  {plan.price.toLocaleString("ko-KR")} /{" "}
+                  {plan.is_recurring ? "월" : "회"}
+                </p>
                 <ul>
                   <li>{plan.description}</li>
                 </ul>
@@ -110,8 +136,23 @@ const MyPlan = () => {
           </div>
         ) : (
           <>
-            <p className={styles.noPlan}>현재 구독 중인 플랜이 없습니다.</p>
-            <button className={styles.subscribeButton} onClick={() => router.push("/plan")}>구독하러 가기</button>
+            <div style={{ textAlign: "-webkit-center" }}>
+              <div className={styles.planCard}>
+                <div style={{ height: "30px" }}></div>
+                <div className={styles.cardcontent}>
+                  <p className={styles.noPlan}>
+                    현재 구독 중인 플랜이 없습니다.
+                  </p>
+                  <h3 style={{ margin: "0", marginTop: "30px" }}>▼</h3>
+                  <button
+                    className={styles.subscribeButton}
+                    onClick={() => router.push("/plan")}
+                  >
+                    구독하러 가기
+                  </button>
+                </div>
+              </div>
+            </div>
           </>
         )}
       </div>

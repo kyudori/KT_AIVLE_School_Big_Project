@@ -64,11 +64,11 @@
   border-collapse: collapse;
 }
 
-.table th, .table td {
+.table th {
   font-weight: normal;
-  border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
+  border-bottom: solid 1px #ddd;
 }
 
 .table th {
@@ -76,18 +76,30 @@
   color: #333;
 }
 
-.table tr {
+.table tbody {
   cursor: pointer;
 }
 
-.table tr:hover {
-  background-color: #ddd;
+.table tbody tr {
+  height: 50px;
+  border-bottom: solid 1px #ddd;
 }
 
-.table tr:nth-child(even) {
-  background-color: #f2f2f2;
+.table td {
+  font-weight: normal;
+  text-align: center;
+  color: #666;
+}
+
+.table tbody:hover {
+  background-color: #f0f0f0;
+  transition: all 0.2s ease;
+}
+
+.table td:hover {
+  margin: 0;
 }
 
 .notice {
-  background-color: yellow;
+  background-color: #ddd;
 }
