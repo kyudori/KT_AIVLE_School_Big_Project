@@ -729,7 +729,11 @@ def check_api_status(request):
         return Response(response.json(), status=status.HTTP_200_OK)
     except requests.RequestException as e:
         return Response({'status': 'Error', 'detail': 'FastAPI server is down'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
+AWS_REGION = 'ap-northeast-1'
+AWS_STORAGE_BUCKET_NAME = 'aivle-8-team-rsb'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com'
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def voice_verity(request):
@@ -741,7 +745,7 @@ def voice_verity(request):
     try:
         key = APIKey.objects.get(key=api_key)
         user = key.user
-
+        
         # 크레딧 검증
         today = timezone.now().date()
         
@@ -776,24 +780,14 @@ def voice_verity(request):
         key.last_used_at = timezone.now()
         key.save()
 
-        # 파일 처리
+        # AI 서버 호출
         file = request.FILES.get('file')
         if not file:
             return Response({'error': 'No file uploaded'}, status=400)
 
-        # S3에 파일 업로드
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=settings.AWS_REGION
-        )
+        # Construct the S3 file URL
+        file_url = f"https://{AWS_S3_CUSTOM_DOMAIN}/{file.name}"
 
-        file_name = file.name
-        s3_client.upload_fileobj(file, settings.AWS_STORAGE_BUCKET_NAME, f'audio_files/{file_name}')
-        file_url = f'https://{settings.AWS_S3_CUSTOM_DOMAIN}/audio_files/{file_name}'
-
-        # AI 서버에 파일 경로 전송
         try:
             response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
             response.raise_for_status()
