@@ -413,18 +413,15 @@ def upload_audio(request):
 
     # AI 서버에 파일 경로 전송
     try:
-        response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url})
+        response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
         response.raise_for_status()
         result = response.json().get('analysis_result', '')
-        data_type = response.json().get('data_type', 'aws')
         predictions = response.json().get('predictions', [])
         fake_cnt = response.json().get('fake_cnt', '')
         real_cnt = response.json().get('real_cnt', '')
     except requests.RequestException as e:
-        result = "AI 서버 OFF, Test 데이터"
-        predictions = [0.1, 0.1, 0.1, 0.1, 0.9, 0.9]
-        fake_cnt = 2
-        real_cnt = 4
+        return Response({'error': f'Error contacting AI server: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     # DB에 저장
     audio_file = AudioFile(
         user=request.user,
