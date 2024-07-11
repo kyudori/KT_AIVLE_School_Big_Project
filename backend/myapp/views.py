@@ -786,7 +786,7 @@ def voice_verity(request):
             return Response({'error': 'No file uploaded'}, status=400)
 
         # Construct the S3 file URL
-        file_url = f"https://{AWS_S3_CUSTOM_DOMAIN}/{file.name}"
+        file_url = f"https://{AWS_S3_CUSTOM_DOMAIN}/audio_files/{file.name}"
 
         try:
             response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
