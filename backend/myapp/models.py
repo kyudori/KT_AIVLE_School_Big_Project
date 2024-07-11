@@ -45,6 +45,11 @@ class UserSubscription(models.Model):
     total_credits = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
+    def save(self, *args, **kwargs):
+        if not self.end_date and not self.plan.is_recurring:
+            self.end_date = timezone.now() + timezone.timedelta(days=90)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.user.username} - {self.plan.name}"
 

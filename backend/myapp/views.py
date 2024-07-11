@@ -169,22 +169,6 @@ def change_password(request):
     user.save()
     return Response({'status': 'Password changed successfully'}, status=status.HTTP_200_OK)
 
-
-@api_view(['POST'])
-def change_password(request):
-    data = request.data
-    user = request.user
-
-    if not user.check_password(data['current_password']):
-        return Response({'error': 'Current password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
-
-    if data['current_password'] == data['new_password']:
-        return Response({'error': 'New password cannot be the same as the current password'}, status=status.HTTP_400_BAD_REQUEST)
-
-    user.set_password(data['new_password'])
-    user.save()
-    return Response({'status': 'Password changed successfully'}, status=status.HTTP_200_OK)
-
 # 카카오페이
 
 @api_view(['GET'])
@@ -512,16 +496,19 @@ def toggle_api_status(request):
     except APIKey.DoesNotExist:
         return Response({'error': 'API Key not found'}, status=status.HTTP_404_NOT_FOUND)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_credits(request):
     user = request.user
-    try:
-        api_key = APIKey.objects.get(user=user)
-        return Response({'credits': api_key.credits})
-    except APIKey.DoesNotExist:
-        return Response({'credits': 0})
+    active_subscriptions = UserSubscription.objects.filter(user=user, is_active=True)
+    
+    total_daily_credits = sum(sub.daily_credits for sub in active_subscriptions if sub.plan.is_recurring)
+    total_general_credits = sum(sub.total_credits for sub in active_subscriptions if not sub.plan.is_recurring)
+
+    return Response({
+        'total_daily_credits': total_daily_credits,
+        'total_general_credits': total_general_credits
+    }, status=status.HTTP_200_OK)
     
 @csrf_exempt
 @api_view(['POST'])
