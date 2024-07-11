@@ -29,6 +29,7 @@ from django.shortcuts import redirect
 from django.shortcuts import redirect, render
 import logging
 import uuid
+import boto3
 from rest_framework.pagination import PageNumberPagination
 from urllib.parse import urlencode
 from django.contrib.auth import login as django_login
@@ -740,7 +741,7 @@ def voice_verity(request):
     try:
         key = APIKey.objects.get(key=api_key)
         user = key.user
-        
+
         # 크레딧 검증
         today = timezone.now().date()
         
@@ -780,15 +781,21 @@ def voice_verity(request):
         if not file:
             return Response({'error': 'No file uploaded'}, status=400)
 
-        # S3에 파일 업로드 (여기서는 로컬 파일 시스템에 저장하는 예를 들었지만, S3에 저장하는 로직을 추가할 수 있습니다)
-        file_path = default_storage.save(f'audio_files/{file.name}', file)
-        file_url = default_storage.url(file_path)
+        # S3에 파일 업로드
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_REGION
+        )
 
-        # AI 서버 호출
+        file_name = file.name
+        s3_client.upload_fileobj(file, settings.AWS_STORAGE_BUCKET_NAME, f'audio_files/{file_name}')
+        file_url = f'https://{settings.AWS_S3_CUSTOM_DOMAIN}/audio_files/{file_name}'
+
+        # AI 서버에 파일 경로 전송
         try:
-            with open(file_path, 'rb') as f:
-                files = {'file': f}
-                response = requests.post(FLASK_URL, files=files)
+            response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
             response.raise_for_status()
             ai_result = response.json()
             return Response(ai_result)
