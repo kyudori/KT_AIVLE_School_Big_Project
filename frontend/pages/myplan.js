@@ -24,7 +24,7 @@ const MyPlan = () => {
         const plansResponse = await axios.get(`${BACKEND_URL}/api/subscription-plans/`, {
           headers: { Authorization: `Token ${token}` },
         });
-        setPlans(plansResponse.data);
+        setPlans(plansResponse.data.filter(plan => plan.is_recurring)); // 구독 플랜만 필터링
         
         const currentPlanResponse = await axios.get(`${BACKEND_URL}/api/current-plan/`, {
           headers: { Authorization: `Token ${token}` },
@@ -71,7 +71,7 @@ const MyPlan = () => {
         headers: { Authorization: `Token ${token}` },
       });
       setShowModal(false);
-      router.push("/payment");
+      router.push("/plansuccess");
     } catch (error) {
       console.error("Error changing plan", error);
     }
@@ -89,7 +89,7 @@ const MyPlan = () => {
             <h2>{user.username || "User Name"}</h2>
             <p>현재 구독플랜</p>
           </div>
-          <p>다음 결제일 : {nextPaymentDate ? new Date(nextPaymentDate).toLocaleDateString() : "정보 없음"}</p>
+          <p className={styles.paymentDate}>다음 결제일 : {nextPaymentDate ? new Date(nextPaymentDate).toLocaleDateString() : "정보 없음"}</p>
         </div>
         {currentPlan ? (
           <div className={styles.plans}>
@@ -108,7 +108,10 @@ const MyPlan = () => {
             ))}
           </div>
         ) : (
-          <p>현재 구독 중인 플랜이 없습니다.</p>
+          <>
+            <p className={styles.noPlan}>현재 구독 중인 플랜이 없습니다.</p>
+            <button className={styles.subscribeButton} onClick={() => router.push("/plan")}>구독하러 가기</button>
+          </>
         )}
       </div>
       <div className={styles.contactUs}>

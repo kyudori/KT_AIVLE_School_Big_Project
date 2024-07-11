@@ -169,12 +169,10 @@ def change_password(request):
     user.save()
     return Response({'status': 'Password changed successfully'}, status=status.HTTP_200_OK)
 
-# 카카오페이
-
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def subscription_plans(request):
-    plans = SubscriptionPlan.objects.all()
+    plans = SubscriptionPlan.objects.filter(is_recurring=True)  # 정기 결제 플랜만 필터링
     plans_data = [
         {
             'id': plan.id,
@@ -193,23 +191,25 @@ def subscription_plans(request):
 def current_plan(request):
     user = request.user
     current_subscription = UserSubscription.objects.filter(user=user, is_active=True).first()
+    if current_subscription:
+        plan_data = {
+            'id': current_subscription.plan.id,
+            'name': current_subscription.plan.name,
+            'price': current_subscription.plan.price,
+            'api_calls_per_day': current_subscription.plan.api_calls_per_day,
+            'credits': current_subscription.plan.credits,
+            'is_recurring': current_subscription.plan.is_recurring,
+            'description': current_subscription.plan.description
+        }
+        next_payment_date = current_subscription.end_date
+    else:
+        plan_data = None
+        next_payment_date = None
 
-    if not current_subscription:
-        return Response({'plan': None, 'next_payment_date': None}, status=200)
-
-    next_payment_date = current_subscription.end_date
-
-    plan_data = {
-        'id': current_subscription.plan.id,
-        'name': current_subscription.plan.name,
-        'price': current_subscription.plan.price,
-        'api_calls_per_day': current_subscription.plan.api_calls_per_day,
-        'credits': current_subscription.plan.credits,
-        'is_recurring': current_subscription.plan.is_recurring,
-        'description': current_subscription.plan.description
-    }
-
-    return Response({'plan': plan_data, 'next_payment_date': next_payment_date}, status=200)
+    return Response({
+        'plan': plan_data,
+        'next_payment_date': next_payment_date
+    }, status=status.HTTP_200_OK)
 
 # 설정된 로거 사용
 logger = logging.getLogger(__name__)
