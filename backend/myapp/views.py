@@ -433,7 +433,7 @@ def upload_audio(request):
     )
     audio_file.save()
 
-    # 업로드 기록 업데이트
+    # 업로드 기록 업데이트 (성공한 경우에만)
     upload_history.upload_count += 1
     upload_history.save()
 
