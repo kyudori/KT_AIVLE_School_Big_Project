@@ -730,9 +730,20 @@ def check_api_status(request):
     except requests.RequestException as e:
         return Response({'status': 'Error', 'detail': 'FastAPI server is down'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# AWS settings
 AWS_REGION = 'ap-northeast-1'
 AWS_STORAGE_BUCKET_NAME = 'aivle-8-team-rsb'
+AWS_ACCESS_KEY_ID = 'AKIA2TMUP5YA2QQRN5WE'
+AWS_SECRET_ACCESS_KEY = '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'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com'
+
+# Initialize S3 client
+s3_client = boto3.client(
+    's3',
+    region_name=AWS_REGION,
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -785,8 +796,15 @@ def voice_verity(request):
         if not file:
             return Response({'error': 'No file uploaded'}, status=400)
 
+        # Upload the file to S3
+        file_key = f'audio_files/{file.name}'
+        try:
+            s3_client.upload_fileobj(file, AWS_STORAGE_BUCKET_NAME, file_key)
+        except Exception as e:
+            return Response({'error': 'Failed to upload file to S3', 'details': str(e)}, status=500)
+
         # Construct the S3 file URL
-        file_url = f"https://{AWS_S3_CUSTOM_DOMAIN}/audio_files/{file.name}"
+        file_url = f"https://{AWS_S3_CUSTOM_DOMAIN}/{file_key}"
         print(file_url)
 
         try:
