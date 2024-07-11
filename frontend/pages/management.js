@@ -14,6 +14,9 @@ const ApiManagement = () => {
   const [apiStatus, setApiStatus] = useState(false); // Activate status
   const [isApiServerOn, setIsApiServerOn] = useState(false); // API Server status
   const [isOpen, setMenu] = useState(true);
+  const [dailyCredits, setDailyCredits] = useState(0);
+  const [additionalCredits, setAdditionalCredits] = useState(0);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -30,6 +33,7 @@ const ApiManagement = () => {
           setUser(response.data);
           fetchApiKey(token);
           checkApiServerStatus(token); // Check API server status
+          fetchCredits(token); // Fetch credits information
         })
         .catch((error) => {
           console.error("사용자 정보 가져오기 오류", error);
@@ -56,6 +60,23 @@ const ApiManagement = () => {
       })
       .catch((error) => {
         console.error("API Key 가져오기 오류", error);
+      });
+  };
+
+  const fetchCredits = (token) => {
+    axios
+      .get(`${BACKEND_URL}/api/get-credits/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+        withCredentials: true,  // 세션 인증을 위해 필요
+      })
+      .then((response) => {
+        setDailyCredits(response.data.total_daily_credits);
+        setAdditionalCredits(response.data.total_general_credits);
+      })
+      .catch((error) => {
+        console.error("Credits 가져오기 오류", error);
       });
   };
 
@@ -212,13 +233,13 @@ const ApiManagement = () => {
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
                   <h3>Daily Credit</h3>
-                  <div className={styles.credit}>38%</div>
+                  <div className={styles.credit}>{dailyCredits}</div>
                 </div>
               </div>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
                   <h3>Additional Credit</h3>
-                  <div className={styles.credit}>38%</div>
+                  <div className={styles.credit}>{additionalCredits}</div>
                 </div>
               </div>
               <div className={styles.card}>
