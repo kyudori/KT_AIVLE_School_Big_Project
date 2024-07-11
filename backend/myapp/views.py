@@ -459,9 +459,14 @@ def get_api_key(request):
     if request.method == 'GET':
         try:
             api_key = APIKey.objects.get(user=user)
-            return Response({'api_key': api_key.key, 'is_active': api_key.is_active})
+            last_used_at = api_key.last_used_at.strftime("%Y/%m/%d %H:%M:%S") if api_key.last_used_at else "사용한 기록이 없습니다."
+            return Response({
+                'api_key': api_key.key, 
+                'is_active': api_key.is_active,
+                'last_used_at': last_used_at
+            })
         except APIKey.DoesNotExist:
-            return Response({'api_key': None, 'is_active': False})
+            return Response({'api_key': None, 'is_active': False, 'last_used_at': "사용한 기록이 없습니다."})
 
     if request.method == 'POST':
         data = request.data

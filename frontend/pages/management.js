@@ -22,6 +22,7 @@ const ApiManagement = () => {
   const [apiKey, setApiKey] = useState(null);
   const [apiStatus, setApiStatus] = useState(false); // Activate status
   const [isApiServerOn, setIsApiServerOn] = useState(false); // API Server status
+  const [lastUsedAt, setLastUsedAt] = useState("사용한 기록이 없습니다."); // 추가된 부분
   const [isOpen, setMenu] = useState(true);
   const router = useRouter();
 
@@ -63,6 +64,7 @@ const ApiManagement = () => {
       .then((response) => {
         setApiKey(response.data.api_key);
         setApiStatus(response.data.is_active); // API key status
+        setLastUsedAt(response.data.last_used_at); // 추가된 부분
       })
       .catch((error) => {
         console.error("API Key 가져오기 오류", error);
@@ -183,6 +185,7 @@ const ApiManagement = () => {
         .then(() => {
           setApiKey(null);
           setApiStatus(false); // 비활성화 상태
+          setLastUsedAt("사용한 기록이 없습니다."); // 추가된 부분
         })
         .catch((error) => {
           if (error.response && error.response.data.error) {
@@ -322,7 +325,7 @@ const ApiManagement = () => {
                     }}
                   ></span>
                 </p>
-                <p>마지막 사용 시간 : 2000/00/00 00:00:00</p>
+                <p>마지막 사용 시간 : {lastUsedAt}</p> {/* 수정된 부분 */}
               </div>
             </div>
             <div className={styles.trafficSummary}>
