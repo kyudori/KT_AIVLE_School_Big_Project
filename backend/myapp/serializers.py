@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Comment
+from .models import Post, Comment, APIKey
 
 class CommentSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.username', read_only=True)
@@ -30,3 +30,8 @@ class PostSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         validated_data['author'] = request.user
         return super().create(validated_data)
+
+class APIKeySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = APIKey
+        fields = ['key', 'created_at', 'last_used_at', 'credits', 'is_active']

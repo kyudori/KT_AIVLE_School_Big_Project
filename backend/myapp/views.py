@@ -450,6 +450,23 @@ def delete_api_key(request):
     APIKey.objects.filter(user=user).delete()
     return Response({'status': 'API key deleted successfully'})
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def toggle_api_status(request):
+    user = request.user
+    data = request.data
+
+    if not user.check_password(data['password']):
+        return Response({'error': 'Password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        api_key = APIKey.objects.get(user=user)
+        api_key.is_active = data['status']
+        api_key.save()
+        return Response({'status': api_key.is_active})
+    except APIKey.DoesNotExist:
+        return Response({'error': 'API key not found'}, status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_credits(request):

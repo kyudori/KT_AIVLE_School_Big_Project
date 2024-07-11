@@ -78,6 +78,7 @@ class APIKey(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_used_at = models.DateTimeField(null=True, blank=True)
     credits = models.IntegerField(default=10)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.key
