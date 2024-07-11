@@ -1,28 +1,33 @@
 .container {
-  font-family: fontA, sans-serif;
-  background-position: top;
-  background-size: cover;
-  background: rgba(217, 217, 217, 0.5);
-  color: black;
-  min-height: 100vh;
+  font-family: fontA;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  min-width: 90vw;
   width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #fff;
 }
 
 .main {
-  flex: 1;
-  display: grid;
+  background-color: #f0f0f0;
+  border-radius: 30px;
   text-align: center;
   margin: 0 200px;
   justify-content: center;
+  align-self: center;
+  width: 900px;
+  height: 500px;
+  padding: 50px;
 }
 
 .userInfo {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  width: 700px;
+  flex-direction: row;
+  align-items: flex-end;
 }
 
 .userIcon {
@@ -30,7 +35,8 @@
   height: 80px;
   background-color: #cdcdcd;
   border-radius: 50%;
-  margin-right: 20px; /* 추가된 코드 */
+  margin-right: 20px;
+  /* 추가된 코드 */
 }
 
 .userIcon img {
@@ -39,8 +45,20 @@
   border-radius: 50%;
 }
 
+.text {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.text h1 {
+  font-weight: normal;
+}
+
 .paymentDate {
-  margin-left: 20px; /* 추가된 코드 */
+  margin-left: 20px;
+  /* 추가된 코드 */
 }
 
 .plans {
@@ -50,15 +68,22 @@
 
 .planCard {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: solid rgba(0, 0, 0, 0.3);
+  background-color: #b8b8b8;
+  align-items: flex-end;
+  border: solid 1px #b8b8b8;
   border-radius: 10px;
   width: 280px;
+  height: 280px;
   text-align: center;
-  padding: 20px;
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+}
+
+.cardcontent {
+  border-radius: 10px;
+  height: 210px;
+  background-color: #fff;
+  width: 100%;
 }
 
 .planCard:hover {
@@ -128,7 +153,7 @@
 
 .contactUs {
   text-align: center;
-  padding: 20px;
+  margin-top: 70px;
 }
 
 .contactUs button {
