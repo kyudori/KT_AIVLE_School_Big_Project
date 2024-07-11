@@ -1,7 +1,7 @@
 .foot {
   background: rgba(221, 221, 221, 0.5);
   color: #000;
-  min-height: 5vh;
+  min-height: 70px;
   width: 100%;
   display: flex;
   justify-content: space-between;

@@ -1,39 +1,61 @@
 .container {
-  font-family: Arial, sans-serif;
+  font-family: fontA;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f0f0f0;
+  min-width: 90vw;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #fff;
 }
 
 .content {
+  margin: 0 200px;
   display: flex;
   flex-direction: column;
   flex: 1;
   justify-content: center;
   align-items: center;
+  width: 800px;
+  align-self: center;
   padding: 20px;
+  background-color: #fff;
 }
 
-.content h1 {
+.container h1 {
+  font-weight:normal;
   font-size: 32px;
   margin-bottom: 20px;
   color: #333;
 }
 
+.head {
+  height: 200px;
+  text-align: center;
+  align-content: center;
+  border: solid 1px #ddd;
+  background-color: #f0f0f0;
+}
+
 .writeButton {
+  background-color: #fff;
+  font-family: fontA;
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
+  color: #333;
+  border: solid 1px #ddd;
+  border-radius: 3px;
   cursor: pointer;
   margin-bottom: 20px;
   align-self: flex-end;
 }
 
 .writeButton:hover {
-  background-color: #0056b3;
+  background-color: #f0f0f0;
+  border: solid 1px #ddd;
+  transition: all 0.2s ease;
 }
 
 .table {
@@ -43,14 +65,15 @@
 }
 
 .table th, .table td {
+  font-weight: normal;
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
 
 .table th {
-  background-color: #f2f2f2;
-  color: black;
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 .table tr {
