@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
 import { Doughnut } from "react-chartjs-2";
 import styles from "../styles/Apimanagement.module.css";
 import Footer from "../components/Footer";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
-
+ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -271,7 +270,13 @@ const ApiManagement = () => {
                 },
               },
             },
+            title: {
+              display: true,
+              text: `${Math.round(((totalCredits - usedCredits) / totalCredits) * 100)}% 남음`,
+              position: 'center'
+            }
           },
+          cutout: '70%',
         };
 
         return (
@@ -279,12 +284,12 @@ const ApiManagement = () => {
             <div className={styles.row}>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
-                  <h3>남은 총 Credit</h3>
+                  <h3>남은 Credit</h3>
                   <div className={styles.credit}>
                     {totalCredits}개
-                    <p>free: {freeCredits}개</p>
-                    {dailyCredits > 0 && <p>daily: {dailyCredits}개</p>}
-                    {additionalCredits > 0 && <p>addi: {additionalCredits}개</p>}
+                    <p>Free Credit: {freeCredits}개</p>
+                    {dailyCredits > 0 && <p>Daily Credit: {dailyCredits}개</p>}
+                    {additionalCredits > 0 && <p>Additional Credit: {additionalCredits}개</p>}
                   </div>
                 </div>
               </div>
@@ -292,12 +297,11 @@ const ApiManagement = () => {
                 <div className={styles.cardcontent}>
                   <h3>사용 현황</h3>
                   <Doughnut data={data} options={options} />
-                  <p>{Math.round(((totalCredits - usedCredits) / totalCredits) * 100)}% 남음</p>
                   <button
                     className={styles.purchaseButton}
                     onClick={() => router.push("/plan")}
                   >
-                    Credit 구매하기
+                    추가 Credit 구매하기
                   </button>
                 </div>
               </div>
