@@ -729,44 +729,61 @@ def check_api_status(request):
     except requests.RequestException as e:
         return Response({'status': 'Error', 'detail': 'FastAPI server is down'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def voice_verity(request):
-#     api_key = request.headers.get('Authorization')
-#     if not api_key:
-#         return Response({'error': 'Missing API key'}, status=401)
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def voice_verity(request):
+    api_key = request.headers.get('Authorization')
+    if not api_key:
+        return Response({'error': 'Missing API key'}, status=401)
 
-#     api_key = api_key.replace('Bearer ', '')
-#     try:
-#         key = APIKey.objects.get(key=api_key)
-#         user = key.user
+    api_key = api_key.replace('Bearer ', '')
+    try:
+        key = APIKey.objects.get(key=api_key)
+        user = key.user
         
-#         # 크레딧 검증
-#         today = timezone.now().date()
-#         if key.last_used_at and key.last_used_at.date() != today:
-#             key.credits_used_today = 0
-
-#         if user.daily_credits > 0:
-#             user.daily_credits -= 1
-#         elif user.additional_credits > 0:
-#             user.additional_credits -= 1
-#         else:
-#             return Response({'error': 'Insufficient credits'}, status=403)
+        # 크레딧 검증
+        today = timezone.now().date()
         
-#         key.credits_used_today += 1
-#         key.last_used_at = timezone.now()
-#         key.save()
-#         user.save()
+        # 유효한 일일 크레딧 구독
+        daily_subscription = UserSubscription.objects.filter(
+            user=user, 
+            plan__is_recurring=True, 
+            is_active=True
+        ).first()
+        
+        # 유효한 추가 크레딧 구독
+        additional_subscription = UserSubscription.objects.filter(
+            user=user, 
+            plan__is_recurring=False, 
+            end_date__gt=today, 
+            is_active=True
+        ).first()
 
-#         # AI 서버 호출
-#         try:
-#             response = requests.post(FLASK_URL, json=request.data)
-#             response.raise_for_status()
-#             ai_result = response.json()
-#             return Response(ai_result)
-#         except requests.RequestException as e:
-#             return Response({'error': 'Failed to connect to AI server', 'details': str(e)}, status=404)
-#     except APIKey.DoesNotExist:
-#         return Response({'error': 'Invalid API key'}, status=402)
-#     except Exception as e:
-#         return Response({'error': str(e)}, status=500)
+        # free_credits 차감
+        if user.free_credits > 0:
+            user.free_credits -= 1
+            user.save()
+        elif daily_subscription and daily_subscription.daily_credits > 0:
+            daily_subscription.daily_credits -= 1
+            daily_subscription.save()
+        elif additional_subscription and additional_subscription.total_credits > 0:
+            additional_subscription.total_credits -= 1
+            additional_subscription.save()
+        else:
+            return Response({'error': 'Insufficient credits'}, status=403)
+
+        key.last_used_at = timezone.now()
+        key.save()
+
+        # AI 서버 호출
+        try:
+            response = requests.post(FLASK_URL, json=request.data)
+            response.raise_for_status()
+            ai_result = response.json()
+            return Response(ai_result)
+        except requests.RequestException as e:
+            return Response({'error': 'Failed to connect to AI server', 'details': str(e)}, status=404)
+    except APIKey.DoesNotExist:
+        return Response({'error': 'Invalid API key'}, status=402)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
