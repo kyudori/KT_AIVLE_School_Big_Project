@@ -408,21 +408,29 @@ def upload_audio(request):
 def generate_api_key():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=32))
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def get_api_key(request):
-    data = request.data
     user = request.user
 
-    if not user.check_password(data['password']):
-        return Response({'error': 'Password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'GET':
+        try:
+            api_key = APIKey.objects.get(user=user)
+            return Response({'api_key': api_key.key, 'is_active': api_key.is_active})
+        except APIKey.DoesNotExist:
+            return Response({'api_key': None, 'is_active': False})
 
-    if not APIKey.objects.filter(user=user).exists():
-        api_key = APIKey.objects.create(user=user, key=generate_api_key())
-    else:
-        api_key = APIKey.objects.get(user=user)
+    if request.method == 'POST':
+        data = request.data
+        if not user.check_password(data['password']):
+            return Response({'error': 'Password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response({'api_key': api_key.key})
+        if not APIKey.objects.filter(user=user).exists():
+            api_key = APIKey.objects.create(user=user, key=generate_api_key())
+        else:
+            api_key = APIKey.objects.get(user=user)
+
+        return Response({'api_key': api_key.key, 'is_active': api_key.is_active})
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -465,7 +473,8 @@ def toggle_api_status(request):
         api_key.save()
         return Response({'status': api_key.is_active})
     except APIKey.DoesNotExist:
-        return Response({'error': 'API key not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'API Key not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
