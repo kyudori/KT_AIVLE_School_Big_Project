@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import signup, login, find_id, reset_password, user_info, change_password, current_plan, subscription_plans, upload_audio, get_api_key, generate_api_key, regenerate_api_key, delete_api_key, toggle_api_status, get_credits, api_usage_weekly, group_usage, user_files, delete_account, subscription_plans, create_payment, approve_payment, cancel_payment, fail_payment, posts_list_create, post_detail, create_comment, comment_detail, user_posts, user_comments, check_api_status
+from .views import signup, login, find_id, reset_password, user_info, change_password, current_plan, subscription_plans, upload_audio, get_api_key, generate_api_key, regenerate_api_key, delete_api_key, toggle_api_status, get_credits, user_files, delete_account, subscription_plans, create_payment, approve_payment, cancel_payment, fail_payment, posts_list_create, post_detail, create_comment, comment_detail, user_posts, user_comments, check_api_status
 
 
 urlpatterns = [
@@ -18,8 +18,8 @@ urlpatterns = [
     path('toggle-api-status/', toggle_api_status, name='toggle_api_status'),
     path('get-credits/', get_credits, name='get_credits'),
     # path('validate-key/', validate_key, name='validate_key'),
-    path('api-usage-weekly/', api_usage_weekly),
-    path('group-usage/', group_usage),
+    # path('api-usage-weekly/', api_usage_weekly),
+    # path('group-usage/', group_usage),
     path('user-files/', user_files),
     path('delete-account/', delete_account, name='delete_account'),
     path('current-plan/', current_plan, name='current_plan'),
