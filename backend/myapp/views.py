@@ -531,7 +531,7 @@ def get_credits(request):
     today = timezone.now().date()
     valid_additional_subs = subscriptions.filter(plan__is_recurring=False, end_date__gt=today)
     total_additional_credits = sum(sub.total_credits for sub in valid_additional_subs)
-    used_additional_credits = sum(sub.total_credits - sub.additional_credits for sub in valid_additional_subs)
+    used_additional_credits = sum(sub.total_credits - sub.total_credits for sub in valid_additional_subs)
 
     # 유효한 일일 크레딧 계산
     total_daily_credits = sum(sub.plan.api_calls_per_day for sub in subscriptions if sub.plan.is_recurring)
