@@ -17,7 +17,7 @@ urlpatterns = [
     path('delete-api-key/', delete_api_key, name='delete_api_key'),
     path('toggle-api-status/', toggle_api_status, name='toggle_api_status'),
     path('get-credits/', get_credits, name='get_credits'),
-    path('validate-key/', validate_key, name='validate_key'),
+    # path('validate-key/', validate_key, name='validate_key'),
     path('api-usage-weekly/', api_usage_weekly),
     path('group-usage/', group_usage),
     path('user-files/', user_files),
