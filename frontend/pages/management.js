@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from "react-chartjs-2";
 import styles from "../styles/Apimanagement.module.css";
 import Footer from "../components/Footer";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
