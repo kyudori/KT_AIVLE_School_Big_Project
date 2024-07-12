@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, LinearScale, CategoryScale } from 'chart.js';
 import { Doughnut, Bar } from "react-chartjs-2";
 import styles from "../styles/Apimanagement.module.css";
 import Footer from "../components/Footer";
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title, BarElement);
+ChartJS.register(ArcElement, Tooltip, Legend, Title, BarElement, LinearScale, CategoryScale);
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -315,8 +315,8 @@ const ApiManagement = () => {
           maintainAspectRatio: false,
         };
 
-        const trafficLabels = trafficData.map((item) => item.label);
-        const trafficCounts = trafficData.map((item) => item.count);
+        const trafficLabels = trafficData.length > 0 ? trafficData.map((item) => item.label) : ["데이터가 없습니다."];
+        const trafficCounts = trafficData.length > 0 ? trafficData.map((item) => item.count) : [0];
 
         const trafficDataChart = {
           labels: trafficLabels,
