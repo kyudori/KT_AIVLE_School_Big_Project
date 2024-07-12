@@ -73,7 +73,7 @@ export default function Contact() {
                 <td>{index + 1}</td>
                 <td>{post.title}</td>
                 <td>{post.author_name}</td>
-                <td>{new Date(post.created_at).toLocaleString()}</td>
+                <td style={{fontSize:'12px'}}>{new Date(post.created_at).toLocaleString()}</td>
                 <td>{post.views}</td>
               </tr>
             ))}
