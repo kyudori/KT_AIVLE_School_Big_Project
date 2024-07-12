@@ -112,6 +112,25 @@
   border: 2px solid black;
 }
 
+.subscribeButton {
+  cursor: pointer;
+  height: 45px;
+  width: 240px;
+  margin: 20px auto;
+  border: none;
+  font-family: fontA;
+  font-size: 20px;
+  background-color: rgba(0, 0, 0, 0);
+  color: #000;
+  outline: solid 1px #000;
+  border-radius: 40px;
+  transition: background 0.3s;
+}
+
+.subscribeButton:hover {
+  background-color: #d9d9d9;
+}
+
 .contactUs {
   text-align: center;
   margin-top: 70px;
