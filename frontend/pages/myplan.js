@@ -17,7 +17,7 @@ const MyPlan = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchPlans = async () => {
       try {
         const token = localStorage.getItem("token");
 
@@ -48,7 +48,7 @@ const MyPlan = () => {
         console.error("Error fetching user info", error);
       }
     };
-    fetchUserInfo();
+    fetchPlans();
   }, []);
 
   const handlePlanClick = (plan) => {
@@ -85,27 +85,6 @@ const MyPlan = () => {
     }
   };
 
-  const plans = [
-    {
-      id: 3,
-      name: "Basic",
-      price: 9900,
-      description: "0.9$ / 1회\n30일 구독 상품",
-    },
-    {
-      id: 4,
-      name: "Associate",
-      price: 29900,
-      description: "0.58$ / 1회\n30일 구독 상품",
-    },
-    {
-      id: 5,
-      name: "Professional",
-      price: 79900,
-      description: "0.39$ / 1회\n30일 구독 상품",
-    },
-  ];
-
   return (
     <div className={styles.container}>
       <div style={{ padding: "0 200px", background: "#fff" }}>
@@ -128,50 +107,38 @@ const MyPlan = () => {
               : "정보 없음"}
           </p>
         </div>
-        {currentPlan ? (
-          <div className={styles.plans}>
-            {plans.map((plan) => (
-              <div
-                key={plan.id}
-                className={`${styles.planCard} ${
-                  plan.id === currentPlan?.id ? styles.currentPlan : ""
-                }`}
-                onClick={() => handlePlanClick(plan)}
-              >
-                <h2>{plan.name}</h2>
-                <p>
-                  {plan.price.toLocaleString("ko-KR")} /{" "}
-                  {plan.is_recurring ? "월" : "회"}
-                </p>
-                <ul>
-                  {plan.description.split("\n").map((line, index) => (
-                    <li key={index}>{line}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+        <div className={styles.plans}>
+          <div
+            className={`${styles.planCard} ${
+              currentPlan?.id === 3 ? styles.currentPlan : ""
+            }`}
+            onClick={() => handlePlanClick({ id: 3, name: "BASIC", price: 9900 })}
+          >
+            <h2>Basic</h2>
+            <p>0.9$ / 1회</p>
+            <p>30일 구독 상품</p>
           </div>
-        ) : (
-          <>
-            <div style={{ textAlign: "-webkit-center" }}>
-              <div className={styles.planCard}>
-                <div style={{ height: "30px" }}></div>
-                <div className={styles.cardcontent}>
-                  <p className={styles.noPlan}>
-                    현재 구독 중인 플랜이 없습니다.
-                  </p>
-                  <h3 style={{ margin: "0", marginTop: "30px" }}>▼</h3>
-                  <button
-                    className={styles.subscribeButton}
-                    onClick={() => router.push("/plan")}
-                  >
-                    구독하러 가기
-                  </button>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+          <div
+            className={`${styles.planCard} ${
+              currentPlan?.id === 4 ? styles.currentPlan : ""
+            }`}
+            onClick={() => handlePlanClick({ id: 4, name: "ASSOCIATE", price: 29900 })}
+          >
+            <h2>Associate</h2>
+            <p>0.58$ / 1회</p>
+            <p>30일 구독 상품</p>
+          </div>
+          <div
+            className={`${styles.planCard} ${
+              currentPlan?.id === 5 ? styles.currentPlan : ""
+            }`}
+            onClick={() => handlePlanClick({ id: 5, name: "PROFESSIONAL", price: 79900 })}
+          >
+            <h2>Professional</h2>
+            <p>0.39$ / 1회</p>
+            <p>30일 구독 상품</p>
+          </div>
+        </div>
       </div>
       <div className={styles.contactUs}>
         <h2>Voice Verity와 함께해요.</h2>
