@@ -200,14 +200,15 @@ export default function Documentation() {
                     설명: 업로드한 음성 파일을 기반으로 AI 모델로부터 Deep Fake 여부를 판단합니다.
                   </li>
                   <li>
-                    음석 파일에 대한 분석은 1초 단위로 제공됩니다. (1.0에 다가갈수록 FAKE)
+                    음석 파일에 대한 분석은 1초 단위로 제공됩니다. (1.0에 가까울수록 FAKE)
                   </li>
                 </ul>
                 <h3>Example</h3>
-                <h3 style={{ color: "#5B5B5B" }}>요청 헤더</h3>
+                <h3 style={{ color: "#5B5B5B" }}>요청 헤더(Headers)</h3>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
-                    <p>multipart/form-data</p>
+                    <li>Key: Authorization</li>
+                    <li>Value: Bearer YOUR_API_KEY_HERE</li>
                     <span
                       onClick={() =>
                         handleCopyClick(`curl -X POST http://voice-verity.com/api/voice-verity/ \
@@ -225,25 +226,28 @@ curl -X POST http://voice-verity.com/api/voice-verity/ \\
               `}</pre>
                 </div>
                 <br />
-                <h3 style={{ color: "#5B5B5B" }}>요청 본문</h3>
+                <h3 style={{ color: "#5B5B5B" }}>요청 본문(Body)</h3>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
+                  <p>multipart/form-data</p>
+                  <li>Key: file</li>
+                  <li>Type: File</li>
                     <p>JSON</p>
                     <span
                       onClick={() =>
                         handleCopyClick(`{
   "predictions": [
-    1.0,
-    0.00005352497100830078,
-    0.3134087920188904,
-    0.00024437904357910156,
-    0.9885746240615845,
-    0.9934805631637573,
-    0.9978170394897461,
-    0.0023506581783294678
+    0.982,
+    0.013,
+    0.020,
+    0.978,
+    0.895,
+    0.980,
+    0.942,
+    0.998
   ],
-  "fake_cnt": 4,
-  "real_cnt": 4,
+  "fake_cnt": 2,
+  "real_cnt": 6,
   "analysis_result": "Fake"
 }`)
                       }
@@ -253,17 +257,17 @@ curl -X POST http://voice-verity.com/api/voice-verity/ \\
                   </div>
                   <pre>{`{
   "predictions": [
-    1.0,
-    0.00005352497100830078,
-    0.3134087920188904,
-    0.00024437904357910156,
-    0.9885746240615845,
-    0.9934805631637573,
-    0.9978170394897461,
-    0.0023506581783294678
+    0.982,
+    0.013,
+    0.020,
+    0.978,
+    0.895,
+    0.980,
+    0.942,
+    0.998
   ],
-  "fake_cnt": 4,
-  "real_cnt": 4,
+  "fake_cnt": 2,
+  "real_cnt": 6,
   "analysis_result": "Fake"
 }`}</pre>
                 </div>
@@ -317,16 +321,24 @@ curl -X POST http://voice-verity.com/api/voice-verity/ \\
                     <td>| 인증 실패입니다. 올바른 API 키를 제공하십시오.</td>
                   </tr>
                   <tr>
+                    <td className={styles.td1}>402 Payment Required</td>
+                    <td>| 유효하지 않은 API 키입니다.</td>
+                  </tr>
+                  <tr>
                     <td className={styles.td1}>403 Forbidden</td>
-                    <td>| 접근 권한이 없습니다.</td>
+                    <td>| Credit이 부족합니다.</td>
                   </tr>
                   <tr>
                     <td className={styles.td1}>404 Not Found</td>
                     <td>| 요청한 리소스를 찾을 수 없습니다.</td>
                   </tr>
                   <tr>
+                    <td className={styles.td1}>405 Method Not Allowed</td>
+                    <td>| 파일 업로드 실패.</td>
+                  </tr>
+                  <tr>
                     <td className={styles.td1}>500 Internal Server Error</td>
-                    <td>| 서버에 문제가 발생했습니다.</td>
+                    <td>| AI 서버에 문제가 발생했습니다.</td>
                   </tr>
                 </tbody>
               </table>
