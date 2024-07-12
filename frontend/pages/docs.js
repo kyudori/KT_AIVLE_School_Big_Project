@@ -219,6 +219,9 @@ Value: Bearer YOUR_API_KEY`)
                   <pre>Key: Authorization{`\n`}Value: Bearer YOUR_API_KEY</pre>
                 </div>
                 <h3>Request Body</h3>
+                <ul>
+                  <li>Content-Type: application/json</li>
+                </ul>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
                     <p>Body</p>
@@ -232,7 +235,7 @@ Value: YOUR_AUDIO_FILE.wav`)
                       📋
                     </span>
                   </div>
-                  <pre>multipart/form-data{`\n`}Key: file{`\n`}Value: YOUR_AUDIO_FILE.wav</pre>
+                  <pre>Key: file{`\n`}Value: YOUR_AUDIO_FILE.wav</pre>
                 </div>
                 <h3>Request Example</h3>
                 <div className={styles.codeEX}>
