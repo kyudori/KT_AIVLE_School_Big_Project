@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
-import { Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement } from 'chart.js';
+import { Doughnut, Bar } from "react-chartjs-2";
 import styles from "../styles/Apimanagement.module.css";
 import Footer from "../components/Footer";
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title);
+ChartJS.register(ArcElement, Tooltip, Legend, Title, BarElement);
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -24,6 +24,8 @@ const ApiManagement = () => {
   const [apiStatus, setApiStatus] = useState(false); // Activate status
   const [isApiServerOn, setIsApiServerOn] = useState(false); // API Server status
   const [isOpen, setMenu] = useState(true);
+  const [selectedInterval, setSelectedInterval] = useState('hourly');
+  const [trafficData, setTrafficData] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -52,6 +54,12 @@ const ApiManagement = () => {
       router.push("/home");
     }
   }, [router]);
+
+  useEffect(() => {
+    if (user) {
+      fetchTrafficData(selectedInterval);
+    }
+  }, [selectedInterval, user]);
 
   const fetchApiKey = (token) => {
     axios
@@ -110,6 +118,22 @@ const ApiManagement = () => {
       .catch((error) => {
         setIsApiServerOn(false);
         console.error("API 서버 상태 확인 오류", error);
+      });
+  };
+
+  const fetchTrafficData = (interval) => {
+    axios
+      .get(`${BACKEND_URL}/api/call-history/?interval=${interval}`, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("token")}`,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        setTrafficData(response.data);
+      })
+      .catch((error) => {
+        console.error("트래픽 데이터 가져오기 오류", error);
       });
   };
 
@@ -240,6 +264,10 @@ const ApiManagement = () => {
     setMenu((isOpen) => !isOpen);
   };
 
+  const handleIntervalChange = (interval) => {
+    setSelectedInterval(interval);
+  };
+
   const renderContent = () => {
     switch (currentPage) {
       case "dashboard":
@@ -257,16 +285,17 @@ const ApiManagement = () => {
             },
           ],
         };
-  
+
         const options = {
           plugins: {
             tooltip: {
               callbacks: {
                 label: function (tooltipItem) {
                   const label = data.labels[tooltipItem.dataIndex];
-                  const value = data.datasets[tooltipItem.datasetIndex].data[
-                    tooltipItem.dataIndex
-                  ];
+                  const value =
+                    data.datasets[tooltipItem.datasetIndex].data[
+                      tooltipItem.dataIndex
+                    ];
                   return `${label}: ${value}개`;
                 },
               },
@@ -285,13 +314,39 @@ const ApiManagement = () => {
           responsive: true,
           maintainAspectRatio: false,
         };
-  
+
+        const trafficLabels = trafficData.map((item) => item.label);
+        const trafficCounts = trafficData.map((item) => item.count);
+
+        const trafficDataChart = {
+          labels: trafficLabels,
+          datasets: [
+            {
+              label: 'API Calls',
+              data: trafficCounts,
+              backgroundColor: 'rgba(75, 192, 192, 0.6)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        const trafficOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        };
+
         return (
           <div className={styles.content}>
             <div className={styles.row}>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
-                  <h3>Total Credits</h3>
+                  <h3>남은 Credit</h3>
                   <div className={styles.credit}>
                     {totalCredits}개
                     <p>Free Credit: {freeCredits}개</p>
@@ -302,7 +357,7 @@ const ApiManagement = () => {
               </div>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
-                  <h3>Credit Usage</h3>
+                  <h3>사용 현황</h3>
                   <div className={styles.doughnutWrapper}>
                     <Doughnut data={data} options={options} />
                   </div>
@@ -310,7 +365,7 @@ const ApiManagement = () => {
                     className={styles.purchaseButton}
                     onClick={() => router.push("/plan")}
                   >
-                    Buy More Credits
+                    추가 Credit 구매하기
                   </button>
                 </div>
               </div>
@@ -318,7 +373,7 @@ const ApiManagement = () => {
                 <h3>API Status</h3>
                 <p>내 API Key : {apiKey || "현재 키 없음"}</p>
                 <p>
-                  현재 API Sever 상태 :{" "}
+                  현재 API 상태 :{" "}
                   {isApiServerOn ? (
                     <span style={{ color: "green" }}>ON</span>
                   ) : (
@@ -337,8 +392,14 @@ const ApiManagement = () => {
             <div className={styles.trafficSummary}>
               <div className={styles.traffic}>
                 <h3>Traffic</h3>
+                <div className={styles.intervalTabs}>
+                  <button onClick={() => handleIntervalChange('hourly')}>시간별</button>
+                  <button onClick={() => handleIntervalChange('daily')}>일별</button>
+                  <button onClick={() => handleIntervalChange('weekly')}>주별</button>
+                  <button onClick={() => handleIntervalChange('monthly')}>월별</button>
+                </div>
                 <div className={styles.graph}>
-                  시간별 / 일별 / 월별 API 응답 요청 수 그래프
+                  <Bar data={trafficDataChart} options={trafficOptions} />
                 </div>
               </div>
               <div className={styles.summary}>

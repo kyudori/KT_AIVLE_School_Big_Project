@@ -16,7 +16,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory, Payment, Post, Comment
+from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory, Payment, Post, Comment, ApiCallHistory
 from .serializers import PostSerializer, CommentSerializer
 from django.db import models 
 import requests
@@ -756,8 +756,11 @@ def voice_verity(request):
     try:
         key = APIKey.objects.get(key=api_key)
         user = key.user
-        
-        # 크레딧 검증
+
+        # API 호출 기록 저장
+        ApiCallHistory.objects.create(user=user, api_key=api_key, endpoint='voice_verity')
+
+        # 크레딧 검증 (크레딧 차감은 성공 시에만 수행하므로, 검증만 수행)
         today = timezone.now().date()
         
         # 유효한 일일 크레딧 구독
@@ -775,21 +778,12 @@ def voice_verity(request):
             is_active=True
         ).first()
 
-        # free_credits 차감
-        if user.free_credits > 0:
-            user.free_credits -= 1
-            user.save()
-        elif daily_subscription and daily_subscription.daily_credits > 0:
-            daily_subscription.daily_credits -= 1
-            daily_subscription.save()
-        elif additional_subscription and additional_subscription.total_credits > 0:
-            additional_subscription.total_credits -= 1
-            additional_subscription.save()
-        else:
+        # 크레딧 검증
+        if user.free_credits <= 0 and (
+            (not daily_subscription or daily_subscription.daily_credits <= 0) and 
+            (not additional_subscription or additional_subscription.total_credits <= 0)
+        ):
             return Response({'error': 'Insufficient credits'}, status=403)
-
-        key.last_used_at = timezone.now()
-        key.save()
 
         # AI 서버 호출
         file = request.FILES.get('file')
@@ -811,6 +805,21 @@ def voice_verity(request):
             response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
             response.raise_for_status()
             ai_result = response.json()
+
+            # AI 서버 호출 성공 시 크레딧 차감
+            if user.free_credits > 0:
+                user.free_credits -= 1
+                user.save()
+            elif daily_subscription and daily_subscription.daily_credits > 0:
+                daily_subscription.daily_credits -= 1
+                daily_subscription.save()
+            elif additional_subscription and additional_subscription.total_credits > 0:
+                additional_subscription.total_credits -= 1
+                additional_subscription.save()
+
+            key.last_used_at = timezone.now()
+            key.save()
+
             return Response(ai_result)
         except requests.RequestException as e:
             return Response({'error': 'Failed to connect to AI server', 'details': str(e)}, status=404)
@@ -818,3 +827,31 @@ def voice_verity(request):
         return Response({'error': 'Invalid API key'}, status=402)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_call_history(request):
+    interval = request.query_params.get('interval', 'hourly')
+    user = request.user
+    today = timezone.now().date()
+
+    if interval == 'hourly':
+        data = ApiCallHistory.objects.filter(user=user, timestamp__gte=today).extra(select={'hour': "EXTRACT(HOUR FROM timestamp)"}).values('hour').annotate(count=Count('id'))
+        response_data = [{'label': f"{item['hour']}h", 'count': item['count']} for item in data]
+
+    elif interval == 'daily':
+        start_date = today - timedelta(days=30)
+        data = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_date).values('timestamp__date').annotate(count=Count('id'))
+        response_data = [{'label': item['timestamp__date'].strftime('%Y-%m-%d'), 'count': item['count']} for item in data]
+
+    elif interval == 'weekly':
+        start_date = today - timedelta(weeks=12)
+        data = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_date).extra(select={'week': "EXTRACT(WEEK FROM timestamp)"}).values('week').annotate(count=Count('id'))
+        response_data = [{'label': f"Week {item['week']}", 'count': item['count']} for item in data]
+
+    elif interval == 'monthly':
+        start_date = today - timedelta(days=365)
+        data = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_date).extra(select={'month': "EXTRACT(MONTH FROM timestamp)"}).values('month').annotate(count=Count('id'))
+        response_data = [{'label': f"Month {item['month']}", 'count': item['count']} for item in data]
+
+    return Response(response_data)
