@@ -72,6 +72,20 @@ export default function TryVoice() {
       alert("음성 파일을 업로드가 필요합니다.");
       return;
     }
+
+    const previousFileName = localStorage.getItem("previousFileName");
+
+    if (previousFileName === fileName) {
+      const confirmRetry = confirm(
+        "체험하기 서비스는 하루 5회만 이용 가능한 서비스입니다.\n동일한 파일로 분석을 다시 요청하시겠습니까?"
+      );
+      if (!confirmRetry) {
+        return;
+      }
+    }
+
+    localStorage.setItem("previousFileName", fileName);
+
     setLoading(true); // 로딩 시작
     const formData = new FormData();
     formData.append("file", file);
