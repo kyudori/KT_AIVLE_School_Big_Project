@@ -1,6 +1,7 @@
 # myapp/tasks.py
 from celery import shared_task
 from django.utils import timezone
+from datetime import datetime, date
 from myapp.models import CustomUser, UserSubscription
 
 @shared_task
@@ -18,13 +19,19 @@ def reset_daily_credits():
 @shared_task
 def expire_general_credits():
     today = timezone.now().date()
-    subscriptions = UserSubscription.objects.filter(is_active=True, plan__is_recurring=False)
+    subscriptions = UserSubscription.objects.filter(plan__is_recurring=False, is_active=True)
 
     for subscription in subscriptions:
-        if subscription.end_date and subscription.end_date <= today:
-            subscription.total_credits = 0
-            subscription.is_active = False
-            subscription.save()
+        if subscription.end_date:
+            # subscription.end_date가 datetime일 경우 date로 변환
+            if isinstance(subscription.end_date, datetime):
+                subscription_end_date = subscription.end_date.date()
+            else:
+                subscription_end_date = subscription.end_date
+            
+            if subscription_end_date <= today:
+                subscription.is_active = False
+                subscription.save()
 
     return f'Expired general credits for {subscriptions.count()} subscriptions.'
 

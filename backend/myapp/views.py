@@ -554,7 +554,7 @@ def get_credits(request):
     remaining_additional_credits = total_additional_credits - used_additional_credits
 
     # 전체 크레딧 계산
-    total_credits = 5 + total_daily_credits + total_additional_credits
+    total_credits = free_credits + total_daily_credits + total_additional_credits
     remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
 
     return Response({
@@ -563,7 +563,7 @@ def get_credits(request):
         'remaining_additional_credits': remaining_additional_credits,
         'remaining_credits': remaining_credits,
         'total_credits': total_credits,
-        'used_credits': total_credits - remaining_credits  # 사용된 크레딧 계산 추가
+        'used_credits': total_credits - remaining_credits + (5 - free_credits)  # 사용된 크레딧 계산 추가
     })
     
 # @csrf_exempt
@@ -734,7 +734,7 @@ def check_api_status(request):
         response.raise_for_status()
         return Response(response.json(), status=status.HTTP_200_OK)
     except requests.RequestException as e:
-        return Response({'status': 'Error', 'detail': 'FastAPI server is down'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'status': 'Error', 'detail': 'FastAPI server is down'}, status=503)
 
 # AWS settings
 AWS_REGION = 'ap-northeast-1'
