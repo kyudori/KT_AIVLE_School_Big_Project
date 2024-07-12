@@ -335,7 +335,7 @@ const ApiManagement = () => {
             title: {
               display: true,
               text: `${Math.round(
-                ((totalCredits - usedCredits) / totalCredits) * 100
+                ((todaytotalCredits - usedCredits) / todaytotalCredits) * 100
               )}% 남음`,
               position: "top",
               align: "center",
@@ -380,7 +380,7 @@ const ApiManagement = () => {
             <div className={styles.row}>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
-                  <h3>남은 Credit</h3>
+                  <h3>Total Credits</h3>
                   <div className={styles.credit}>
                     {totalCredits}개
                     <p>Free Credit: {freeCredits}개</p>
@@ -395,7 +395,7 @@ const ApiManagement = () => {
               </div>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
-                  <h3>사용 현황</h3>
+                  <h3>Credit Usage</h3>
                   <div className={styles.doughnutWrapper}>
                     <Doughnut data={data} options={options} />
                   </div>
@@ -403,7 +403,7 @@ const ApiManagement = () => {
                     className={styles.purchaseButton}
                     onClick={() => router.push("/plan")}
                   >
-                    추가 Credit 구매하기
+                    Buy More Credits
                   </button>
                 </div>
               </div>
