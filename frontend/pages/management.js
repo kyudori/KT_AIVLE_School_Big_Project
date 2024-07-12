@@ -257,17 +257,16 @@ const ApiManagement = () => {
             },
           ],
         };
-
+  
         const options = {
           plugins: {
             tooltip: {
               callbacks: {
                 label: function (tooltipItem) {
                   const label = data.labels[tooltipItem.dataIndex];
-                  const value =
-                    data.datasets[tooltipItem.datasetIndex].data[
-                      tooltipItem.dataIndex
-                    ];
+                  const value = data.datasets[tooltipItem.datasetIndex].data[
+                    tooltipItem.dataIndex
+                  ];
                   return `${label}: ${value}개`;
                 },
               },
@@ -279,14 +278,14 @@ const ApiManagement = () => {
               align: 'center',
               font: {
                 size: 18,
-              }
-            }
+              },
+            },
           },
           cutout: '70%',
           responsive: true,
           maintainAspectRatio: false,
         };
-
+  
         return (
           <div className={styles.content}>
             <div className={styles.row}>
@@ -332,7 +331,7 @@ const ApiManagement = () => {
                     }}
                   ></span>
                 </p>
-                <p>마지막 사용 시간 : {apiKey ? `${apiKey.last_used_at}` : "사용한 기록이 없습니다."}</p>
+                <p>마지막 사용 시간 : {apiLastUsed ? apiLastUsed : "사용한 기록이 없습니다."}</p>
               </div>
             </div>
             <div className={styles.trafficSummary}>
