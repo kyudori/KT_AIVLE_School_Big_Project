@@ -68,15 +68,55 @@ export default function Signup() {
     const { value } = e.target;
     const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
 
-    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 6)) {
+    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 5)) {
       setNickname(value);
     } else {
-      alert("한글 4자 이하, 영어 6자 이하만 가능합니다.");
+      alert("한글 4자 이하, 영어 5자 이하만 가능합니다.");
+    }
+  };
+
+  const handleUsernameChange = (e) => {
+    const { value } = e.target;
+    const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
+
+    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 5)) {
+      setUsername(value);
+    } else {
+      alert("한글 4자 이하, 영어 5자 이하만 가능합니다.");
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const { value } = e.target;
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (emailRegex.test(value)) {
+      setEmail(value);
+    } else {
+      alert("유효한 이메일 형식이 아닙니다.");
+    }
+  };
+
+  const handleContactChange = (e) => {
+    const { value } = e.target;
+    const isNumeric = /^\d+$/.test(value);
+
+    if (isNumeric) {
+      setContact(value);
+    } else {
+      alert("연락처는 숫자만 입력할 수 있습니다.");
     }
   };
 
   const handleSignup = async (event) => {
     event.preventDefault();
+
+    if (password.length < 4) {
+      alert("비밀번호는 최소 4자리 이상이어야 합니다.");
+      setPassword("");
+      setConfirmPassword("");
+      return;
+    }
 
     if (password !== confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
@@ -221,15 +261,15 @@ export default function Signup() {
               <div style={{ margin: '10px' }} />
               <input
                 type="text"
-                placeholder="사용자 이름"
+                placeholder="사용자 이름 (한글 4자 이하, 영어 5자 이하)"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={handleUsernameChange}
                 required
                 className={styles.inputField}
               />
               <input
                 type="text"
-                placeholder="닉네임(한글 4자 이하, 영어 6자 이하)"
+                placeholder="닉네임 (한글 4자 이하, 영어 5자 이하)"
                 value={nickname}
                 onChange={handleNicknameChange}
                 required
@@ -237,9 +277,9 @@ export default function Signup() {
               />
               <input
                 type="email"
-                placeholder="이메일"
+                placeholder="이메일 (특수문자 제외)"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 required
                 className={styles.inputField}
               />
@@ -252,15 +292,15 @@ export default function Signup() {
               />
               <input
                 type="text"
-                placeholder="연락처 ('-' 없이 입력)"
+                placeholder="연락처 ('-' 없이 숫자만 입력)"
                 value={contact}
-                onChange={(e) => setContact(e.target.value)}
+                onChange={handleContactChange}
                 required
                 className={styles.inputField}
               />
               <input
                 type="password"
-                placeholder="비밀번호"
+                placeholder="비밀번호 (최소 4자리)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -268,7 +308,7 @@ export default function Signup() {
               />
               <input
                 type="password"
-                placeholder="비밀번호 확인"
+                placeholder="비밀번호 확인 (최소 4자리)"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
