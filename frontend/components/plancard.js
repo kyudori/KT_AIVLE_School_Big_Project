@@ -26,8 +26,8 @@ const PlanCard = ({ plan }) => {
           Authorization: `Token ${token}`,
         },
       });
-      setGeneralCredits(response.data.total_general_credits);
-      setDailyCredits(response.data.total_daily_credits);
+      setGeneralCredits(response.data.remaining_additional_credits);
+      setDailyCredits(response.data.remaining_daily_credits);
     } catch (error) {
       console.error("Failed to fetch user credits:", error);
     }
