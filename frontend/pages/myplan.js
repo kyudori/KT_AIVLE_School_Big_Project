@@ -35,8 +35,10 @@ const MyPlan = () => {
             headers: { Authorization: `Token ${token}` },
           }
         );
-        setCurrentPlan(currentPlanResponse.data.plan);
-        setNextPaymentDate(currentPlanResponse.data.next_payment_date);
+        if (currentPlanResponse.data.plan) {
+          setCurrentPlan(currentPlanResponse.data.plan);
+          setNextPaymentDate(currentPlanResponse.data.next_payment_date);
+        }
 
         const userInfoResponse = await axios.get(
           `${BACKEND_URL}/api/user-info/`,

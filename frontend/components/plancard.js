@@ -9,6 +9,7 @@ const PlanCard = ({ plan }) => {
   const router = useRouter();
   const [generalCredits, setGeneralCredits] = useState(null);
   const [dailyCredits, setDailyCredits] = useState(null);
+  const [currentPlan, setCurrentPlan] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -16,6 +17,7 @@ const PlanCard = ({ plan }) => {
     if (token) {
       setIsLoggedIn(true);
       fetchUserCredits(token);
+      fetchCurrentPlan(token);
     }
   }, []);
 
@@ -33,11 +35,29 @@ const PlanCard = ({ plan }) => {
     }
   };
 
+  const fetchCurrentPlan = async (token) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/current-plan/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      setCurrentPlan(response.data.plan);
+    } catch (error) {
+      console.error("Failed to fetch current plan:", error);
+    }
+  };
+
   const handlePayment = async (price, planId) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         alert("로그인이 필요합니다.");
+        return;
+      }
+
+      if (currentPlan && (planId <= currentPlan.id)) {
+        alert("현재 구독 중인 플랜보다 상위 플랜을 선택해야 합니다.");
         return;
       }
 
@@ -83,7 +103,7 @@ const PlanCard = ({ plan }) => {
           ))}
           {isLoggedIn && (
             <div style={{ margin: "3px 10px" }}>
-              <p>현재 {generalCredits}개의 AdditionalCredit이 남아있습니다.</p>
+              <p>현재 {generalCredits}개의 Additional Credit이 남아있습니다.</p>
               <p>구매한 Credit은 90일 후 만료됩니다.</p>
             </div>
           )}
