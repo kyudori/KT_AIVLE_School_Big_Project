@@ -20,6 +20,7 @@ const ApiManagement = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [apiKey, setApiKey] = useState(null);
+  const [apiLastUsed, setApiLastUsed] = useState(null);
   const [apiStatus, setApiStatus] = useState(false); // Activate status
   const [isApiServerOn, setIsApiServerOn] = useState(false); // API Server status
   const [isOpen, setMenu] = useState(true);
@@ -62,7 +63,8 @@ const ApiManagement = () => {
       })
       .then((response) => {
         setApiKey(response.data.api_key);
-        setApiStatus(response.data.is_active); // API key status
+        setApiLastUsed(response.data.last_used_at);
+        setApiStatus(response.data.is_active);
       })
       .catch((error) => {
         console.error("API Key 가져오기 오류", error);
