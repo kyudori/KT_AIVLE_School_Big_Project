@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import PlanCard from "../components/PlanCard";
+import PlanCard from "../components/plancard";
 import axios from "axios";
 import styles from "../styles/Plan.module.css";
 import { useRouter } from "next/router";
