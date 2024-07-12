@@ -555,6 +555,7 @@ def get_credits(request):
 
     # 전체 크레딧 계산
     total_credits = free_credits + total_daily_credits + total_additional_credits
+    today_total_credits = 5 + total_daily_credits + total_additional_credits
     remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
 
     return Response({
@@ -563,6 +564,7 @@ def get_credits(request):
         'remaining_additional_credits': remaining_additional_credits,
         'remaining_credits': remaining_credits,
         'total_credits': total_credits,
+        'today_total_credits': today_total_credits,
         'used_credits': total_credits - remaining_credits + (5 - free_credits)  # 사용된 크레딧 계산 추가
     })
     

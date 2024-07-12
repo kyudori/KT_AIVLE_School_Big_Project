@@ -17,6 +17,7 @@ const ApiManagement = () => {
   const [freeCredits, setFreeCredits] = useState(0);
   const [usedCredits, setUsedCredits] = useState(0);
   const [totalCredits, setTotalCredits] = useState(0);
+  const [todaytotalCredits, setTodayTotalCredits] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [apiKey, setApiKey] = useState(null);
@@ -90,11 +91,12 @@ const ApiManagement = () => {
         withCredentials: true,
       })
       .then((response) => {
+        setTodayTotalCredits(response.data.today_total_credits)
         setDailyCredits(response.data.remaining_daily_credits);
         setAdditionalCredits(response.data.remaining_additional_credits);
         setFreeCredits(response.data.remaining_free_credits);
         setUsedCredits(
-          response.data.total_credits -
+          response.data.today_total_credits -
             (response.data.remaining_daily_credits +
               response.data.remaining_additional_credits +
               response.data.remaining_free_credits)
