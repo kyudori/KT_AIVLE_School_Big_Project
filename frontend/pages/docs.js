@@ -220,7 +220,7 @@ Value: Bearer YOUR_API_KEY`)
                 </div>
                 <h3>Request Body</h3>
                 <ul>
-                  <li>Content-Type: application/json</li>
+                  <li>multipart/form-data</li>
                 </ul>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
