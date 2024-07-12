@@ -61,7 +61,7 @@ export default function Documentation() {
       // HTTPS가 아닌 환경에서는 execCommand를 사용
       const textArea = document.createElement("textarea");
       textArea.value = textToCopy;
-      textArea.style.position = "fixed";  // avoid scrolling to bottom
+      textArea.style.position = "fixed"; // avoid scrolling to bottom
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
@@ -172,7 +172,7 @@ export default function Documentation() {
             </section>
             <section id="authentication" className={styles.section}>
               <h2>인증</h2>
-              <p>플랫폼에 회원가입 및 로그인하여 API 키를 발급받습니다.</p>
+              <p>플랫폼에 회원가입 및 로그인하여 API 페이지에서 API 키를 발급받습니다.</p>
               <hr />
               <div className={styles.codeEX}>
                 <div className={styles.codetop}>
@@ -192,69 +192,80 @@ export default function Documentation() {
               <h2>엔드 포인트</h2>
               <hr />
               <div style={{ marginBottom: "50px" }}>
-                <h3>1. 판별(Decision)</h3>
+                <h3>1. 분석(Predict)</h3>
                 <ul>
-                  <li>URL: /api/decision</li>
+                  <li>URL: http://voice-verity.com/api/voice-verity/</li>
                   <li>Method: POST</li>
                   <li>
                     설명: 업로드한 음성 파일을 기반으로 AI 모델로부터 Deep Fake 여부를 판단합니다.
                   </li>
+                  <li>
+                    음석 파일에 대한 분석은 1초 단위로 제공됩니다. (1.0에 다가갈수록 FAKE)
+                  </li>
                 </ul>
                 <h3>Example</h3>
-                <h3 style={{ color: "#5B5B5B" }}>Request 요청 본문(json)</h3>
+                <h3 style={{ color: "#5B5B5B" }}>요청 헤더</h3>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
-                    <p>JSON</p>
+                    <p>multipart/form-data</p>
                     <span
                       onClick={() =>
-                        handleCopyClick(`{
-  "data": [
-    {
-      "feature1": value1,
-      "feature2": value2,
-      "feature3": value3
-    }
-  ]
-}`)
+                        handleCopyClick(`curl -X POST http://voice-verity.com/api/voice-verity/ \
+  -H "Authorization: Bearer YOUR_API_KEY_HERE" \
+  -F "file=@/path/to/your_audio_file.wav"`)
                       }
                     >
                       📋
                     </span>
                   </div>
-                  <pre>
-                    {`
-{
-  "data": [
-    {
-      "feature1": value1,
-      "feature2": value2,
-      "feature3": value3
-    }
-  ]
-}
-              `}
-                  </pre>
+                  <pre>{`
+curl -X POST http://voice-verity.com/api/voice-verity/ \\
+  -H "Authorization: Bearer YOUR_API_KEY_HERE" \\
+  -F "file=@/path/to/your_audio_file.wav"
+              `}</pre>
                 </div>
                 <br />
-                <h3 style={{ color: "#5B5B5B" }}>Response 응답(json)</h3>
+                <h3 style={{ color: "#5B5B5B" }}>요청 본문</h3>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
                     <p>JSON</p>
                     <span
                       onClick={() =>
                         handleCopyClick(`{
-  "prediction": [예측값1, 예측값2, ...]
+  "predictions": [
+    1.0,
+    0.00005352497100830078,
+    0.3134087920188904,
+    0.00024437904357910156,
+    0.9885746240615845,
+    0.9934805631637573,
+    0.9978170394897461,
+    0.0023506581783294678
+  ],
+  "fake_cnt": 4,
+  "real_cnt": 4,
+  "analysis_result": "Fake"
 }`)
                       }
                     >
                       📋
                     </span>
                   </div>
-                  <pre>
-                    {`{
-  "prediction": [예측값1, 예측값2, ...]
-}`}
-                  </pre>
+                  <pre>{`{
+  "predictions": [
+    1.0,
+    0.00005352497100830078,
+    0.3134087920188904,
+    0.00024437904357910156,
+    0.9885746240615845,
+    0.9934805631637573,
+    0.9978170394897461,
+    0.0023506581783294678
+  ],
+  "fake_cnt": 4,
+  "real_cnt": 4,
+  "analysis_result": "Fake"
+}`}</pre>
                 </div>
               </div>
               <div style={{ height: "20px" }} />
