@@ -30,7 +30,7 @@ from django.shortcuts import redirect, render
 import logging
 import uuid
 import boto3
-from django.db.models import Count
+from django.db.models import Count, Avg
 from rest_framework.pagination import PageNumberPagination
 from urllib.parse import urlencode
 from django.contrib.auth import login as django_login
@@ -759,34 +759,6 @@ def voice_verity(request):
         key = APIKey.objects.get(key=api_key)
         user = key.user
 
-        # API 호출 기록 저장
-        ApiCallHistory.objects.create(user=user, api_key=api_key, endpoint='voice_verity')
-
-        # 크레딧 검증 (크레딧 차감은 성공 시에만 수행하므로, 검증만 수행)
-        today = timezone.now().date()
-        
-        # 유효한 일일 크레딧 구독
-        daily_subscription = UserSubscription.objects.filter(
-            user=user, 
-            plan__is_recurring=True, 
-            is_active=True
-        ).first()
-        
-        # 유효한 추가 크레딧 구독
-        additional_subscription = UserSubscription.objects.filter(
-            user=user, 
-            plan__is_recurring=False, 
-            end_date__gt=today, 
-            is_active=True
-        ).first()
-
-        # 크레딧 검증
-        if user.free_credits <= 0 and (
-            (not daily_subscription or daily_subscription.daily_credits <= 0) and 
-            (not additional_subscription or additional_subscription.total_credits <= 0)
-        ):
-            return Response({'error': 'Insufficient credits'}, status=403)
-
         # AI 서버 호출
         file = request.FILES.get('file')
         if not file:
@@ -797,18 +769,41 @@ def voice_verity(request):
         try:
             s3_client.upload_fileobj(file, AWS_STORAGE_BUCKET_NAME, file_key)
         except Exception as e:
-            return Response({'error': 'Failed to upload file to S3', 'details': str(e)}, status=500)
+            return Response({'error': 'Failed to upload file to S3', 'details': str(e)}, status=405)
 
         # Construct the S3 file URL
         file_url = f"https://{AWS_S3_CUSTOM_DOMAIN}/{file_key}"
         print(file_url)
 
         try:
+            start_time = timezone.now()
             response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
             response.raise_for_status()
             ai_result = response.json()
+            end_time = timezone.now()
+            response_time = (end_time - start_time).total_seconds() * 1000  # milliseconds
 
-            # AI 서버 호출 성공 시 크레딧 차감
+            # API 호출 기록 저장 (성공)
+            ApiCallHistory.objects.create(user=user, endpoint='voice_verity', success=True, response_time=response_time)
+
+            # 크레딧 차감
+            today = timezone.now().date()
+            # 유효한 일일 크레딧 구독
+            daily_subscription = UserSubscription.objects.filter(
+                user=user, 
+                plan__is_recurring=True, 
+                is_active=True
+            ).first()
+            
+            # 유효한 추가 크레딧 구독
+            additional_subscription = UserSubscription.objects.filter(
+                user=user, 
+                plan__is_recurring=False, 
+                end_date__gt=today, 
+                is_active=True
+            ).first()
+
+            # free_credits 차감
             if user.free_credits > 0:
                 user.free_credits -= 1
                 user.save()
@@ -818,13 +813,17 @@ def voice_verity(request):
             elif additional_subscription and additional_subscription.total_credits > 0:
                 additional_subscription.total_credits -= 1
                 additional_subscription.save()
+            else:
+                return Response({'error': 'Insufficient credits'}, status=403)
 
             key.last_used_at = timezone.now()
             key.save()
 
             return Response(ai_result)
         except requests.RequestException as e:
-            return Response({'error': 'Failed to connect to AI server', 'details': str(e)}, status=404)
+            # API 호출 기록 저장 (실패)
+            ApiCallHistory.objects.create(user=user, endpoint='voice_verity', success=False)
+            return Response({'error': 'AI server OFF', 'details': str(e)}, status=404)
     except APIKey.DoesNotExist:
         return Response({'error': 'Invalid API key'}, status=402)
     except Exception as e:
@@ -848,3 +847,41 @@ def call_history(request):
         return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(list(history), status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def call_summary(request):
+    user = request.user
+    interval = request.query_params.get('interval', 'hourly')
+
+    if interval == 'hourly':
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncHour('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
+    elif interval == 'daily':
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncDay('timestamp')).values('label').annotate(count=Count('id')). order_by('label')
+    elif interval == 'weekly':
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncWeek('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
+    elif interval == 'monthly':
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncMonth('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
+    else:
+        return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
+
+    total_calls = history.aggregate(total=Count('id'))['total']
+    avg_response_time = history.aggregate(avg_response=Avg('response_time'))['avg_response']
+
+    max_calls = history.order_by('-count').first()
+    min_calls = history.order_by('count').first()
+
+    summary = {
+        'total_calls': total_calls,
+        'avg_response_time': avg_response_time,
+        'max_calls_time': max_calls['label'] if max_calls else None,
+        'min_calls_time': min_calls['label'] if min_calls else None,
+        'success_rate': calculate_success_rate(user)
+    }
+
+    return Response(summary, status=status.HTTP_200_OK)
+
+def calculate_success_rate(user):
+    total_calls = ApiCallHistory.objects.filter(user=user).count()
+    success_calls = ApiCallHistory.objects.filter(user=user, success=True).count()
+    return (success_calls / total_calls) * 100 if total_calls > 0 else 0

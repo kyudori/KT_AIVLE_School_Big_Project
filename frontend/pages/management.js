@@ -26,6 +26,7 @@ const ApiManagement = () => {
   const [isOpen, setMenu] = useState(true);
   const [selectedInterval, setSelectedInterval] = useState('hourly');
   const [trafficData, setTrafficData] = useState([]);
+  const [summaryData, setSummaryData] = useState({});
   const router = useRouter();
 
   useEffect(() => {
@@ -58,6 +59,7 @@ const ApiManagement = () => {
   useEffect(() => {
     if (user) {
       fetchTrafficData(selectedInterval);
+      fetchSummaryData(selectedInterval);
     }
   }, [selectedInterval, user]);
 
@@ -136,6 +138,23 @@ const ApiManagement = () => {
         console.error("트래픽 데이터 가져오기 오류", error);
       });
   };
+
+
+  const fetchSummaryData = (interval) => {
+    axios
+        .get(`${BACKEND_URL}/api/call-summary/?interval=${interval}`, {
+            headers: {
+                Authorization: `Token ${localStorage.getItem("token")}`,
+            },
+            withCredentials: true,
+        })
+        .then((response) => {
+            setSummaryData(response.data);
+        })
+        .catch((error) => {
+            console.error("요약 데이터 가져오기 오류", error);
+        });
+};
 
   const handleGenerateApiKey = () => {
     const password = prompt("비밀번호를 입력해주세요:");
@@ -267,6 +286,18 @@ const ApiManagement = () => {
   const handleIntervalChange = (interval) => {
     setSelectedInterval(interval);
   };
+
+  const renderSummary = () => {
+    return (
+        <div>
+            <p>총 API 호출 수: {summaryData.total_calls}</p>
+            <p>평균 응답 시간: {summaryData.avg_response_time} ms</p>
+            <p>가장 많은 호출 시간: {summaryData.max_calls_time}</p>
+            <p>가장 적은 호출 시간: {summaryData.min_calls_time}</p>
+            <p>성공률: {summaryData.success_rate} %</p>
+        </div>
+    );
+};
 
   const renderContent = () => {
     switch (currentPage) {
@@ -408,7 +439,7 @@ const ApiManagement = () => {
               </div>
               <div className={styles.summary}>
                 <h3>Summary</h3>
-                <div className={styles.graph}>오류율 그래프</div>
+                <div className={styles.graph}>{renderSummary()}</div>
               </div>
             </div>
           </div>
