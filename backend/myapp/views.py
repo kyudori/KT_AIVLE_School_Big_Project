@@ -30,6 +30,7 @@ from django.shortcuts import redirect, render
 import logging
 import uuid
 import boto3
+import pytz
 from django.db.models import Count, Avg
 from rest_framework.pagination import PageNumberPagination
 from urllib.parse import urlencode
@@ -836,17 +837,23 @@ def call_history(request):
     interval = request.query_params.get('interval', 'hourly')
 
     if interval == 'hourly':
-        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncHour('timestamp')).values('label').annotate(count=models.Count('id')).order_by('label')
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncHour('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
     elif interval == 'daily':
-        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncDay('timestamp')).values('label').annotate(count=models.Count('id')).order_by('label')
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncDay('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
     elif interval == 'weekly':
-        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncWeek('timestamp')).values('label').annotate(count=models.Count('id')).order_by('label')
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncWeek('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
     elif interval == 'monthly':
-        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncMonth('timestamp')).values('label').annotate(count=models.Count('id')). order_by('label')
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncMonth('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
     else:
         return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response(list(history), status=status.HTTP_200_OK)
+    # Format the label to be more readable
+    formatted_history = []
+    for item in history:
+        item['label'] = item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시 %M분 %S초')
+        formatted_history.append(item)
+
+    return Response(formatted_history, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -857,7 +864,7 @@ def call_summary(request):
     if interval == 'hourly':
         history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncHour('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
     elif interval == 'daily':
-        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncDay('timestamp')).values('label').annotate(count=Count('id')). order_by('label')
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncDay('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
     elif interval == 'weekly':
         history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncWeek('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
     elif interval == 'monthly':
@@ -866,7 +873,7 @@ def call_summary(request):
         return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
 
     total_calls = history.aggregate(total=Count('id'))['total']
-    avg_response_time = history.aggregate(avg_response=Avg('response_time'))['avg_response']
+    avg_response_time = round(history.aggregate(avg_response=Avg('response_time'))['avg_response'], 2)
 
     max_calls = history.order_by('-count').first()
     min_calls = history.order_by('count').first()
@@ -874,8 +881,8 @@ def call_summary(request):
     summary = {
         'total_calls': total_calls,
         'avg_response_time': avg_response_time,
-        'max_calls_time': max_calls['label'] if max_calls else None,
-        'min_calls_time': min_calls['label'] if min_calls else None,
+        'max_calls_time': max_calls['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시 %M분 %S초') if max_calls else None,
+        'min_calls_time': min_calls['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시 %M분 %S초') if min_calls else None,
         'success_rate': calculate_success_rate(user)
     }
 
@@ -884,4 +891,4 @@ def call_summary(request):
 def calculate_success_rate(user):
     total_calls = ApiCallHistory.objects.filter(user=user).count()
     success_calls = ApiCallHistory.objects.filter(user=user, success=True).count()
-    return (success_calls / total_calls) * 100 if total_calls > 0 else 0
+    return round((success_calls / total_calls) * 100, 2) if total_calls > 0 else 0

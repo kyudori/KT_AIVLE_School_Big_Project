@@ -139,22 +139,21 @@ const ApiManagement = () => {
       });
   };
 
-
   const fetchSummaryData = (interval) => {
     axios
-        .get(`${BACKEND_URL}/api/call-summary/?interval=${interval}`, {
-            headers: {
-                Authorization: `Token ${localStorage.getItem("token")}`,
-            },
-            withCredentials: true,
-        })
-        .then((response) => {
-            setSummaryData(response.data);
-        })
-        .catch((error) => {
-            console.error("요약 데이터 가져오기 오류", error);
-        });
-};
+      .get(`${BACKEND_URL}/api/call-summary/?interval=${interval}`, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("token")}`,
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        setSummaryData(response.data);
+      })
+      .catch((error) => {
+        console.error("요약 데이터 가져오기 오류", error);
+      });
+  };
 
   const handleGenerateApiKey = () => {
     const password = prompt("비밀번호를 입력해주세요:");
@@ -289,15 +288,15 @@ const ApiManagement = () => {
 
   const renderSummary = () => {
     return (
-        <div>
-            <p>총 API 호출 수: {summaryData.total_calls}</p>
-            <p>평균 응답 시간: {summaryData.avg_response_time} ms</p>
-            <p>가장 많은 호출 시간: {summaryData.max_calls_time}</p>
-            <p>가장 적은 호출 시간: {summaryData.min_calls_time}</p>
-            <p>성공률: {summaryData.success_rate} %</p>
-        </div>
+      <div>
+        <p>총 API 호출 수: {summaryData.total_calls}</p>
+        <p>평균 응답 시간: {summaryData.avg_response_time} ms</p>
+        <p>가장 많은 호출 시간: {summaryData.max_calls_time}</p>
+        <p>가장 적은 호출 시간: {summaryData.min_calls_time}</p>
+        <p>성공률: {summaryData.success_rate} %</p>
+      </div>
     );
-};
+  };
 
   const renderContent = () => {
     switch (currentPage) {
@@ -333,15 +332,17 @@ const ApiManagement = () => {
             },
             title: {
               display: true,
-              text: `${Math.round(((totalCredits - usedCredits) / totalCredits) * 100)}% 남음`,
-              position: 'top',
-              align: 'center',
+              text: `${Math.round(
+                ((totalCredits - usedCredits) / totalCredits) * 100
+              )}% 남음`,
+              position: "top",
+              align: "center",
               font: {
                 size: 18,
               },
             },
           },
-          cutout: '70%',
+          cutout: "70%",
           responsive: true,
           maintainAspectRatio: false,
         };
@@ -353,10 +354,10 @@ const ApiManagement = () => {
           labels: trafficLabels,
           datasets: [
             {
-              label: 'API Calls',
+              label: "API Calls",
               data: trafficCounts,
               fill: false,
-              borderColor: 'rgba(75, 192, 192, 1)',
+              borderColor: "rgba(75, 192, 192, 1)",
               tension: 0.1,
             },
           ],
@@ -381,8 +382,12 @@ const ApiManagement = () => {
                   <div className={styles.credit}>
                     {totalCredits}개
                     <p>Free Credit: {freeCredits}개</p>
-                    {dailyCredits > 0 && <p>Daily Credit: {dailyCredits}개</p>}
-                    {additionalCredits > 0 && <p>Additional Credit: {additionalCredits}개</p>}
+                    {dailyCredits > 0 && (
+                      <p>Daily Credit: {dailyCredits}개</p>
+                    )}
+                    {additionalCredits > 0 && (
+                      <p>Additional Credit: {additionalCredits}개</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -417,23 +422,36 @@ const ApiManagement = () => {
                     }}
                   ></span>
                 </p>
-                <p>마지막 사용 시간 : {apiLastUsed ? apiLastUsed : "사용한 기록이 없습니다."}</p>
+                <p>
+                  마지막 사용 시간 :{" "}
+                  {apiLastUsed ? apiLastUsed : "사용한 기록이 없습니다."}
+                </p>
               </div>
             </div>
             <div className={styles.trafficSummary}>
               <div className={styles.traffic}>
                 <h3>Traffic</h3>
                 <div className={styles.intervalTabs}>
-                  <button onClick={() => handleIntervalChange('hourly')}>시간별</button>
-                  <button onClick={() => handleIntervalChange('daily')}>일별</button>
-                  <button onClick={() => handleIntervalChange('weekly')}>주별</button>
-                  <button onClick={() => handleIntervalChange('monthly')}>월별</button>
+                  <button onClick={() => handleIntervalChange("hourly")}>
+                    시간별
+                  </button>
+                  <button onClick={() => handleIntervalChange("daily")}>
+                    일별
+                  </button>
+                  <button onClick={() => handleIntervalChange("weekly")}>
+                    주별
+                  </button>
+                  <button onClick={() => handleIntervalChange("monthly")}>
+                    월별
+                  </button>
                 </div>
                 <div className={styles.graph}>
                   {trafficData.length > 0 ? (
                     <Line data={trafficDataChart} options={trafficOptions} />
                   ) : (
-                    <div className={styles.noDataMessage}>API 사용 기록이 없습니다.</div>
+                    <div className={styles.noDataMessage}>
+                      API 사용 기록이 없습니다.
+                    </div>
                   )}
                 </div>
               </div>
