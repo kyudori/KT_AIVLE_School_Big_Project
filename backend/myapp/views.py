@@ -355,7 +355,6 @@ def approve_payment(request):
                 total_credits=payment.plan.credits,
                 start_date=timezone.now(),
                 end_date=timezone.now() + timedelta(days=90),
-                is_active = False
             )
 
         PaymentHistory.objects.create(user=user, plan=payment.plan, amount=payment.amount)
