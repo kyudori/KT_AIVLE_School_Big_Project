@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Chart from "chart.js/auto";
+import Chart from "chart.js/auto"; // 차트 라이브러리 추가
 import annotationPlugin from "chartjs-plugin-annotation";
 import styles from "../styles/Try.module.css";
 
@@ -154,6 +154,7 @@ export default function TryVoice() {
                   yMax: 0.8,
                   borderColor: "red",
                   borderWidth: 2,
+                  borderDash: [10, 5],
                   label: {
                     content: "0.8 (Fake)",
                     enabled: true,
