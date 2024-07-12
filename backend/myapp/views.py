@@ -769,7 +769,8 @@ def voice_verity(request):
         file = request.FILES.get('file')
         if not file:
             return Response({'error': 'No file uploaded'}, status=400)
-        if len(file) > 1:
+        files = request.FILES.getlist('file')
+        if len(files) > 1:
             return Response({'error': 'Only one file can be uploaded at a time'}, status=410)
 
         # 파일 크기 및 확장자 검증
