@@ -57,9 +57,9 @@ const ApiManagement = () => {
 
   useEffect(() => {
     if (user) {
-      fetchTrafficData(selectedInterval);
+      fetchTrafficData();
     }
-  }, [selectedInterval, user]);
+  }, [user]);
 
   const fetchApiKey = (token) => {
     axios
@@ -121,9 +121,9 @@ const ApiManagement = () => {
       });
   };
 
-  const fetchTrafficData = (interval) => {
+  const fetchTrafficData = () => {
     axios
-      .get(`${BACKEND_URL}/api/call-history/?interval=${interval}`, {
+      .get(`${BACKEND_URL}/api/call-history/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem("token")}`,
         },
@@ -268,6 +268,30 @@ const ApiManagement = () => {
     setSelectedInterval(interval);
   };
 
+  const filterTrafficData = (interval) => {
+    const now = new Date();
+    let filteredData = [];
+
+    switch (interval) {
+      case 'hourly':
+        filteredData = trafficData.filter(item => new Date(item.timestamp) > new Date(now.getTime() - (24 * 60 * 60 * 1000)));
+        break;
+      case 'daily':
+        filteredData = trafficData.filter(item => new Date(item.timestamp) > new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000)));
+        break;
+      case 'weekly':
+        filteredData = trafficData.filter(item => new Date(item.timestamp) > new Date(now.getTime() - (12 * 7 * 24 * 60 * 60 * 1000)));
+        break;
+      case 'monthly':
+        filteredData = trafficData.filter(item => new Date(item.timestamp) > new Date(now.getTime() - (365 * 24 * 60 * 60 * 1000)));
+        break;
+      default:
+        filteredData = trafficData;
+    }
+
+    return filteredData;
+  };
+
   const renderContent = () => {
     switch (currentPage) {
       case "dashboard":
@@ -315,8 +339,9 @@ const ApiManagement = () => {
           maintainAspectRatio: false,
         };
 
-        const trafficLabels = trafficData.length > 0 ? trafficData.map((item) => item.label) : ["데이터가 없습니다."];
-        const trafficCounts = trafficData.length > 0 ? trafficData.map((item) => item.count) : [0];
+        const filteredTrafficData = filterTrafficData(selectedInterval);
+        const trafficLabels = filteredTrafficData.length > 0 ? filteredTrafficData.map((item) => new Date(item.timestamp).toLocaleString()) : ["API 사용 기록이 없습니다."];
+        const trafficCounts = filteredTrafficData.length > 0 ? filteredTrafficData.map((item) => item.count) : [0];
 
         const trafficDataChart = {
           labels: trafficLabels,
@@ -555,3 +580,4 @@ const ApiManagement = () => {
 };
 
 export default ApiManagement;
+
