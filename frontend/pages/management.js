@@ -286,6 +286,15 @@ const ApiManagement = () => {
     }
   };
 
+  const handleCopyApiKey = () => {
+    if (apiKey) {
+      navigator.clipboard.writeText(apiKey);
+      alert("API Key가 클립보드에 복사되었습니다.");
+    } else {
+      alert("복사할 API Key가 없습니다.");
+    }
+  };
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -515,6 +524,14 @@ const ApiManagement = () => {
                     >
                       {apiKey ? "재발급" : "키 발급"}
                     </button>
+                    {apiKey && (
+                      <button
+                        className={styles.copyButton}
+                        onClick={handleCopyApiKey}
+                      >
+                        키 복사
+                      </button>
+                    )}
                   </div>
                 </div>
                 <div className={styles.statusSection}>
