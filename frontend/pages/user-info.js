@@ -49,9 +49,32 @@ export default function UserInfo() {
         })
         .catch((error) => {
           console.error("사용자 정보 가져오기 오류", error);
+          alert("사용자 정보를 가져오는데 실패했습니다.");
         });
     }
   }, []);
+
+  const handleNicknameChange = (e) => {
+    const { value } = e.target;
+    const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
+
+    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 6)) {
+      setNickname(value);
+    } else {
+      alert("닉네임은 한글 4자 이하, 영어 6자 이하만 가능합니다.");
+    }
+  };
+
+  const handleContactChange = (e) => {
+    const { value } = e.target;
+    const regex = /^[0-9]*$/;
+
+    if (regex.test(value)) {
+      setContact(value);
+    } else {
+      alert("연락처는 숫자만 입력 가능합니다.");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,7 +102,7 @@ export default function UserInfo() {
       alert("사용자 정보가 성공적으로 업데이트되었습니다.");
     } catch (error) {
       console.error("사용자 정보 업데이트 오류", error);
-      alert("사용자 정보 업데이트 오류");
+      alert("사용자 정보 업데이트 오류: " + error.response.data.error);
     }
   };
 
@@ -115,7 +138,7 @@ export default function UserInfo() {
       setConfirmPassword("");
     } catch (error) {
       console.error("비밀번호 변경 오류", error);
-      alert("이전 비밀번호가 동일하거나 잘못 입력하셨습니다.");
+      alert("비밀번호 변경 오류: " + error.response.data.error);
     }
   };
 
@@ -133,7 +156,7 @@ export default function UserInfo() {
         router.push("/");
       } catch (error) {
         console.error("계정 삭제 오류", error);
-        alert("계정 삭제 오류");
+        alert("계정 삭제 오류: " + error.response.data.error);
       }
     }
   };
@@ -174,7 +197,7 @@ export default function UserInfo() {
       alert("프로필 이미지가 성공적으로 업데이트되었습니다.");
     } catch (error) {
       console.error("프로필 이미지 업데이트 오류", error);
-      alert("프로필 이미지 업데이트 오류");
+      alert("프로필 이미지 업데이트 오류: " + error.response.data.error);
     }
   };
 
@@ -223,9 +246,10 @@ export default function UserInfo() {
                 <input
                   type="text"
                   value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
+                  onChange={handleNicknameChange}
                   required
                   className={styles.inputField}
+                  placeholder="닉네임 (한글 4자 이하, 영어 6자 이하)"
                 />
               </div>
               <div className={styles.fieldGroup}>
@@ -252,7 +276,7 @@ export default function UserInfo() {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     className={styles.inputField}
-                    placeholder="새 비밀번호"
+                    placeholder="새 비밀번호 (4자리 이상)"
                   />
                   <input
                     type="password"
@@ -294,9 +318,10 @@ export default function UserInfo() {
                 <input
                   type="text"
                   value={contact}
-                  onChange={(e) => setContact(e.target.value)}
+                  onChange={handleContactChange}
                   required
                   className={styles.inputField}
+                  placeholder="연락처 (- 없이 입력)"
                 />
               </div>
               <div className={styles.fieldGroup}>
@@ -306,12 +331,19 @@ export default function UserInfo() {
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   className={styles.inputField}
+                  placeholder="선택"
                 />
               </div>
-              <div style={{marginTop:'50px'}}><p style={{
-                  color: '#868686',
-                  textAlign: 'left'
-              }}>마케팅활용동의 및 광고수신동의</p></div>
+              <div style={{ marginTop: "50px" }}>
+                <p
+                  style={{
+                    color: "#868686",
+                    textAlign: "left",
+                  }}
+                >
+                  마케팅활용동의 및 광고수신동의
+                </p>
+              </div>
               <div className={styles.marketing}>
                 <div className={styles.checkboxGroup}>
                   <label>
