@@ -254,7 +254,7 @@ Value: YOUR_AUDIO_FILE.wav`)
                 </div>
                 <h3>Response</h3>
                 <ul>
-                  <li>응답 형식: Content-Type: application/json</li>
+                  <li>Content-Type: application/json</li>
                 </ul>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
@@ -307,7 +307,7 @@ Value: YOUR_AUDIO_FILE.wav`)
               </ul>
               <h3 style={{ color: "#5B5B5B" }}>Response</h3>
                 <ul>
-                  <li>응답 형식: Content-Type: application/json</li>
+                  <li>Content-Type: application/json</li>
                 </ul>
               <div className={styles.codeEX}>
                 <div className={styles.codetop}>
