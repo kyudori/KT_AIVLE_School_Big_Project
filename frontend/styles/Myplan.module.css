@@ -36,7 +36,6 @@
   background-color: #cdcdcd;
   border-radius: 50%;
   margin-right: 20px;
-  /* 추가된 코드 */
 }
 
 .userIcon img {
@@ -58,7 +57,6 @@
 
 .paymentDate {
   margin-left: 20px;
-  /* 추가된 코드 */
 }
 
 .plans {
@@ -115,7 +113,7 @@
 }
 
 .currentPlan::after {
-  content: '✓';
+  content: "✓";
   position: absolute;
   top: 10px;
   right: 10px;
