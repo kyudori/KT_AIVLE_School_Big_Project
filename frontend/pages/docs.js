@@ -356,6 +356,10 @@ Value: YOUR_AUDIO_FILE.wav`)
                     <td>| Credit 추가 구매가 필요합니다.</td>
                   </tr>
                   <tr>
+                    <td className={styles.td1}>410 Only one File</td>
+                    <td>| 1개의 파일만 분석 가능합니다.</td>
+                  </tr>
+                  <tr>
                     <td className={styles.td1}>413 Payload Too Large</td>
                     <td>| 음성 파일의 크기가 허용 크기를 초과하였습니다.</td>
                   </tr>
