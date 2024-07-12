@@ -291,7 +291,7 @@ const ApiManagement = () => {
             <div className={styles.row}>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
-                  <h3>남은 Credit</h3>
+                  <h3>Total Credits</h3>
                   <div className={styles.credit}>
                     {totalCredits}개
                     <p>Free Credit: {freeCredits}개</p>
@@ -302,7 +302,7 @@ const ApiManagement = () => {
               </div>
               <div className={styles.card}>
                 <div className={styles.cardcontent}>
-                  <h3>사용 현황</h3>
+                  <h3>Credit Usage</h3>
                   <div className={styles.doughnutWrapper}>
                     <Doughnut data={data} options={options} />
                   </div>
@@ -310,7 +310,7 @@ const ApiManagement = () => {
                     className={styles.purchaseButton}
                     onClick={() => router.push("/plan")}
                   >
-                    추가 Credit 구매하기
+                    Buy More Credits
                   </button>
                 </div>
               </div>
@@ -318,7 +318,7 @@ const ApiManagement = () => {
                 <h3>API Status</h3>
                 <p>내 API Key : {apiKey || "현재 키 없음"}</p>
                 <p>
-                  현재 API 상태 :{" "}
+                  현재 API Sever 상태 :{" "}
                   {isApiServerOn ? (
                     <span style={{ color: "green" }}>ON</span>
                   ) : (
@@ -338,7 +338,7 @@ const ApiManagement = () => {
               <div className={styles.traffic}>
                 <h3>Traffic</h3>
                 <div className={styles.graph}>
-                  시간별 / 일별 / 월별 / 년별 API 응답 요청 수 그래프
+                  시간별 / 일별 / 월별 API 응답 요청 수 그래프
                 </div>
               </div>
               <div className={styles.summary}>
