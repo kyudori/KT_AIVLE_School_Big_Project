@@ -342,7 +342,7 @@ def approve_payment(request):
                 user=user,
                 plan=payment.plan,
                 daily_credits=payment.plan.api_calls_per_day,
-                additional_credits=payment.plan.credits,
+                total_credits=payment.plan.credits,
                 start_date=timezone.now(),
                 end_date=timezone.now() + timedelta(days=30)
             )
@@ -352,7 +352,7 @@ def approve_payment(request):
                 user=user,
                 plan=payment.plan,
                 daily_credits=0,
-                additional_credits=payment.plan.credits,
+                total_credits=payment.plan.credits,
                 start_date=timezone.now(),
                 end_date=timezone.now() + timedelta(days=90)
             )
