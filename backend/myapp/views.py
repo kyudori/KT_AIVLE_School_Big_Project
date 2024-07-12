@@ -553,7 +553,7 @@ def get_credits(request):
     remaining_additional_credits = total_additional_credits - used_additional_credits
 
     # 전체 크레딧 계산
-    total_credits = free_credits + total_daily_credits + total_additional_credits
+    total_credits = 5 + total_daily_credits + total_additional_credits
     remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
 
     return Response({
