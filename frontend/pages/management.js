@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, CategoryScale, LinearScale } from 'chart.js';
-import { Doughnut, Bar } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import { Doughnut, Line } from "react-chartjs-2";
 import styles from "../styles/Apimanagement.module.css";
 import Footer from "../components/Footer";
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title, BarElement, CategoryScale, LinearScale);
+ChartJS.register(ArcElement, Tooltip, Legend, Title, LineElement, CategoryScale, LinearScale, PointElement);
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -324,9 +324,9 @@ const ApiManagement = () => {
             {
               label: 'API Calls',
               data: trafficCounts,
-              backgroundColor: 'rgba(75, 192, 192, 0.6)',
+              fill: false,
               borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
+              tension: 0.1,
             },
           ],
         };
@@ -400,7 +400,7 @@ const ApiManagement = () => {
                 </div>
                 <div className={styles.graph}>
                   {trafficData.length > 0 ? (
-                    <Bar data={trafficDataChart} options={trafficOptions} />
+                    <Line data={trafficDataChart} options={trafficOptions} />
                   ) : (
                     <div className={styles.noDataMessage}>API 사용 기록이 없습니다.</div>
                   )}
