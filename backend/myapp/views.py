@@ -342,7 +342,7 @@ def approve_payment(request):
                 user=user,
                 plan=payment.plan,
                 daily_credits=payment.plan.api_calls_per_day,
-                additional_credits=payment.plan.credits,
+                total_credits=payment.plan.credits,
                 start_date=timezone.now(),
                 end_date=timezone.now() + timedelta(days=30)
             )
@@ -352,9 +352,9 @@ def approve_payment(request):
                 user=user,
                 plan=payment.plan,
                 daily_credits=0,
-                additional_credits=payment.plan.credits,
+                total_credits=payment.plan.credits,
                 start_date=timezone.now(),
-                end_date=timezone.now() + timedelta(days=90)
+                end_date=timezone.now() + timedelta(days=90),
             )
 
         PaymentHistory.objects.create(user=user, plan=payment.plan, amount=payment.amount)
@@ -539,7 +539,7 @@ def get_credits(request):
 
     # 유효한 추가 크레딧 계산 (만료되지 않은 추가 크레딧만 포함)
     today = timezone.now().date()
-    valid_additional_subs = subscriptions.filter(plan__is_recurring=False, end_date__gt=today)
+    valid_additional_subs = subscriptions.filter(end_date__gt=today)
     total_additional_credits = valid_additional_subs.aggregate(total=Sum('total_credits'))['total'] or 0
     used_additional_credits = valid_additional_subs.aggregate(used=Sum(F('total_credits') - F('daily_credits')))['used'] or 0
 
@@ -769,7 +769,10 @@ def voice_verity(request):
         file = request.FILES.get('file')
         if not file:
             return Response({'error': 'No file uploaded'}, status=400)
-        
+        files = request.FILES.getlist('file')
+        if len(files) > 1:
+            return Response({'error': 'Only one file can be uploaded at a time'}, status=410)
+
         # 파일 크기 및 확장자 검증
         file_size = file.size
         file_extension = os.path.splitext(file.name)[1].lower()

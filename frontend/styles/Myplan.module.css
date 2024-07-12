@@ -19,15 +19,14 @@
   justify-content: center;
   align-self: center;
   width: 900px;
-  height: 500px;
   padding: 50px;
 }
 
 .userInfo {
   display: flex;
-  width: 700px;
   flex-direction: row;
   align-items: flex-end;
+  margin-bottom: 20px;
 }
 
 .userIcon {
@@ -36,7 +35,6 @@
   background-color: #cdcdcd;
   border-radius: 50%;
   margin-right: 20px;
-  /* 추가된 코드 */
 }
 
 .userIcon img {
@@ -46,10 +44,10 @@
 }
 
 .text {
-  margin: 20px 0;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  width: 100%;
 }
 
 .text h1 {
@@ -58,7 +56,6 @@
 
 .paymentDate {
   margin-left: 20px;
-  /* 추가된 코드 */
 }
 
 .plans {
@@ -67,23 +64,17 @@
 }
 
 .planCard {
-  display: flex;
   background-color: #b8b8b8;
-  align-items: flex-end;
   border: solid 1px #b8b8b8;
   border-radius: 10px;
   width: 280px;
   height: 280px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
-}
-
-.cardcontent {
-  border-radius: 10px;
-  height: 210px;
-  background-color: #fff;
-  width: 100%;
 }
 
 .planCard:hover {
@@ -99,14 +90,7 @@
 
 .planCard p {
   font-size: 1em;
-  margin-bottom: 10px;
-}
-
-.planCard ul {
-  padding: 0;
-  margin: 40px;
-  text-align: left;
-  list-style: none;
+  margin: 5px 0;
 }
 
 .currentPlan {
@@ -126,10 +110,6 @@
   text-align: center;
   line-height: 20px;
   border: 2px solid black;
-}
-
-.noPlan {
-  margin-top: 20px;
 }
 
 .subscribeButton {
@@ -192,4 +172,31 @@
   padding: 20px;
   border-radius: 10px;
   text-align: center;
+}
+
+.modalContent button {
+  cursor: pointer;
+  height: 35px; /* 버튼 높이 조정 */
+  width: 100px; /* 버튼 너비 조정 */
+  margin: 10px; /* 버튼 사이 간격 조정 */
+  border: none;
+  font-family: fontA;
+  font-size: 16px; /* 버튼 폰트 크기 조정 */
+  background-color: #d9d9d9; /* 버튼 배경색 */
+  color: #000;
+  outline: solid 1px #000;
+  border-radius: 20px; /* 버튼 모서리 둥글게 */
+  transition: background 0.3s;
+}
+
+.modalContent button:hover {
+  background-color: #b0b0b0; /* 호버 시 배경색 변경 */
+}
+
+.modalContent .confirmButton {
+  background-color: #d9d9d9; /* 확인 버튼 배경색 */
+}
+
+.modalContent .cancelButton {
+  background-color: #d9d9d9; /* 취소 버튼 배경색 */
 }

@@ -8,7 +8,6 @@ import styles from "../styles/Myplan.module.css";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const MyPlan = () => {
-  const [plans, setPlans] = useState([]);
   const [currentPlan, setCurrentPlan] = useState(null);
   const [nextPaymentDate, setNextPaymentDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -18,16 +17,9 @@ const MyPlan = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchPlans = async () => {
+    const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("token");
-        const plansResponse = await axios.get(
-          `${BACKEND_URL}/api/subscription-plans/`,
-          {
-            headers: { Authorization: `Token ${token}` },
-          }
-        );
-        setPlans(plansResponse.data.filter((plan) => plan.is_recurring)); // 구독 플랜만 필터링
 
         const currentPlanResponse = await axios.get(
           `${BACKEND_URL}/api/current-plan/`,
@@ -35,8 +27,10 @@ const MyPlan = () => {
             headers: { Authorization: `Token ${token}` },
           }
         );
-        setCurrentPlan(currentPlanResponse.data.plan);
-        setNextPaymentDate(currentPlanResponse.data.next_payment_date);
+        if (currentPlanResponse.data.plan) {
+          setCurrentPlan(currentPlanResponse.data.plan);
+          setNextPaymentDate(currentPlanResponse.data.next_payment_date);
+        }
 
         const userInfoResponse = await axios.get(
           `${BACKEND_URL}/api/user-info/`,
@@ -51,10 +45,10 @@ const MyPlan = () => {
             : "/images/userinfo/profile_default.png"
         );
       } catch (error) {
-        console.error("Error fetching plans or user info", error);
+        console.error("Error fetching user info", error);
       }
     };
-    fetchPlans();
+    fetchUserInfo();
   }, []);
 
   const handlePlanClick = (plan) => {
@@ -91,6 +85,27 @@ const MyPlan = () => {
     }
   };
 
+  const plans = [
+    {
+      id: 3,
+      name: "Basic",
+      price: 9900,
+      description: "0.9$ / 1회\n30일 구독 상품",
+    },
+    {
+      id: 4,
+      name: "Associate",
+      price: 29900,
+      description: "0.58$ / 1회\n30일 구독 상품",
+    },
+    {
+      id: 5,
+      name: "Professional",
+      price: 79900,
+      description: "0.39$ / 1회\n30일 구독 상품",
+    },
+  ];
+
   return (
     <div className={styles.container}>
       <div style={{ padding: "0 200px", background: "#fff" }}>
@@ -124,12 +139,10 @@ const MyPlan = () => {
                 onClick={() => handlePlanClick(plan)}
               >
                 <h2>{plan.name}</h2>
-                <p>
-                  {plan.price.toLocaleString("ko-KR")} /{" "}
-                  {plan.is_recurring ? "월" : "회"}
-                </p>
                 <ul>
-                  <li>{plan.description}</li>
+                  {plan.description.split("\n").map((line, index) => (
+                    <li key={index}>{line}</li>
+                  ))}
                 </ul>
               </div>
             ))}
