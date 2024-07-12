@@ -154,3 +154,30 @@
   border-radius: 10px;
   text-align: center;
 }
+
+.modalContent button {
+  cursor: pointer;
+  height: 35px; /* 버튼 높이 조정 */
+  width: 100px; /* 버튼 너비 조정 */
+  margin: 10px; /* 버튼 사이 간격 조정 */
+  border: none;
+  font-family: fontA;
+  font-size: 16px; /* 버튼 폰트 크기 조정 */
+  background-color: #d9d9d9; /* 버튼 배경색 */
+  color: #000;
+  outline: solid 1px #000;
+  border-radius: 20px; /* 버튼 모서리 둥글게 */
+  transition: background 0.3s;
+}
+
+.modalContent button:hover {
+  background-color: #b0b0b0; /* 호버 시 배경색 변경 */
+}
+
+.modalContent .confirmButton {
+  background-color: #d9d9d9; /* 확인 버튼 배경색 */
+}
+
+.modalContent .cancelButton {
+  background-color: #d9d9d9; /* 취소 버튼 배경색 */
+}
