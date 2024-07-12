@@ -37,5 +37,5 @@ urlpatterns = [
     path('check-api-status/', check_api_status, name='check-api-status'),
     path('voice-verity/', voice_verity, name='voice-verity'),
     path('call-history/', call_history, name='call-history'),
-    path('call-summary/', call_summary, name='call_summary'),
+    path('call-summary/', call_summary, name='call-summary'),
 ]
