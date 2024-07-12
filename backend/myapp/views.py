@@ -830,7 +830,7 @@ def voice_verity(request):
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def api_call_history(request):
+def call_history(request):
     interval = request.query_params.get('interval', 'hourly')
     user = request.user
     today = timezone.now().date()
