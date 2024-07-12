@@ -727,7 +727,7 @@ def user_comments(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def check_api_status(request):
     try:
         response = requests.get(f"{FLASK_URL}/status")

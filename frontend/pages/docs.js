@@ -301,20 +301,22 @@ Value: YOUR_AUDIO_FILE.wav`)
               <div style={{ height: "20px" }} />
               <h3>2. 상태(Status)</h3>
               <ul>
-                <li>URL: /api/status</li>
+                <li>URL: http://voice-verity.com/api/check-api-status/</li>
                 <li>Method: GET</li>
-                <li>설명: 호출하는 API 모델의 상태를 확인합니다.</li>
+                <li>설명: 호출하는 API 모델의 서버 상태를 확인합니다.</li>
               </ul>
-              <h3>Example</h3>
-              <h3 style={{ color: "#5B5B5B" }}>Response 응답(json)</h3>
+              <h3 style={{ color: "#5B5B5B" }}>Response</h3>
+                <ul>
+                  <li>응답 형식: Content-Type: application/json</li>
+                </ul>
               <div className={styles.codeEX}>
                 <div className={styles.codetop}>
                   <p>JSON</p>
                   <span
                     onClick={() =>
                       handleCopyClick(`{
-  "status": "ready",
-  "version": "1.0.0"
+  "status": "OK",
+  "detail": "Server is healthy"
 }`)
                     }
                   >
@@ -323,8 +325,8 @@ Value: YOUR_AUDIO_FILE.wav`)
                 </div>
                 <pre>
                   {`{
-  "status": "ready",
-  "version": "1.0.0"
+  "status": "OK",
+  "detail": "Server is healthy"
 }`}
                 </pre>
               </div>
