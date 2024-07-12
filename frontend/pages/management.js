@@ -288,10 +288,14 @@ const ApiManagement = () => {
 
   const handleCopyApiKey = () => {
     if (apiKey) {
-      navigator.clipboard.writeText(apiKey);
-      alert("API Key가 클립보드에 복사되었습니다.");
-    } else {
-      alert("복사할 API Key가 없습니다.");
+      navigator.clipboard
+        .writeText(apiKey)
+        .then(() => {
+          alert("API Key가 클립보드에 복사되었습니다.");
+        })
+        .catch((error) => {
+          console.error("API Key 복사 오류", error);
+        });
     }
   };
 
@@ -407,11 +411,6 @@ const ApiManagement = () => {
                   <div className={styles.credit}>
                     <p>Free Credit: {freeCredits}개</p>
 
-                    {/* {dailyCredits > 0 && <p>Daily Credit: {dailyCredits}개</p>}
-                    {additionalCredits > 0 && (
-                      <p>Additional Credit: {additionalCredits}개</p>
-                    )} */}
-
                     <p>Daily Credit: {dailyCredits}개</p>
                     <p>Additional Credit: {additionalCredits}개</p>
                   </div>
@@ -524,14 +523,12 @@ const ApiManagement = () => {
                     >
                       {apiKey ? "재발급" : "키 발급"}
                     </button>
-                    {apiKey && (
-                      <button
-                        className={styles.copyButton}
-                        onClick={handleCopyApiKey}
-                      >
-                        키 복사
-                      </button>
-                    )}
+                    <button
+                      className={styles.button}
+                      onClick={handleCopyApiKey}
+                    >
+                      키 복사
+                    </button>
                   </div>
                 </div>
                 <div className={styles.statusSection}>
