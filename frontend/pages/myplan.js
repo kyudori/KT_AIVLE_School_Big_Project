@@ -139,10 +139,6 @@ const MyPlan = () => {
                 onClick={() => handlePlanClick(plan)}
               >
                 <h2>{plan.name}</h2>
-                <p>
-                  {plan.price.toLocaleString("ko-KR")} /{" "}
-                  {plan.is_recurring ? "월" : "회"}
-                </p>
                 <ul>
                   {plan.description.split("\n").map((line, index) => (
                     <li key={index}>{line}</li>
