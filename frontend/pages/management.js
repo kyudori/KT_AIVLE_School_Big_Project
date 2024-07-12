@@ -1,12 +1,31 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+} from "chart.js";
 import { Doughnut, Line } from "react-chartjs-2";
 import styles from "../styles/Apimanagement.module.css";
 import Footer from "../components/Footer";
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title, LineElement, CategoryScale, LinearScale, PointElement);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement
+);
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -25,7 +44,7 @@ const ApiManagement = () => {
   const [apiStatus, setApiStatus] = useState(false); // Activate status
   const [isApiServerOn, setIsApiServerOn] = useState(false); // API Server status
   const [isOpen, setMenu] = useState(true);
-  const [selectedInterval, setSelectedInterval] = useState('hourly');
+  const [selectedInterval, setSelectedInterval] = useState("hourly");
   const [trafficData, setTrafficData] = useState([]);
   const [summaryData, setSummaryData] = useState({});
   const router = useRouter();
@@ -91,7 +110,7 @@ const ApiManagement = () => {
         withCredentials: true,
       })
       .then((response) => {
-        setTodayTotalCredits(response.data.today_total_credits)
+        setTodayTotalCredits(response.data.today_total_credits);
         setDailyCredits(response.data.remaining_daily_credits);
         setAdditionalCredits(response.data.remaining_additional_credits);
         setFreeCredits(response.data.remaining_free_credits);
@@ -307,12 +326,7 @@ const ApiManagement = () => {
           labels: ["Free", "Daily", "Additional", "Used"],
           datasets: [
             {
-              data: [
-                freeCredits,
-                dailyCredits,
-                additionalCredits,
-                usedCredits,
-              ],
+              data: [freeCredits, dailyCredits, additionalCredits, usedCredits],
               backgroundColor: ["#36A2EB", "#FFCE56", "#FF6384", "#CCCCCC"],
             },
           ],
@@ -336,7 +350,7 @@ const ApiManagement = () => {
               display: true,
               text: `${Math.round(
                 ((todaytotalCredits - usedCredits) / todaytotalCredits) * 100
-              )}% 남음`,
+              )}% | ${totalCredits}개 남음`,
               position: "top",
               align: "center",
               font: {
@@ -382,14 +396,15 @@ const ApiManagement = () => {
                 <div className={styles.cardcontent}>
                   <h3>Total Credits</h3>
                   <div className={styles.credit}>
-                    {totalCredits}개
                     <p>Free Credit: {freeCredits}개</p>
-                    {dailyCredits > 0 && (
-                      <p>Daily Credit: {dailyCredits}개</p>
-                    )}
+
+                    {/* {dailyCredits > 0 && <p>Daily Credit: {dailyCredits}개</p>}
                     {additionalCredits > 0 && (
                       <p>Additional Credit: {additionalCredits}개</p>
-                    )}
+                    )} */}
+
+                    <p>Daily Credit: {dailyCredits}개</p>
+                    <p>Additional Credit: {additionalCredits}개</p>
                   </div>
                 </div>
               </div>
@@ -408,26 +423,28 @@ const ApiManagement = () => {
                 </div>
               </div>
               <div className={styles.card}>
-                <h3>API Status</h3>
-                <p>내 API Key : {apiKey || "현재 키 없음"}</p>
-                <p>
-                  현재 API 상태 :{" "}
-                  {isApiServerOn ? (
-                    <span style={{ color: "green" }}>ON</span>
-                  ) : (
-                    <span style={{ color: "red" }}>OFF</span>
-                  )}{" "}
-                  <span
-                    className={styles.status}
-                    style={{
-                      backgroundColor: isApiServerOn ? "green" : "red",
-                    }}
-                  ></span>
-                </p>
-                <p>
-                  마지막 사용 시간 :{" "}
-                  {apiLastUsed ? apiLastUsed : "사용한 기록이 없습니다."}
-                </p>
+                <div className={styles.cardcontent} style={{ border: "none" }}>
+                  <h3>API Status</h3>
+                  <p>내 API Key : {apiKey || "현재 키 없음"}</p>
+                  <p>
+                    현재 API 상태 :{" "}
+                    {isApiServerOn ? (
+                      <span style={{ color: "green" }}>ON</span>
+                    ) : (
+                      <span style={{ color: "red" }}>OFF</span>
+                    )}{" "}
+                    <span
+                      className={styles.status}
+                      style={{
+                        backgroundColor: isApiServerOn ? "green" : "red",
+                      }}
+                    ></span>
+                  </p>
+                  <p>
+                    마지막 사용 시간 :{" "}
+                    {apiLastUsed ? apiLastUsed : "사용한 기록이 없습니다."}
+                  </p>
+                </div>
               </div>
             </div>
             <div className={styles.trafficSummary}>
@@ -443,7 +460,10 @@ const ApiManagement = () => {
                   <button onClick={() => handleIntervalChange("weekly")}>
                     주별
                   </button>
-                  <button onClick={() => handleIntervalChange("monthly")}>
+                  <button
+                    onClick={() => handleIntervalChange("monthly")}
+                    style={{ border: "none" }}
+                  >
                     월별
                   </button>
                 </div>
@@ -459,6 +479,7 @@ const ApiManagement = () => {
               </div>
               <div className={styles.summary}>
                 <h3>Summary</h3>
+                <div style={{ height: "33.4px" }} />
                 <div className={styles.graph}>{renderSummary()}</div>
               </div>
             </div>
