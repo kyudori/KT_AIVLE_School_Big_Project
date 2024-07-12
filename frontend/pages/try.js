@@ -3,8 +3,12 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Chart from "chart.js/auto"; // 차트 라이브러리 추가
+import Chart from "chart.js/auto";
+import annotationPlugin from "chartjs-plugin-annotation";
 import styles from "../styles/Try.module.css";
+
+// 플러그인 등록
+Chart.register(annotationPlugin);
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const ALLOWED_EXTENSIONS = [".wav", ".m4a", ".mp3"];
@@ -131,7 +135,6 @@ export default function TryVoice() {
             {
               label: "Real/Fake Probability",
               data: predictions,
-              borderColor: "rgba(75, 192, 192, 1)",
               fill: false,
               pointRadius: 0,
               borderColor: "rgb(155, 144, 210)",
@@ -142,6 +145,23 @@ export default function TryVoice() {
           plugins: {
             legend: {
               display: false,
+            },
+            annotation: {
+              annotations: {
+                line1: {
+                  type: "line",
+                  yMin: 0.8,
+                  yMax: 0.8,
+                  borderColor: "red",
+                  borderWidth: 2,
+                  label: {
+                    content: "0.8 (Fake)",
+                    enabled: true,
+                    position: "end",
+                    backgroundColor: "rgba(255, 99, 132, 0.25)",
+                  },
+                },
+              },
             },
           },
           responsive: false,
