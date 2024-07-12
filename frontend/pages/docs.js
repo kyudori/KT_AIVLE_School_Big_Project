@@ -61,7 +61,7 @@ export default function Documentation() {
       // HTTPS가 아닌 환경에서는 execCommand를 사용
       const textArea = document.createElement("textarea");
       textArea.value = textToCopy;
-      textArea.style.position = "fixed"; // avoid scrolling to bottom
+      textArea.style.position = "fixed";  // avoid scrolling to bottom
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
@@ -200,54 +200,80 @@ export default function Documentation() {
                     설명: 업로드한 음성 파일을 기반으로 AI 모델로부터 Deep Fake 여부를 판단합니다.
                   </li>
                   <li>
-                    음석 파일에 대한 분석은 1초 단위로 제공됩니다. (1.0에 가까울수록 FAKE)
+                    음성 파일에 대한 분석은 1초 단위로 제공됩니다.
                   </li>
                 </ul>
-                <h3>Example</h3>
-                <h3 style={{ color: "#5B5B5B" }}>요청 헤더(Headers)</h3>
+                <h3>Request Header</h3>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
-                    <li>Key: Authorization</li>
-                    <li>Value: Bearer YOUR_API_KEY_HERE</li>
+                    <p>Header</p>
                     <span
                       onClick={() =>
-                        handleCopyClick(`curl -X POST http://voice-verity.com/api/voice-verity/ \
-  -H "Authorization: Bearer YOUR_API_KEY_HERE" \
-  -F "file=@/path/to/your_audio_file.wav"`)
+                        handleCopyClick(`Key: Authorization
+Value: Bearer YOUR_API_KEY`)
                       }
                     >
                       📋
                     </span>
                   </div>
-                  <pre>{`
-curl -X POST http://voice-verity.com/api/voice-verity/ \\
-  -H "Authorization: Bearer YOUR_API_KEY_HERE" \\
-  -F "file=@/path/to/your_audio_file.wav"
-              `}</pre>
+                  <pre>Key: Authorization{`\n`}Value: Bearer YOUR_API_KEY</pre>
                 </div>
-                <br />
-                <h3 style={{ color: "#5B5B5B" }}>요청 본문(Body)</h3>
+                <h3>Request Body</h3>
                 <div className={styles.codeEX}>
                   <div className={styles.codetop}>
-                  <p>multipart/form-data</p>
-                  <li>Key: file</li>
-                  <li>Type: File</li>
+                    <p>Body</p>
+                    <span
+                      onClick={() =>
+                        handleCopyClick(`multipart/form-data
+Key: file
+Value: YOUR_AUDIO_FILE.wav`)
+                      }
+                    >
+                      📋
+                    </span>
+                  </div>
+                  <pre>multipart/form-data{`\n`}Key: file{`\n`}Value: YOUR_AUDIO_FILE.wav</pre>
+                </div>
+                <h3>Request Example</h3>
+                <div className={styles.codeEX}>
+                  <div className={styles.codetop}>
+                    <p>sh</p>
+                    <span
+                      onClick={() =>
+                        handleCopyClick(`curl -X POST http://voice-verity.com/api/voice-verity/ 
+-H "Authorization: Bearer YOUR_API_KEY_HERE" 
+-F "file=@/path/to/your_audio_file.wav"`)
+                      }
+                    >
+                      📋
+                    </span>
+                  </div>
+                  <pre>{`curl -X POST http://voice-verity.com/api/voice-verity/ 
+-H "Authorization: Bearer YOUR_API_KEY_HERE" 
+-F "file=@/path/to/your_audio_file.wav"`}</pre>
+                </div>
+                <h3>Response</h3>
+                <ul>
+                  <li>응답 형식: Content-Type: application/json</li>
+                </ul>
+                <div className={styles.codeEX}>
+                  <div className={styles.codetop}>
                     <p>JSON</p>
                     <span
                       onClick={() =>
                         handleCopyClick(`{
   "predictions": [
-    0.982,
-    0.013,
-    0.020,
-    0.978,
-    0.895,
-    0.980,
-    0.942,
-    0.998
+    1.0,
+    0.352497100830078,
+    0.3134087920188904,
+    0.00024437904357910156,
+    0.9885746240615845,
+    0.9934805631637573,
+    0.9978170394897461,
+    0.0023506581783294678
   ],
-  "fake_cnt": 2,
-  "real_cnt": 6,
+  "fake_cnt": 4,
+  "real_cnt": 4,
   "analysis_result": "Fake"
 }`)
                       }
@@ -257,17 +283,17 @@ curl -X POST http://voice-verity.com/api/voice-verity/ \\
                   </div>
                   <pre>{`{
   "predictions": [
-    0.982,
-    0.013,
-    0.020,
-    0.978,
-    0.895,
-    0.980,
-    0.942,
-    0.998
+    1.0,
+    0.352497100830078,
+    0.3134087920188904,
+    0.00024437904357910156,
+    0.9885746240615845,
+    0.9934805631637573,
+    0.9978170394897461,
+    0.0023506581783294678
   ],
-  "fake_cnt": 2,
-  "real_cnt": 6,
+  "fake_cnt": 4,
+  "real_cnt": 4,
   "analysis_result": "Fake"
 }`}</pre>
                 </div>
@@ -321,24 +347,16 @@ curl -X POST http://voice-verity.com/api/voice-verity/ \\
                     <td>| 인증 실패입니다. 올바른 API 키를 제공하십시오.</td>
                   </tr>
                   <tr>
-                    <td className={styles.td1}>402 Payment Required</td>
-                    <td>| 유효하지 않은 API 키입니다.</td>
-                  </tr>
-                  <tr>
                     <td className={styles.td1}>403 Forbidden</td>
-                    <td>| Credit이 부족합니다.</td>
+                    <td>| 접근 권한이 없습니다.</td>
                   </tr>
                   <tr>
                     <td className={styles.td1}>404 Not Found</td>
                     <td>| 요청한 리소스를 찾을 수 없습니다.</td>
                   </tr>
                   <tr>
-                    <td className={styles.td1}>405 Method Not Allowed</td>
-                    <td>| 파일 업로드 실패.</td>
-                  </tr>
-                  <tr>
                     <td className={styles.td1}>500 Internal Server Error</td>
-                    <td>| AI 서버에 문제가 발생했습니다.</td>
+                    <td>| 서버에 문제가 발생했습니다.</td>
                   </tr>
                 </tbody>
               </table>
