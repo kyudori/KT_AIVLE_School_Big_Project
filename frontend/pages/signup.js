@@ -277,7 +277,7 @@ export default function Signup() {
               />
               <input
                 type="email"
-                placeholder="이메일 (특수문자 제외)"
+                placeholder="이메일"
                 value={email}
                 onChange={handleEmailChange}
                 required
@@ -292,7 +292,7 @@ export default function Signup() {
               />
               <input
                 type="text"
-                placeholder="연락처 ('-' 없이 숫자만 입력)"
+                placeholder="연락처 ('-' 없이 입력)"
                 value={contact}
                 onChange={handleContactChange}
                 required
