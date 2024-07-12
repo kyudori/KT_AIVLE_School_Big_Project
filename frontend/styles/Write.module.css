@@ -60,10 +60,12 @@
   }
 
   .form input {
+    font-family: fontA;
     font-size: 20px;
   }
   
   .form textarea {
+    font-family: fontA;
     height: 400px;
     resize: none;
   }
