@@ -264,16 +264,16 @@ Value: YOUR_AUDIO_FILE.wav`)
                         handleCopyClick(`{
   "predictions": [
     1.0,
-    0.352497100830078,
-    0.3134087920188904,
-    0.00024437904357910156,
-    0.9885746240615845,
-    0.9934805631637573,
-    0.9978170394897461,
-    0.0023506581783294678
+    0.12,
+    0.23,
+    0.984,
+    0.988,
+    0.993,
+    0.997,
+    0.817
   ],
-  "fake_cnt": 4,
-  "real_cnt": 4,
+  "fake_cnt": 6,
+  "real_cnt": 2,
   "analysis_result": "Fake"
 }`)
                       }
@@ -284,16 +284,16 @@ Value: YOUR_AUDIO_FILE.wav`)
                   <pre>{`{
   "predictions": [
     1.0,
-    0.352497100830078,
-    0.3134087920188904,
-    0.00024437904357910156,
-    0.9885746240615845,
-    0.9934805631637573,
-    0.9978170394897461,
-    0.0023506581783294678
+    0.12,
+    0.23,
+    0.984,
+    0.988,
+    0.993,
+    0.997,
+    0.817
   ],
-  "fake_cnt": 4,
-  "real_cnt": 4,
+  "fake_cnt": 6,
+  "real_cnt": 2,
   "analysis_result": "Fake"
 }`}</pre>
                 </div>
@@ -340,23 +340,31 @@ Value: YOUR_AUDIO_FILE.wav`)
                 <tbody>
                   <tr>
                     <td className={styles.td1}>400 Bad Request</td>
-                    <td>| 잘못된 요청 형식입니다.</td>
+                    <td>| 음성 파일이 업로드 되지 않았습니다.</td>
                   </tr>
                   <tr>
                     <td className={styles.td1}>401 Unauthorized</td>
                     <td>| 인증 실패입니다. 올바른 API 키를 제공하십시오.</td>
                   </tr>
                   <tr>
-                    <td className={styles.td1}>403 Forbidden</td>
-                    <td>| 접근 권한이 없습니다.</td>
+                    <td className={styles.td1}>403 Insufficient credits</td>
+                    <td>| Credit 추가 구매가 필요합니다.</td>
                   </tr>
                   <tr>
-                    <td className={styles.td1}>404 Not Found</td>
-                    <td>| 요청한 리소스를 찾을 수 없습니다.</td>
+                    <td className={styles.td1}>413 Payload Too Large</td>
+                    <td>| 음성 파일의 크기가 허용 크기를 초과하였습니다.</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.td1}>415 Payload Too Large</td>
+                    <td>| 지원하지 않는 음성 파일입니다.</td>
                   </tr>
                   <tr>
                     <td className={styles.td1}>500 Internal Server Error</td>
-                    <td>| 서버에 문제가 발생했습니다.</td>
+                    <td>| 웹 서버에 문제가 발생했습니다.</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.td1}>503 Service Unavailable</td>
+                    <td>| AI 서버에 문제가 발생했습니다.</td>
                   </tr>
                 </tbody>
               </table>

@@ -386,6 +386,7 @@ FLASK_URL = 'http://220.149.235.232:8000'
 ALLOWED_EXTENSIONS = ['.wav', '.mp3', '.m4a']
 MAX_FILE_SIZE_MB = 200
 MAX_UPLOADS_PER_DAY = 100
+MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -766,13 +767,23 @@ def voice_verity(request):
         file = request.FILES.get('file')
         if not file:
             return Response({'error': 'No file uploaded'}, status=400)
+        
+        # 파일 크기 및 확장자 검증
+        file_size = file.size
+        file_extension = os.path.splitext(file.name)[1].lower()
+
+        if file_extension not in ALLOWED_EXTENSIONS:
+            return Response({'error': 'Invalid file type'}, status=415)
+
+        if file_size > MAX_FILE_SIZE_BYTES:
+            return Response({'error': f'File size exceeds {MAX_FILE_SIZE_MB} MB limit'}, status=413)
 
         # Upload the file to S3
         file_key = f'audio_files/{file.name}'
         try:
             s3_client.upload_fileobj(file, AWS_STORAGE_BUCKET_NAME, file_key)
         except Exception as e:
-            return Response({'error': 'Failed to upload file to S3', 'details': str(e)}, status=405)
+            return Response({'error': 'Failed to upload file to S3', 'details': str(e)}, status=500)
 
         # Construct the S3 file URL
         file_url = f"https://{AWS_S3_CUSTOM_DOMAIN}/{file_key}"
@@ -826,9 +837,9 @@ def voice_verity(request):
         except requests.RequestException as e:
             # API 호출 기록 저장 (실패)
             ApiCallHistory.objects.create(user=user, endpoint='voice_verity', success=False)
-            return Response({'error': 'AI server OFF', 'details': str(e)}, status=404)
+            return Response({'error': 'AI server OFF', 'details': str(e)}, status=503)
     except APIKey.DoesNotExist:
-        return Response({'error': 'Invalid API key'}, status=402)
+        return Response({'error': 'Invalid API key'}, status=401)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
     
