@@ -337,7 +337,7 @@ Value: YOUR_AUDIO_FILE.wav`)
             <section id="error-codes" className={styles.section}>
               <h2>에러 코드</h2>
               <p>
-                API사용 시 발생할 수 있는 일반적인 에러 코드와 의미는 다음과
+                API 사용 시 발생할 수 있는 일반적인 에러 코드와 의미는 다음과
                 같습니다.
               </p>
               <hr />
