@@ -34,6 +34,7 @@ from django.db.models import Count
 from rest_framework.pagination import PageNumberPagination
 from urllib.parse import urlencode
 from django.contrib.auth import login as django_login
+from django.db.models.functions import TruncHour, TruncDay, TruncWeek, TruncMonth
 
 User = get_user_model()
 
@@ -832,32 +833,18 @@ def voice_verity(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def call_history(request):
-    interval = request.GET.get('interval', 'hourly')
     user = request.user
-    now = timezone.now()
+    interval = request.query_params.get('interval', 'hourly')
 
     if interval == 'hourly':
-        start_time = now - timedelta(hours=24)
-        data = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_time).annotate(
-            label=models.functions.TruncHour('timestamp')
-        ).values('label').annotate(count=Count('id')).order_by('label')
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncHour('timestamp')).values('label').annotate(count=models.Count('id')).order_by('label')
     elif interval == 'daily':
-        start_time = now - timedelta(days=30)
-        data = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_time).annotate(
-            label=models.functions.TruncDay('timestamp')
-        ).values('label').annotate(count=Count('id')).order_by('label')
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncDay('timestamp')).values('label').annotate(count=models.Count('id')).order_by('label')
     elif interval == 'weekly':
-        start_time = now - timedelta(weeks=12)
-        data = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_time).annotate(
-            label=models.functions.TruncWeek('timestamp')
-        ).values('label').annotate(count=Count('id')).order_by('label')
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncWeek('timestamp')).values('label').annotate(count=models.Count('id')).order_by('label')
     elif interval == 'monthly':
-        start_time = now - timedelta(days=365)
-        data = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_time).annotate(
-            label=models.functions.TruncMonth('timestamp')
-        ).values('label').annotate(count=Count('id')).order_by('label')
+        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncMonth('timestamp')).values('label').annotate(count=models.Count('id')). order_by('label')
     else:
         return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
 
-    response_data = [{'label': item['label'], 'count': item['count']} for item in data]
-    return Response(response_data)
+    return Response(list(history), status=status.HTTP_200_OK)
