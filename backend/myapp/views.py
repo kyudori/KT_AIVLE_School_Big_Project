@@ -539,7 +539,7 @@ def get_credits(request):
 
     # 유효한 추가 크레딧 계산 (만료되지 않은 추가 크레딧만 포함)
     today = timezone.now().date()
-    valid_additional_subs = subscriptions.filter(plan__is_recurring=False, end_date__gt=today)
+    valid_additional_subs = subscriptions.filter(end_date__gt=today)
     total_additional_credits = valid_additional_subs.aggregate(total=Sum('total_credits'))['total'] or 0
     used_additional_credits = valid_additional_subs.aggregate(used=Sum(F('total_credits') - F('daily_credits')))['used'] or 0
 
