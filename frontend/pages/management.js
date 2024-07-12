@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, LinearScale, CategoryScale } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import { Doughnut, Bar } from "react-chartjs-2";
 import styles from "../styles/Apimanagement.module.css";
 import Footer from "../components/Footer";
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title, BarElement, LinearScale, CategoryScale);
+ChartJS.register(ArcElement, Tooltip, Legend, Title, BarElement, CategoryScale, LinearScale);
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -57,9 +57,9 @@ const ApiManagement = () => {
 
   useEffect(() => {
     if (user) {
-      fetchTrafficData();
+      fetchTrafficData(selectedInterval);
     }
-  }, [user]);
+  }, [selectedInterval, user]);
 
   const fetchApiKey = (token) => {
     axios
@@ -121,9 +121,9 @@ const ApiManagement = () => {
       });
   };
 
-  const fetchTrafficData = () => {
+  const fetchTrafficData = (interval) => {
     axios
-      .get(`${BACKEND_URL}/api/call-history/`, {
+      .get(`${BACKEND_URL}/api/call-history/?interval=${interval}`, {
         headers: {
           Authorization: `Token ${localStorage.getItem("token")}`,
         },
@@ -268,30 +268,6 @@ const ApiManagement = () => {
     setSelectedInterval(interval);
   };
 
-  const filterTrafficData = (interval) => {
-    const now = new Date();
-    let filteredData = [];
-
-    switch (interval) {
-      case 'hourly':
-        filteredData = trafficData.filter(item => new Date(item.timestamp) > new Date(now.getTime() - (24 * 60 * 60 * 1000)));
-        break;
-      case 'daily':
-        filteredData = trafficData.filter(item => new Date(item.timestamp) > new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000)));
-        break;
-      case 'weekly':
-        filteredData = trafficData.filter(item => new Date(item.timestamp) > new Date(now.getTime() - (12 * 7 * 24 * 60 * 60 * 1000)));
-        break;
-      case 'monthly':
-        filteredData = trafficData.filter(item => new Date(item.timestamp) > new Date(now.getTime() - (365 * 24 * 60 * 60 * 1000)));
-        break;
-      default:
-        filteredData = trafficData;
-    }
-
-    return filteredData;
-  };
-
   const renderContent = () => {
     switch (currentPage) {
       case "dashboard":
@@ -339,9 +315,8 @@ const ApiManagement = () => {
           maintainAspectRatio: false,
         };
 
-        const filteredTrafficData = filterTrafficData(selectedInterval);
-        const trafficLabels = filteredTrafficData.length > 0 ? filteredTrafficData.map((item) => new Date(item.timestamp).toLocaleString()) : ["API 사용 기록이 없습니다."];
-        const trafficCounts = filteredTrafficData.length > 0 ? filteredTrafficData.map((item) => item.count) : [0];
+        const trafficLabels = trafficData.map((item) => item.label);
+        const trafficCounts = trafficData.map((item) => item.count);
 
         const trafficDataChart = {
           labels: trafficLabels,
@@ -424,7 +399,11 @@ const ApiManagement = () => {
                   <button onClick={() => handleIntervalChange('monthly')}>월별</button>
                 </div>
                 <div className={styles.graph}>
-                  <Bar data={trafficDataChart} options={trafficOptions} />
+                  {trafficData.length > 0 ? (
+                    <Bar data={trafficDataChart} options={trafficOptions} />
+                  ) : (
+                    <div className={styles.noDataMessage}>API 사용 기록이 없습니다.</div>
+                  )}
                 </div>
               </div>
               <div className={styles.summary}>
@@ -580,4 +559,3 @@ const ApiManagement = () => {
 };
 
 export default ApiManagement;
-
