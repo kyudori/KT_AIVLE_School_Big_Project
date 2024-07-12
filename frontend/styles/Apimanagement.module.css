@@ -235,20 +235,54 @@
   flex-grow: 1;
 }
 .cardcontent {
+  min-width: 250px;
   border-right: dashed 2px;
+  max-width: 500px;
   height: 100%;
 }
 
+.cardcontent p {
+  font-size: 20px;
+}
+
 .card h3 {
+  font-size: 30px;
+  font-weight: normal;
   margin: 0;
 }
 
 .credit {
   font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 10px;
+  margin-top: 30px;
 }
+
+.credit li {
+  margin-bottom: 5px;
+}
+
+.doughnutWrapper {
+  width: 300px;
+}
+
+.purchaseButton {
+  background-color: #fff;
+  font-family: fontA;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
+  border: solid 2px #333;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.purchaseButton:hover {
+  background-color: #f0f0f0;
+  border: solid 2px #333;
+  transition: all 0.2s ease;
+}
+
+.purchaseButton
 
 .status {
   background-color: green;
@@ -268,6 +302,20 @@
   border: solid 1px;
 }
 
+.intervalTabs button{
+  font-family: fontA;
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-right: solid 2px #ccc;
+  margin-bottom: 5px;
+}
+
+.intervalTabs button:hover {
+  color: #717171;
+}
+
 .traffic {
   margin: 10px 20px 0 40px;
   width: 70%;
@@ -280,7 +328,7 @@
 
 .graph {
   background-color: #f0f0f0;
-  height: 380px;
+  height: 350px;
   display: flex;
   align-items: center;
   justify-content: center;
