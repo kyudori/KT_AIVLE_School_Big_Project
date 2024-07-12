@@ -56,7 +56,7 @@ const PlanCard = ({ plan }) => {
         return;
       }
 
-      if (currentPlan && (planId <= currentPlan.id)) {
+      if (plan.name !== "Pay As You Go" && currentPlan && planId <= currentPlan.id) {
         alert("현재 구독 중인 플랜보다 상위 플랜을 선택해야 합니다.");
         return;
       }
