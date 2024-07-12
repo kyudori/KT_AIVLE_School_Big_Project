@@ -19,14 +19,15 @@
   justify-content: center;
   align-self: center;
   width: 900px;
+  height: 500px;
   padding: 50px;
 }
 
 .userInfo {
   display: flex;
+  width: 700px;
   flex-direction: row;
   align-items: flex-end;
-  margin-bottom: 20px;
 }
 
 .userIcon {
@@ -44,10 +45,10 @@
 }
 
 .text {
+  margin: 20px 0;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  width: 100%;
 }
 
 .text h1 {
@@ -60,21 +61,23 @@
 
 .plans {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .planCard {
-  background-color: #b8b8b8;
-  border: solid 1px #b8b8b8;
-  border-radius: 10px;
-  width: 280px;
-  height: 280px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  background-color: #ffffff;
+  align-items: flex-start;
+  border: solid 1px #000;
+  border-radius: 10px;
+  width: 200px;
+  height: 300px;
+  text-align: center;
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  flex-direction: column;
+  position: relative;
+  margin: 0 10px;
 }
 
 .planCard:hover {
@@ -86,20 +89,32 @@
   font-weight: normal;
   font-size: 30px;
   margin-bottom: 5px;
+  margin-top: 20px;
 }
 
-.planCard p {
-  font-size: 1em;
-  margin: 5px 0;
+.planCard ul {
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  list-style: none;
+}
+
+.planCard ul li {
+  margin: 10px 0;
 }
 
 .currentPlan {
   border: 2px solid #000;
-  position: relative;
 }
 
-.currentPlan::after {
-  content: '✓';
+.planHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkIcon {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -110,6 +125,15 @@
   text-align: center;
   line-height: 20px;
   border: 2px solid black;
+}
+
+.arrowIcon {
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .contactUs {

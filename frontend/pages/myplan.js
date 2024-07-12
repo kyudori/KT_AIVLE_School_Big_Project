@@ -45,22 +45,22 @@ const MyPlan = () => {
             : "/images/userinfo/profile_default.png"
         );
       } catch (error) {
-        console.error("Error fetching user info", error);
+        console.error("Error fetching plans or user info", error);
       }
     };
     fetchPlans();
   }, []);
 
-  const handlePlanClick = (plan) => {
+  const handlePlanClick = (planId) => {
     if (!currentPlan) {
-      setSelectedPlan(plan);
+      setSelectedPlan(planId);
       setShowModal(true);
-    } else if (plan.id === currentPlan.id) {
+    } else if (planId === currentPlan.id) {
       alert("현재 구독 중인 플랜입니다.");
-    } else if (plan.id < currentPlan.id) {
+    } else if (planId < currentPlan.id) {
       alert("현재 구독 중인 플랜이 더 좋은 플랜입니다.");
     } else {
-      setSelectedPlan(plan);
+      setSelectedPlan(planId);
       setShowModal(true);
     }
   };
@@ -71,7 +71,7 @@ const MyPlan = () => {
       const response = await axios.post(
         `${BACKEND_URL}/api/payments/create/`,
         {
-          plan_id: selectedPlan.id,
+          plan_id: selectedPlan,
         },
         {
           headers: { Authorization: `Token ${token}` },
@@ -84,6 +84,30 @@ const MyPlan = () => {
       console.error("Error changing plan", error);
     }
   };
+
+  const plans = [
+    {
+      id: 3,
+      name: "Basic",
+      price: 9900,
+      description1: "0.9$ / 1회",
+      description2: "30일 구독 상품",
+    },
+    {
+      id: 4,
+      name: "Associate",
+      price: 29900,
+      description1: "0.58$ / 1회",
+      description2: "30일 구독 상품",
+    },
+    {
+      id: 5,
+      name: "Professional",
+      price: 79900,
+      description1: "0.39$ / 1회",
+      description2: "30일 구독 상품",
+    },
+  ];
 
   return (
     <div className={styles.container}>
@@ -108,36 +132,29 @@ const MyPlan = () => {
           </p>
         </div>
         <div className={styles.plans}>
-          <div
-            className={`${styles.planCard} ${
-              currentPlan?.id === 3 ? styles.currentPlan : ""
-            }`}
-            onClick={() => handlePlanClick({ id: 3, name: "BASIC", price: 9900 })}
-          >
-            <h2>Basic</h2>
-            <p>0.9$ / 1회</p>
-            <p>30일 구독 상품</p>
-          </div>
-          <div
-            className={`${styles.planCard} ${
-              currentPlan?.id === 4 ? styles.currentPlan : ""
-            }`}
-            onClick={() => handlePlanClick({ id: 4, name: "ASSOCIATE", price: 29900 })}
-          >
-            <h2>Associate</h2>
-            <p>0.58$ / 1회</p>
-            <p>30일 구독 상품</p>
-          </div>
-          <div
-            className={`${styles.planCard} ${
-              currentPlan?.id === 5 ? styles.currentPlan : ""
-            }`}
-            onClick={() => handlePlanClick({ id: 5, name: "PROFESSIONAL", price: 79900 })}
-          >
-            <h2>Professional</h2>
-            <p>0.39$ / 1회</p>
-            <p>30일 구독 상품</p>
-          </div>
+          {plans.map((plan) => (
+            <div
+              key={plan.id}
+              className={`${styles.planCard} ${
+                plan.id === currentPlan?.id ? styles.currentPlan : ""
+              }`}
+              onClick={() => handlePlanClick(plan.id)}
+            >
+              <div className={styles.planHeader}>
+                {plan.id === currentPlan?.id && (
+                  <div className={styles.checkIcon}>✓</div>
+                )}
+                {plan.id !== plans[0].id && (
+                  <div className={styles.arrowIcon}>▶</div>
+                )}
+              </div>
+              <h2>{plan.name}</h2>
+              <ul>
+                <li>{plan.description1}</li>
+                <li>{plan.description2}</li>
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
       <div className={styles.contactUs}>
@@ -151,7 +168,7 @@ const MyPlan = () => {
           <div className={styles.modalContent}>
             <h2>구독 변경 확인</h2>
             <p>현재 구독 플랜: {currentPlan?.name || "없음"}</p>
-            <p>새로운 구독 플랜: {selectedPlan.name}</p>
+            <p>새로운 구독 플랜: {plans.find(p => p.id === selectedPlan).name}</p>
             <p>이 변경사항을 확인하면 새로운 구독으로 결제됩니다.</p>
             <button onClick={confirmPlanChange}>확인</button>
             <button onClick={() => setShowModal(false)}>취소</button>
