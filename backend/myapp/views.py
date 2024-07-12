@@ -765,6 +765,10 @@ def voice_verity(request):
         key = APIKey.objects.get(key=api_key)
         user = key.user
 
+        # 업로드된 파일 개수 확인
+        if len(request.FILES) > 1:
+            return Response({'error': 'Only one file can be uploaded at a time'}, status=410)
+
         # AI 서버 호출
         file = request.FILES.get('file')
         if not file:
