@@ -15,6 +15,25 @@ export default function Home() {
   const fakeAudioRef = useRef(null);
   const [hoveredProfile, setHoveredProfile] = useState(null);
 
+  useEffect(() => {
+    if (realAudioRef.current && fakeAudioRef.current) {
+      const realAudioEl = realAudioRef.current.audioEl.current;
+      const fakeAudioEl = fakeAudioRef.current.audioEl.current;
+
+      const handleAudioEnded = () => {
+        setPlayingAudio(null);
+      };
+
+      realAudioEl.addEventListener('ended', handleAudioEnded);
+      fakeAudioEl.addEventListener('ended', handleAudioEnded);
+
+      return () => {
+        realAudioEl.removeEventListener('ended', handleAudioEnded);
+        fakeAudioEl.removeEventListener('ended', handleAudioEnded);
+      };
+    }
+  }, []);
+
   const handleTryVoiceVerity = () => {
     router.push('/try');
   };
@@ -27,11 +46,25 @@ export default function Home() {
     router.push('/contact');
   };
 
+  const stopCurrentAudio = () => {
+    if (realAudioRef.current.audioEl.current.src) {
+      realAudioRef.current.audioEl.current.pause();
+      realAudioRef.current.audioEl.current.currentTime = 0;
+    }
+    if (fakeAudioRef.current.audioEl.current.src) {
+      fakeAudioRef.current.audioEl.current.pause();
+      fakeAudioRef.current.audioEl.current.currentTime = 0;
+    }
+    setPlayingAudio(null);
+  };
+
   const toggleHandler1 = () => {
+    stopCurrentAudio();
     setisOn1(prevState => !prevState);
   };
 
   const toggleHandler2 = () => {
+    stopCurrentAudio();
     setisOn2(prevState => !prevState);
   };
 
@@ -51,14 +84,7 @@ export default function Home() {
       }
     } else {
       // 다른 오디오 클릭 시, 현재 재생 중인 오디오 정지
-      if (realAudioRef.current.audioEl.current.src) {
-        realAudioRef.current.audioEl.current.pause();
-        realAudioRef.current.audioEl.current.currentTime = 0;
-      }
-      if (fakeAudioRef.current.audioEl.current.src) {
-        fakeAudioRef.current.audioEl.current.pause();
-        fakeAudioRef.current.audioEl.current.currentTime = 0;
-      }
+      stopCurrentAudio();
       setPlayingAudio(audioToPlay);
       setAudioSrc(audioToPlay);
 
