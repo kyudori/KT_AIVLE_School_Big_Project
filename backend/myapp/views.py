@@ -626,17 +626,27 @@ def posts_list_create(request):
     if request.method == 'GET':
         query = request.GET.get('query', None)
         paginator = PostPagination()
+
         if query:
             posts = Post.objects.filter(
                 Q(title__icontains=query) | Q(author__username__icontains=query)
             ).order_by('-created_at')
         else:
             posts = Post.objects.all().order_by('-created_at')
-        
-        result_page = paginator.paginate_queryset(posts, request)
+
+        notices = posts.filter(is_notice=True)
+        non_notices = posts.filter(is_notice=False)
+
+        result_page = paginator.paginate_queryset(non_notices, request)
         serializer = PostSerializer(result_page, many=True)
-        return paginator.get_paginated_response(serializer.data)
-    
+        notice_serializer = PostSerializer(notices, many=True)
+        
+        return paginator.get_paginated_response({
+            'notices': notice_serializer.data,
+            'posts': serializer.data,
+            'count': non_notices.count()
+        })
+
     if request.method == 'POST':
         if not request.user.is_authenticated:
             return Response({'error': 'Authentication required'}, status=401)
