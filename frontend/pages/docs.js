@@ -345,18 +345,18 @@ Value: YOUR_AUDIO_FILE.wav`)
                 <tbody>
                   <tr>
                     <td className={styles.td1}>400 Bad Request</td>
-                    <td>| 음성 파일이 업로드 되지 않았습니다.</td>
+                    <td>| 음성 파일 또는 API 키가 누락되었습니다.</td>
                   </tr>
                   <tr>
                     <td className={styles.td1}>401 Unauthorized</td>
                     <td>| 인증 실패입니다. 올바른 API 키를 제공하십시오.</td>
                   </tr>
                   <tr>
-                    <td className={styles.td1}>403 Insufficient credits</td>
+                    <td className={styles.td1}>403 Insufficient Credits</td>
                     <td>| Credit 추가 구매가 필요합니다.</td>
                   </tr>
                   <tr>
-                    <td className={styles.td1}>410 Only one File</td>
+                    <td className={styles.td1}>410 Only One File</td>
                     <td>| 1개의 파일만 분석 가능합니다.</td>
                   </tr>
                   <tr>
@@ -364,7 +364,7 @@ Value: YOUR_AUDIO_FILE.wav`)
                     <td>| 음성 파일의 크기가 허용 크기를 초과하였습니다.</td>
                   </tr>
                   <tr>
-                    <td className={styles.td1}>415 Payload Too Large</td>
+                    <td className={styles.td1}>415 Invalid File Type</td>
                     <td>| 지원하지 않는 음성 파일입니다.</td>
                   </tr>
                   <tr>
