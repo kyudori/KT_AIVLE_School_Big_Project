@@ -608,7 +608,7 @@ const ApiManagement = () => {
           <div className={styles.header}>
             <div className={styles.headerTitle}>
               <h1>{currentPage === "dashboard" ? "DashBoard" : "API 관리"}</h1>
-              <span>Welcome! {user ? user.username : "[User name]"}!</span>
+              <span>Welcome! {user ? user.username : "[User name]"}님</span>
             </div>
             <div className={styles.user} onClick={toggleDropdown}>
               <img
