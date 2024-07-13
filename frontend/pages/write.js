@@ -11,6 +11,7 @@ export default function Write() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isNotice, setIsNotice] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);  // 전체공개 여부
   const [isEditMode, setIsEditMode] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
@@ -47,6 +48,7 @@ export default function Write() {
         setTitle(post.title);
         setContent(post.content);
         setIsNotice(post.is_notice);
+        setIsPublic(post.is_public);  // 전체공개 여부 설정
       })
       .catch((error) => console.error("Error fetching post", error));
   };
@@ -54,7 +56,7 @@ export default function Write() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    const data = { title, content, is_notice: isNotice };
+    const data = { title, content, is_notice: isNotice, is_public: isPublic };  // 전체공개 여부 추가
     const headers = { Authorization: `Token ${token}` };
 
     if (isEditMode) {
@@ -105,8 +107,16 @@ export default function Write() {
               공지사항
             </label>
           )}
+          <label>
+            <input
+              type="checkbox"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+            />{" "}
+            전체공개
+          </label>
           <div className={styles.buttonGroup}>
-          <button
+            <button
               type="button"
               className={`${styles.button} ${styles.cancelButton}`}
               onClick={handleCancel}

@@ -34,10 +34,20 @@ export default function PostDetail() {
   }, [id]);
 
   const fetchPost = (id) => {
+    const token = localStorage.getItem("token");
+    const headers = token ? { Authorization: `Token ${token}` } : {};
+
     axios
-      .get(`${BACKEND_URL}/api/posts/${id}/`)
+      .get(`${BACKEND_URL}/api/posts/${id}/`, { headers })
       .then((response) => setPost(response.data))
-      .catch((error) => console.error("Error fetching post", error));
+      .catch((error) => {
+        if (error.response && error.response.status === 403) {
+          alert("Permission denied. You do not have access to this post.");
+          router.push("/contact");
+        } else {
+          console.error("Error fetching post", error);
+        }
+      });
   };
 
   const handleCommentChange = (e) => {
@@ -112,6 +122,8 @@ export default function PostDetail() {
 
   if (!post) return <div>Loading...</div>;
 
+  const canEditOrDelete = user && (user.is_staff || user.id === post.author_id);
+
   return (
     <div className={styles.container}>
       <div style={{ padding: "0 200px", background: "#fff" }}>
@@ -131,7 +143,7 @@ export default function PostDetail() {
           <span>By {post.author_name}</span>
           <span>{new Date(post.created_at).toLocaleString()}</span>
           <span>Views: {post.views}</span>
-          {user && (user.is_staff || user.id === post.author_id) && (
+          {canEditOrDelete && (
             <div className={styles.actions}>
               <button onClick={handlePostEdit}>Edit</button>
               <button onClick={handlePostDelete}>Delete</button>
@@ -147,62 +159,62 @@ export default function PostDetail() {
             글 목록
           </button>
           <h2>Comments</h2>
-          {post.comments.map((comment) => (
-            <div
-              key={comment.id}
-              className={`${styles.comment} ${
-                comment.author_name === "관리자" ? styles.adminComment : ""
-              }`}
-            >
-              {editingComment && editingComment.id === comment.id ? (
-                <form
-                  onSubmit={handleCommentSubmit}
-                  className={styles.commentForm}
-                >
-                  <textarea
-                    name="content"
-                    value={newComment.content}
-                    onChange={handleCommentChange}
-                    required
-                  ></textarea>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="is_public"
-                      checked={newComment.is_public}
+          {post.comments.map((comment) => {
+            const canEditOrDeleteComment = user && (user.is_staff || user.id === comment.author_id || user.id === post.author_id);
+            return (
+              <div
+                key={comment.id}
+                className={`${styles.comment} ${
+                  comment.author_name === "관리자" ? styles.adminComment : ""
+                }`}
+              >
+                {editingComment && editingComment.id === comment.id ? (
+                  <form
+                    onSubmit={handleCommentSubmit}
+                    className={styles.commentForm}
+                  >
+                    <textarea
+                      name="content"
+                      value={newComment.content}
                       onChange={handleCommentChange}
-                    />{" "}
-                    전체 공개
-                  </label>
-                  <button type="submit">Update Comment</button>
-                  <button type="button" onClick={() => setEditingComment(null)}>
-                    Cancel
-                  </button>
-                </form>
-              ) : (
-                <div>
-                  <p>{comment.content}</p>
-                  <div className={styles.meta}>
-                    <span>By {comment.author_name}</span>
-                    <span>{new Date(comment.created_at).toLocaleString()}</span>
-                    {user &&
-                      (user.is_staff || user.id === comment.author_id) && (
+                      required
+                    ></textarea>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="is_public"
+                        checked={newComment.is_public}
+                        onChange={handleCommentChange}
+                      />{" "}
+                      전체 공개
+                    </label>
+                    <button type="submit">Update Comment</button>
+                    <button type="button" onClick={() => setEditingComment(null)}>
+                      Cancel
+                    </button>
+                  </form>
+                ) : (
+                  <div>
+                    <p>{comment.content}</p>
+                    <div className={styles.meta}>
+                      <span>By {comment.author_name}</span>
+                      <span>{new Date(comment.created_at).toLocaleString()}</span>
+                      {canEditOrDeleteComment && (
                         <div className={styles.actions}>
                           <button onClick={() => handleCommentEdit(comment)}>
                             Edit
                           </button>
-                          <button
-                            onClick={() => handleCommentDelete(comment.id)}
-                          >
+                          <button onClick={() => handleCommentDelete(comment.id)}>
                             Delete
                           </button>
                         </div>
                       )}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            );
+          })}
           {user && !editingComment && (
             <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
               <textarea

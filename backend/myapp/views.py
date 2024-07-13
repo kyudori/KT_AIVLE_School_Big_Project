@@ -31,7 +31,7 @@ import logging
 import uuid
 import boto3
 import pytz
-from django.db.models import Count, Avg, Sum, F
+from django.db.models import Count, Avg, Sum, F, Q
 from rest_framework.pagination import PageNumberPagination
 from urllib.parse import urlencode
 from django.contrib.auth import login as django_login
@@ -133,6 +133,7 @@ def user_info(request):
         else:
             profile_image_url = None
         return Response({
+            'id': user.id,
             'email': user.email,
             'username': user.username,
             'nickname': user.nickname,
@@ -623,22 +624,29 @@ class PostPagination(PageNumberPagination):
 @permission_classes([AllowAny])
 def posts_list_create(request):
     if request.method == 'GET':
+        query = request.GET.get('query', None)
         paginator = PostPagination()
-        posts = Post.objects.all().order_by('-is_notice', '-created_at')
+        if query:
+            posts = Post.objects.filter(
+                Q(title__icontains=query) | Q(author__username__icontains=query)
+            ).order_by('-created_at')
+        else:
+            posts = Post.objects.all().order_by('-created_at')
+        
         result_page = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
     
     if request.method == 'POST':
         if not request.user.is_authenticated:
-            return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Authentication required'}, status=401)
         
         data = request.data
         serializer = PostSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             serializer.save(author=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
@@ -649,14 +657,32 @@ def post_detail(request, pk):
         return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        if post.is_public or (request.user.is_authenticated and (request.user == post.author or request.user.is_staff)):
+        user = request.user if request.user.is_authenticated else None
+        if post.is_public or (user and (user == post.author or user.is_staff)):
             post.views += 1
             post.save()
             serializer = PostSerializer(post)
-            return Response(serializer.data)
+            response_data = serializer.data
+            response_data['comments'] = [
+                comment for comment in response_data['comments']
+                if comment['is_public'] or 
+                (user and (user.id == comment['author_id'] or user.id == post.author_id or user.is_staff))
+            ]
+            return Response(response_data)
+        elif user and user == post.author:
+            # 작성자인 경우에도 게시글을 볼 수 있도록 허용
+            post.views += 1
+            post.save()
+            serializer = PostSerializer(post)
+            response_data = serializer.data
+            response_data['comments'] = [
+                comment for comment in response_data['comments']
+                if comment['is_public'] or (user.id == comment['author_id'] or user.is_staff)
+            ]
+            return Response(response_data)
         else:
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
-    
+
     if request.method == 'PUT':
         if not request.user.is_authenticated or (request.user != post.author and not request.user.is_staff):
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
@@ -666,13 +692,13 @@ def post_detail(request, pk):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     if request.method == 'DELETE':
         if not request.user.is_authenticated or (request.user != post.author and not request.user.is_staff):
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
+    
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_comment(request, post_pk):
@@ -695,7 +721,7 @@ def comment_detail(request, pk):
         comment = Comment.objects.get(pk=pk)
     except Comment.DoesNotExist:
         return Response({'error': 'Comment not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+
     if request.method == 'PUT':
         if request.user != comment.author and not request.user.is_staff:
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
@@ -711,6 +737,7 @@ def comment_detail(request, pk):
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
