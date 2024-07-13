@@ -88,11 +88,12 @@ export default function Signup() {
 
   const handleEmailChange = (e) => {
     const { value } = e.target;
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    setEmail(value);
+  };
 
-    if (emailRegex.test(value)) {
-      setEmail(value);
-    } else {
+  const handleEmailBlur = () => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
       alert("유효한 이메일 형식이 아닙니다.");
     }
   };
@@ -110,6 +111,13 @@ export default function Signup() {
 
   const handleSignup = async (event) => {
     event.preventDefault();
+
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!emailRegex.test(email)) {
+      alert("유효한 이메일 형식이 아닙니다.");
+      return;
+    }
 
     if (password.length < 4) {
       alert("비밀번호는 최소 4자리 이상이어야 합니다.");
@@ -280,6 +288,7 @@ export default function Signup() {
                 placeholder="이메일"
                 value={email}
                 onChange={handleEmailChange}
+                onBlur={handleEmailBlur}
                 required
                 className={styles.inputField}
               />

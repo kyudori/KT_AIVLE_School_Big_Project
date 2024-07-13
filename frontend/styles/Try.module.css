@@ -142,15 +142,15 @@ margin: 50px;
 
 
 .chartContainer {
-display: flex;
-justify-content: space-around;
-height: 350px;
-min-width: 700px;
-width: 100%;
-border: solid 1px #000;
-border-radius: 30px;
-align-items: center;
-text-align:'-webkit-center';
+  display: flex;
+  justify-content: space-around;
+  height: 350px;
+  min-width: 700px;
+  width: 100%;
+  border: solid 1px #000;
+  border-radius: 30px;
+  align-items: center;
+  text-align: '-webkit-center';
 }
 
 .chart {
@@ -158,7 +158,7 @@ width: 10%; /* 차트를 좌우로 작게 조정 */
 }
 
 .chartContainer div{
-  width: 400px;
+  width: 300px;
 }
 
 .resultTxt {

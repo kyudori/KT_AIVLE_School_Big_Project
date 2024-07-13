@@ -209,6 +209,31 @@ export default function TryVoice() {
         },
         options: {
           responsive: false,
+          plugins: {
+            afterDraw: function (chart) {
+              const ctx = chart.ctx;
+              const meta = chart.getDatasetMeta(0);
+              const fakePercentage = (fakeCount / (fakeCount + realCount)) * 100;
+              const fakeAngle = (fakePercentage / 100) * 2 * Math.PI;
+
+              if (fakePercentage > 30) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#FF0000';
+                ctx.setLineDash([5, 5]);
+
+                const chartArea = chart.chartArea;
+                const centerX = (chartArea.left + chartArea.right) / 2;
+                const centerY = (chartArea.top + chartArea.bottom) / 2;
+                const outerRadius = chart.getDatasetMeta(0).data[0].outerRadius;
+
+                ctx.arc(centerX, centerY, outerRadius, 0, fakeAngle);
+                ctx.stroke();
+                ctx.restore();
+              }
+            },
+          },
         },
       });
     }
@@ -277,13 +302,12 @@ export default function TryVoice() {
                     ></canvas>
                   </div>
                   <div className={styles.piechart}>
-                    <p>Real/Fake Ratio</p>
+                    <p style={{ textAlign: "center" }}>Real/Fake Ratio</p>
                     <div>
                       <canvas
                         id="pieChart"
-                        width="200px"
-                        height="200px"
-                        float="right"
+                        width="260px"  // 30% 확대
+                        height="260px"  // 30% 확대
                         className={styles.chart}
                       ></canvas>
                     </div>
