@@ -1,7 +1,6 @@
 @font-face {
   font-family: fontA;
-  src: local("Y 너만을 비춤체"),
-  url(Y너만을비춤체.ttf);
+  src: local("Y 너만을 비춤체"), url(Y너만을비춤체.ttf);
 }
 
 .container {
@@ -57,7 +56,7 @@
   border-bottom-left-radius: 10px;
 }
 
-.hide { 
+.hide {
   border: solid 1px;
   text-align: center;
   width: 25px;
@@ -68,7 +67,7 @@
   cursor: pointer;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  transform: rotate(180deg)
+  transform: rotate(180deg);
 }
 
 .logo {
@@ -228,27 +227,89 @@
   border-radius: 10px;
   border: solid 1px;
   min-width: 800px;
+  padding: 20px;
+  gap: 20px;
 }
 
 .card {
   padding: 20px;
   flex-grow: 1;
-}
-.cardcontent {
-  min-width: 250px;
-  border-right: dashed 2px;
-  max-width: 500px;
-  height: 100%;
+  flex-basis: 0;
+  font-size: 25px;
 }
 
-.cardcontent p {
-  font-size: 20px;
+.totalcredit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cardcontent {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  font-size: 25px;
+}
+
+.usageleft {
+  align-items: left;
+}
+
+.doughnutWrapper {
+  width: 150px;
+  margin-right: 20px;
+}
+
+.chartLegend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.legendColorBox {
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+}
+
+.purchaseButton {
+  background-color: #fff;
+  font-family: fontA;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
+  border: solid 2px #333;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.purchaseButton:hover {
+  background-color: #f0f0f0;
+  border: solid 2px #333;
+  transition: all 0.2s ease;
+}
+
+.separator {
+  border-left: 2px dashed #ccc;
+  margin: 0 20px;
+  height: auto;
 }
 
 .card h3 {
-  font-size: 30px;
-  font-weight: normal;
-  margin: 0;
+  margin-bottom: 20px;
+}
+
+.apiStatus {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .credit {
@@ -302,7 +363,7 @@
   border: solid 1px;
 }
 
-.intervalTabs button{
+.intervalTabs button {
   font-family: fontA;
   font-size: 20px;
   background: none;

@@ -406,51 +406,53 @@ const ApiManagement = () => {
           <div className={styles.content}>
             <div className={styles.row}>
               <div className={styles.card}>
-                <div className={styles.cardcontent}>
-                  <h3>Total Credits</h3>
-                  <div className={styles.credit}>
-                    <p>Free Credit: {freeCredits}개</p>
-                    <p>Daily Credit: {dailyCredits}개</p>
-                    <p>Additional Credit: {additionalCredits}개</p>
-                  </div>
+                <h3>Total Credits</h3>
+                <div className={styles.totalcredit}>
+                  <p>⦁ Free: {freeCredits}개</p>
+                  <p>⦁ Daily: {dailyCredits}개</p>
+                  <p>⦁ Additional: {additionalCredits}개</p>
                 </div>
               </div>
+              <div className={styles.separator}></div>
               <div className={styles.card}>
+                <h3>Credit Usage</h3>
                 <div className={styles.cardcontent}>
-                  <h3>Credit Usage</h3>
                   <div className={styles.doughnutWrapper}>
-                    <Doughnut data={data} options={options} />
+                    <Doughnut data={data} options={{ cutout: '70%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
                   </div>
-                  <button
-                    className={styles.purchaseButton}
-                    onClick={() => router.push("/plan")}
-                  >
+                  <div className={styles.usageleft}>
+                    <span>{Math.round(((todaytotalCredits - usedCredits) / todaytotalCredits) * 100)}% | {totalCredits}개 남음</span>
+                  </div>
+                </div>
+                <div className={styles.chartLegend}>
+                  <div className={styles.legendItem}>
+                    <div className={styles.legendColorBox} style={{ backgroundColor: "#36A2EB" }}></div>
+                    Free
+                  </div>
+                  <div className={styles.legendItem}>
+                    <div className={styles.legendColorBox} style={{ backgroundColor: "#FFCE56" }}></div>
+                    Daily
+                  </div>
+                  <div className={styles.legendItem}>
+                    <div className={styles.legendColorBox} style={{ backgroundColor: "#FF6384" }}></div>
+                    Additional
+                  </div>
+                  <div className={styles.legendItem}>
+                    <div className={styles.legendColorBox} style={{ backgroundColor: "#CCCCCC" }}></div>
+                    Used
+                  </div>
+                  <button className={styles.purchaseButton} onClick={() => router.push("/plan")}>
                     Buy More Credits
                   </button>
                 </div>
               </div>
+              <div className={styles.separator}></div>
               <div className={styles.card}>
-                <div className={styles.cardcontent} style={{ border: "none" }}>
-                  <h3>API Status</h3>
-                  <p>내 API Key : {apiKey || "현재 키 없음"}</p>
-                  <p>
-                    현재 API 상태 :{" "}
-                    {isApiServerOn ? (
-                      <span style={{ color: "green" }}>ON</span>
-                    ) : (
-                      <span style={{ color: "red" }}>OFF</span>
-                    )}{" "}
-                    <span
-                      className={styles.status}
-                      style={{
-                        backgroundColor: isApiServerOn ? "green" : "red",
-                      }}
-                    ></span>
-                  </p>
-                  <p>
-                    마지막 사용 시간 :{" "}
-                    {apiLastUsed ? apiLastUsed : "사용한 기록이 없습니다."}
-                  </p>
+                <h3>API Status</h3>
+                <div className={styles.apiStatus}>
+                  <p>내 API Key: {apiKey || "현재 키 없음"}</p>
+                  <p>현재 API 상태: {isApiServerOn ? <span style={{ color: "green" }}>ON</span> : <span style={{ color: "red" }}>OFF</span>}</p>
+                  <p>마지막 사용 시간: {apiLastUsed ? apiLastUsed : "사용한 기록이 없습니다."}</p>
                 </div>
               </div>
             </div>
