@@ -61,20 +61,22 @@
 .plans {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .planCard {
   background-color: #b8b8b8;
   border: solid 1px #b8b8b8;
   border-radius: 10px;
-  width: 280px;
-  height: 280px;
+  width: 220px;
+  height: 220px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  padding: 20px;
 }
 
 .planCard:hover {
@@ -84,13 +86,42 @@
 
 .planCard h2 {
   font-weight: normal;
-  font-size: 30px;
-  margin-bottom: 5px;
+  font-size: 25px;
+  margin: 0;
 }
 
-.planCard p {
-  font-size: 1em;
-  margin: 5px 0;
+.noPlan {
+  background-color: #fff;
+  border: solid 1px #000000;
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 15px;
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin: 0 10px;
+  color: #000; /* 화살표 색상 */
+}
+
+.planDescription {
+  background-color: #fff;
+  border: solid 1px #000000;
+  border-radius: 10px;
+  padding: 10px;
+  height: 107%;
+  width: 109%;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: -20px;
+}
+
+.planDescription p {
+  margin: 39px 0;
+  font-size: 20px;
 }
 
 .currentPlan {
@@ -115,7 +146,7 @@
 .subscribeButton {
   cursor: pointer;
   height: 45px;
-  width: 240px;
+  width: 150px;
   margin: 20px auto;
   border: none;
   font-family: fontA;
