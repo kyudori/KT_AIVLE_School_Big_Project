@@ -200,7 +200,6 @@ export default function PostDetail() {
                   <div>
                     <p>
                       {comment.is_public ? "" : "(비공개) "}
-                      {comment.author_name === "관리자" ? "<관리자> " : ""}
                       {comment.content}
                     </p>
                     <div className={styles.meta}>
