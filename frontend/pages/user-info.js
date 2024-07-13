@@ -143,9 +143,25 @@ export default function UserInfo() {
   };
 
   const handleAccountDeletion = async () => {
-    if (confirm("정말 탈퇴하시겠습니까?")) {
+    if (confirm("회원을 탈퇴한 경우, 활동한 모든 기록이 삭제되게 됩니다.\n그래도 탈퇴하시겠습니까?")) {
+      const deletePassword = prompt("비밀번호를 입력해주세요:");
+      if (!deletePassword) {
+        alert("비밀번호가 입력되지 않았습니다.");
+        return;
+      }
       const token = localStorage.getItem("token");
       try {
+        await axios.post(
+          `${BACKEND_URL}/api/confirm-delete-account/`,
+          {
+            password: deletePassword,
+          },
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
         await axios.delete(`${BACKEND_URL}/api/delete-account/`, {
           headers: {
             Authorization: `Token ${token}`,
