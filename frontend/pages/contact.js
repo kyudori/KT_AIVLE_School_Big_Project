@@ -8,6 +8,7 @@ import styles from "../styles/Contact.module.css";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Contact() {
+  const [notices, setNotices] = useState([]);
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,8 +37,10 @@ export default function Contact() {
         params: { page, query, searchOption }
       })
       .then((response) => {
-        setPosts(response.data.results);
-        setTotalPages(Math.ceil(response.data.count / 10));
+        const { notices, posts, count } = response.data.results;
+        setNotices(notices || []);
+        setPosts(posts || []);
+        setTotalPages(Math.ceil(count / 10));
       })
       .catch((error) => console.error("Error fetching posts", error));
   };
@@ -114,6 +117,23 @@ export default function Contact() {
             </tr>
           </thead>
           <tbody>
+            {notices.length > 0 && notices.map((post, index) => (
+              <tr
+                key={post.id}
+                onClick={() => handlePostClick(post)}
+                className={styles.notice}
+              >
+                <td>공지</td>
+                <td>
+                  {post.is_notice && <span>&lt;공지&gt; </span>}
+                  {post.title}
+                  {!post.is_public && <span> (비공개)</span>}
+                </td>
+                <td>{post.author_name}</td>
+                <td style={{ fontSize: '12px' }}>{new Date(post.created_at).toLocaleString()}</td>
+                <td>{post.views}</td>
+              </tr>
+            ))}
             {posts.length === 0 && searchInitiated ? (
               <tr>
                 <td colSpan="5">일치하는 결과가 없습니다.</td>

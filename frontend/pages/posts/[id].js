@@ -93,13 +93,15 @@ export default function PostDetail() {
   };
 
   const handleCommentDelete = (commentId) => {
-    const token = localStorage.getItem("token");
-    const headers = { Authorization: `Token ${token}` };
+    if (confirm("정말로 댓글을 삭제하시겠습니까?")) {
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Token ${token}` };
 
-    axios
-      .delete(`${BACKEND_URL}/api/comments/${commentId}/`, { headers })
-      .then(() => fetchPost(id))
-      .catch((error) => console.error("Error deleting comment", error));
+      axios
+        .delete(`${BACKEND_URL}/api/comments/${commentId}/`, { headers })
+        .then(() => fetchPost(id))
+        .catch((error) => console.error("Error deleting comment", error));
+    }
   };
 
   const handlePostEdit = () => {
@@ -107,13 +109,15 @@ export default function PostDetail() {
   };
 
   const handlePostDelete = () => {
-    const token = localStorage.getItem("token");
-    const headers = { Authorization: `Token ${token}` };
+    if (confirm("정말로 게시글을 삭제하시겠습니까?")) {
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Token ${token}` };
 
-    axios
-      .delete(`${BACKEND_URL}/api/posts/${id}/`, { headers })
-      .then(() => router.push("/contact"))
-      .catch((error) => console.error("Error deleting post", error));
+      axios
+        .delete(`${BACKEND_URL}/api/posts/${id}/`, { headers })
+        .then(() => router.push("/contact"))
+        .catch((error) => console.error("Error deleting post", error));
+    }
   };
 
   const handleBackClick = () => {
