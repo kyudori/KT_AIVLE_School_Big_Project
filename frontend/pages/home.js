@@ -54,7 +54,7 @@ export default function Home() {
     if (fakeAudioRef.current.audioEl.current.src) {
       fakeAudioRef.current.audioEl.current.pause();
       fakeAudioRef.current.audioEl.current.currentTime = 0;
-    }
+    } 
     setPlayingAudio(null);
   };
 
