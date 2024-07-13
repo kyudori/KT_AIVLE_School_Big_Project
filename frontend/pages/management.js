@@ -307,6 +307,19 @@ const ApiManagement = () => {
     setSelectedInterval(interval);
   };
 
+  const handleCopyApiKey = () => {
+    if (apiKey) {
+      navigator.clipboard.writeText(apiKey).then(
+        () => {
+          alert("API Key가 복사되었습니다.");
+        },
+        (error) => {
+          console.error("API Key 복사 오류", error);
+        }
+      );
+    }
+  };
+
   const renderSummary = () => {
     return (
       <div>
@@ -397,12 +410,6 @@ const ApiManagement = () => {
                   <h3>Total Credits</h3>
                   <div className={styles.credit}>
                     <p>Free Credit: {freeCredits}개</p>
-
-                    {/* {dailyCredits > 0 && <p>Daily Credit: {dailyCredits}개</p>}
-                    {additionalCredits > 0 && (
-                      <p>Additional Credit: {additionalCredits}개</p>
-                    )} */}
-
                     <p>Daily Credit: {dailyCredits}개</p>
                     <p>Additional Credit: {additionalCredits}개</p>
                   </div>
@@ -491,22 +498,25 @@ const ApiManagement = () => {
             <div className={styles.apiCard}>
               <div className={styles.keydlete}>
                 <h3>내 API Key</h3>
-                <button
-                  className={styles.deleteButton}
-                  onClick={handleDeleteApiKey}
-                >
-                  키 삭제
-                </button>
+                {apiKey && (
+                  <button
+                    className={styles.deleteButton}
+                    onClick={handleDeleteApiKey}
+                  >
+                    키 삭제
+                  </button>
+                )}
               </div>
-              <div>
-                <div className={styles.keySection}>
-                  <h3>Key Value</h3>
-                  <div>
-                    <input
-                      className={styles.keyValue}
-                      value={apiKey || "현재 키 없음"}
-                      disabled
-                    />
+              <div className={styles.keySection}>
+                <h3>Key Value</h3>
+                <div className={styles.keyContainer}>
+                  <input
+                    className={styles.keyValue}
+                    value={apiKey || "발급된 키 없음"}
+                    disabled
+                    size={apiKey ? apiKey.length : 32}
+                  />
+                  <div className={styles.buttonContainer}>
                     <button
                       className={styles.button}
                       onClick={
@@ -515,29 +525,37 @@ const ApiManagement = () => {
                     >
                       {apiKey ? "재발급" : "키 발급"}
                     </button>
+                    {apiKey && (
+                      <button
+                        className={`${styles.button} ${styles.copyButton}`}
+                        onClick={handleCopyApiKey}
+                      >
+                        키 복사
+                      </button>
+                    )}
                   </div>
                 </div>
-                <div className={styles.statusSection}>
-                  <h3>Activate Status</h3>
-                  <div className={styles.use}>
-                    <input
-                      type="radio"
-                      name="status"
-                      value="사용함"
-                      checked={apiStatus}
-                      onChange={() => handleToggleApiStatus(true)}
-                    />{" "}
-                    사용함
-                    <input
-                      type="radio"
-                      name="status"
-                      value="사용 안함"
-                      style={{ marginLeft: "20px" }}
-                      checked={!apiStatus}
-                      onChange={() => handleToggleApiStatus(false)}
-                    />{" "}
-                    사용 안함
-                  </div>
+              </div>
+              <div className={styles.statusSection}>
+                <h3>Activate Status</h3>
+                <div className={styles.use}>
+                  <input
+                    type="radio"
+                    name="status"
+                    value="사용함"
+                    checked={apiStatus}
+                    onChange={() => handleToggleApiStatus(true)}
+                  />{" "}
+                  사용함
+                  <input
+                    type="radio"
+                    name="status"
+                    value="사용 안함"
+                    style={{ marginLeft: "20px" }}
+                    checked={!apiStatus}
+                    onChange={() => handleToggleApiStatus(false)}
+                  />{" "}
+                  사용 안함
                 </div>
               </div>
             </div>

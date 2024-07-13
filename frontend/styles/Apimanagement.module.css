@@ -353,25 +353,40 @@
 }
 
 .keySection {
-  margin: 20px;
+  margin: 20px 0;
   display: flex;
   align-items: center;
-  width: 600px;
+  width: 100%;
   justify-content: space-between;
+}
+
+.keyContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .keyValue {
   font-family: fontA;
   font-size: 18px;
   border: none;
-  width: 350px;
+  width: 400px;
   border-bottom: solid 1px #717171;
+  margin-right: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .button {
   font-family: fontA;
   font-size: 16px;
-  margin-left: 20px;
   padding: 8px 12px;
   background: none;
   border: solid 1px;
@@ -380,7 +395,7 @@
 }
 
 .statusSection {
-  margin: 20px;
+  margin: 20px 0;
   display: flex;
   align-items: center;
   width: 500px;
@@ -410,11 +425,9 @@
   align-items: center;
 }
 
-
 .deleteButton {
   font-family: fontA;
   font-size: 20px;
-  margin-right: 20px;
   padding: 8px 12px;
   background: none;
   border: solid 1px;
