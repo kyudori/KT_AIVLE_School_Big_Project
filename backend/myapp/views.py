@@ -641,9 +641,18 @@ def posts_list_create(request):
         serializer = PostSerializer(result_page, many=True)
         notice_serializer = PostSerializer(notices, many=True)
         
+        # 댓글 수 추가
+        serialized_notices = notice_serializer.data
+        for notice in serialized_notices:
+            notice['comments_count'] = Comment.objects.filter(post_id=notice['id']).count()
+
+        serialized_posts = serializer.data
+        for post in serialized_posts:
+            post['comments_count'] = Comment.objects.filter(post_id=post['id']).count()
+
         return paginator.get_paginated_response({
-            'notices': notice_serializer.data,
-            'posts': serializer.data,
+            'notices': serialized_notices,
+            'posts': serialized_posts,
             'count': non_notices.count()
         })
 
@@ -657,6 +666,7 @@ def posts_list_create(request):
             serializer.save(author=request.user)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])

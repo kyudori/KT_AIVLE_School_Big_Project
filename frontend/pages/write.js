@@ -81,7 +81,7 @@ export default function Write() {
       <div style={{ padding: "0 200px", background: "#fff" }}>
         <Navbar />
       </div>
-      <div className={styles.head}><h1>{isEditMode ? "Edit Post" : "Write a Post"}</h1></div>
+      <div className={styles.head}><h1>{isEditMode ? "게시글 수정" : "게시글 작성"}</h1></div>
       <div className={styles.content}>
         <form onSubmit={handleSubmit} className={styles.form}>
           <input
@@ -121,10 +121,10 @@ export default function Write() {
               className={`${styles.button} ${styles.cancelButton}`}
               onClick={handleCancel}
             >
-              Cancel
+              수정 취소
             </button>
             <button type="submit" className={styles.button}>
-              {isEditMode ? "Update" : "Submit"}
+              {isEditMode ? "수정 완료" : "글 등록"}
             </button>
           </div>
         </form>

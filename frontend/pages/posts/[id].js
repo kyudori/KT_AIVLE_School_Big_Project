@@ -42,7 +42,7 @@ export default function PostDetail() {
       .then((response) => setPost(response.data))
       .catch((error) => {
         if (error.response && error.response.status === 403) {
-          alert("Permission denied. You do not have access to this post.");
+          alert("비공개 게시글 입니다.");
           router.push("/contact");
         } else {
           console.error("Error fetching post", error);
@@ -136,9 +136,6 @@ export default function PostDetail() {
       <div className={styles.main}>
         <div className={styles.head}>
           <h3>Contact Us</h3>
-          <button onClick={handleBackClick} className={styles.backButton}>
-            글 목록
-          </button>
         </div>
         <h1 className={post.is_notice ? styles.noticeTitle : ""}>
           {post.title}
@@ -147,22 +144,24 @@ export default function PostDetail() {
           <span>By {post.author_name}</span>
           <span>{new Date(post.created_at).toLocaleString()}</span>
           <span>Views: {post.views}</span>
-          {canEditOrDelete && (
-            <div className={styles.actions}>
-              <button onClick={handlePostEdit}>Edit</button>
-              <button onClick={handlePostDelete}>Delete</button>
-            </div>
-          )}
         </div>
         <div className={styles.content}>
           <pre>{post.content}</pre>
         </div>
         <br />
         <div className={styles.commentsSection}>
-          <button onClick={handleBackClick} className={styles.backButton}>
-            글 목록
-          </button>
-          <h2>Comments</h2>
+          <div className={styles.commentHeader}>
+            <button onClick={handleBackClick} className={styles.backButton}>
+              글 목록
+            </button>
+            {canEditOrDelete && (
+              <div className={styles.actions}>
+                <button onClick={handlePostEdit}>수정</button>
+                <button onClick={handlePostDelete}>삭제</button>
+              </div>
+            )}
+          </div>
+          <h2>댓글</h2>
           {post.comments.map((comment) => {
             const canEditOrDeleteComment = user && (user.is_staff || user.id === comment.author_id || user.id === post.author_id);
             return (
@@ -192,24 +191,28 @@ export default function PostDetail() {
                       />{" "}
                       전체 공개
                     </label>
-                    <button type="submit">Update Comment</button>
+                    <button type="submit">수정</button>
                     <button type="button" onClick={() => setEditingComment(null)}>
-                      Cancel
+                      취소
                     </button>
                   </form>
                 ) : (
                   <div>
-                    <p>{comment.content}</p>
+                    <p>
+                      {comment.is_public ? "" : "(비공개) "}
+                      {comment.author_name === "관리자" ? "<관리자> " : ""}
+                      {comment.content}
+                    </p>
                     <div className={styles.meta}>
                       <span>By {comment.author_name}</span>
                       <span>{new Date(comment.created_at).toLocaleString()}</span>
                       {canEditOrDeleteComment && (
                         <div className={styles.actions}>
                           <button onClick={() => handleCommentEdit(comment)}>
-                            Edit
+                            수정
                           </button>
                           <button onClick={() => handleCommentDelete(comment.id)}>
-                            Delete
+                            삭제
                           </button>
                         </div>
                       )}
@@ -225,7 +228,7 @@ export default function PostDetail() {
                 name="content"
                 value={newComment.content}
                 onChange={handleCommentChange}
-                placeholder="Add a comment"
+                placeholder="댓글을 입력하세요."
                 required
               ></textarea>
               <label style={{ width: "15%" }}>
@@ -237,7 +240,7 @@ export default function PostDetail() {
                 />{" "}
                 전체 공개
               </label>
-              <button type="submit">Post</button>
+              <button type="submit">등록</button>
             </form>
           )}
         </div>
