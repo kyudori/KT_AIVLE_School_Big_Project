@@ -228,14 +228,12 @@
   border: solid 1px;
   min-width: 800px;
   padding: 20px;
-  gap: 20px;
 }
 
 .card {
-  padding: 20px;
   flex-grow: 1;
   flex-basis: 0;
-  font-size: 25px;
+  font-size: 22px;
 }
 
 .totalcredit {
@@ -261,6 +259,7 @@
 }
 
 .chartLegend {
+  font-size: 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -287,7 +286,7 @@
   border: solid 2px #333;
   border-radius: 3px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-left: auto;
 }
 
 .purchaseButton:hover {

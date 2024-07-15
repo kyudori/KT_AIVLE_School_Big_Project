@@ -111,13 +111,17 @@ const ApiManagement = () => {
         withCredentials: true,
       })
       .then((response) => {
-        setTodayTotalCredits(response.data.used_credits + response.data.remaining_credits);
+        setTodayTotalCredits(
+          response.data.used_credits + response.data.remaining_credits
+        );
         setDailyCredits(response.data.remaining_daily_credits);
         setAdditionalCredits(response.data.remaining_additional_credits);
-        setRemainingCredits(response.data.remaining_credits)
+        setRemainingCredits(response.data.remaining_credits);
         setFreeCredits(response.data.remaining_free_credits);
         setUsedCredits(response.data.used_credits);
-        setTotalCredits(response.data.used_credits + response.data.remaining_credits);
+        setTotalCredits(
+          response.data.used_credits + response.data.remaining_credits
+        );
       })
       .catch((error) => {
         console.error("크레딧 가져오기 오류", error);
@@ -407,30 +411,62 @@ const ApiManagement = () => {
                 <h3>Credit Usage</h3>
                 <div className={styles.cardcontent}>
                   <div className={styles.doughnutWrapper}>
-                    <Doughnut data={data} options={{ cutout: '70%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+                    <Doughnut
+                      data={data}
+                      options={{
+                        cutout: "70%",
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                      }}
+                    />
                   </div>
                   <div className={styles.usageleft}>
-                    <span>{Math.round(((todaytotalCredits - usedCredits) / todaytotalCredits) * 100)}% | {remainingCredits} Credits</span>
+                    <span>
+                      {Math.round(
+                        ((todaytotalCredits - usedCredits) /
+                          todaytotalCredits) *
+                          100
+                      )}
+                      % | {remainingCredits} Credits
+                    </span>
                   </div>
                 </div>
-                <div className={styles.chartLegend}>
-                  <div className={styles.legendItem}>
-                    <div className={styles.legendColorBox} style={{ backgroundColor: "#36A2EB" }}></div>
-                    Free
+                <div style={{display: 'flex', alignItems: 'flex-end'}}>
+                  <div className={styles.chartLegend}>
+                    <div className={styles.legendItem}>
+                      <div
+                        className={styles.legendColorBox}
+                        style={{ backgroundColor: "#36A2EB" }}
+                      ></div>
+                      Free
+                    </div>
+                    <div className={styles.legendItem}>
+                      <div
+                        className={styles.legendColorBox}
+                        style={{ backgroundColor: "#FFCE56" }}
+                      ></div>
+                      Daily
+                    </div>
+                    <div className={styles.legendItem}>
+                      <div
+                        className={styles.legendColorBox}
+                        style={{ backgroundColor: "#FF6384" }}
+                      ></div>
+                      Additional
+                    </div>
+                    <div className={styles.legendItem}>
+                      <div
+                        className={styles.legendColorBox}
+                        style={{ backgroundColor: "#CCCCCC" }}
+                      ></div>
+                      Used
+                    </div>
                   </div>
-                  <div className={styles.legendItem}>
-                    <div className={styles.legendColorBox} style={{ backgroundColor: "#FFCE56" }}></div>
-                    Daily
-                  </div>
-                  <div className={styles.legendItem}>
-                    <div className={styles.legendColorBox} style={{ backgroundColor: "#FF6384" }}></div>
-                    Additional
-                  </div>
-                  <div className={styles.legendItem}>
-                    <div className={styles.legendColorBox} style={{ backgroundColor: "#CCCCCC" }}></div>
-                    Used
-                  </div>
-                  <button className={styles.purchaseButton} onClick={() => router.push("/plan")}>
+                  <button
+                    className={styles.purchaseButton}
+                    onClick={() => router.push("/plan")}
+                  >
                     Buy More Credits
                   </button>
                 </div>
@@ -440,8 +476,18 @@ const ApiManagement = () => {
                 <h3>API Status</h3>
                 <div className={styles.apiStatus}>
                   <p>내 API Key: {apiKey || "현재 키 없음"}</p>
-                  <p>현재 API 상태: {isApiServerOn ? <span style={{ color: "green" }}>ON</span> : <span style={{ color: "red" }}>OFF</span>}</p>
-                  <p>마지막 사용 시간: {apiLastUsed ? apiLastUsed : "사용한 기록이 없습니다."}</p>
+                  <p>
+                    현재 API 상태:{" "}
+                    {isApiServerOn ? (
+                      <span style={{ color: "green" }}>ON</span>
+                    ) : (
+                      <span style={{ color: "red" }}>OFF</span>
+                    )}
+                  </p>
+                  <p>
+                    마지막 사용 시간:{" "}
+                    {apiLastUsed ? apiLastUsed : "사용한 기록이 없습니다."}
+                  </p>
                 </div>
               </div>
             </div>
