@@ -850,7 +850,7 @@ def voice_verity(request):
             response_time = (end_time - start_time).total_seconds() * 1000  # milliseconds
 
             # API 호출 기록 저장 (성공)
-            ApiCallHistory.objects.create(user=user, endpoint='voice_verity', success=True, response_time=response_time)
+            ApiCallHistory.objects.create(user=user, api_key = key, endpoint='voice_verity', success=True, response_time=response_time)
 
             # 크레딧 차감
             today = timezone.now().date()
