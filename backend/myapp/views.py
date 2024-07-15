@@ -1065,7 +1065,10 @@ def call_summary(request):
         return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
 
     total_calls = history.aggregate(total=Count('id'))['total']
-    avg_response_time = round(history.aggregate(avg_response=Avg('response_time'))['avg_response'], 2)
+    avg_response_time = history.aggregate(avg_response=Avg('response_time'))['avg_response']
+
+    # avg_response_time이 None인 경우를 처리
+    avg_response_time = round(avg_response_time, 2) if avg_response_time is not None else 0
 
     max_calls = history.order_by('-count').first()
     min_calls = history.order_by('count').first()
@@ -1079,6 +1082,7 @@ def call_summary(request):
     }
 
     return Response(summary, status=status.HTTP_200_OK)
+
 
 def calculate_success_rate(user):
     total_calls = ApiCallHistory.objects.filter(user=user).count()
