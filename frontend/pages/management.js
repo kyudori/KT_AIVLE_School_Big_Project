@@ -306,30 +306,25 @@ const ApiManagement = () => {
 
   const handleCopyApiKey = () => {
     if (apiKey) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(apiKey).then(
-          () => {
-            alert("API Key가 복사되었습니다.");
-          },
-          (error) => {
-            console.error("API Key 복사 오류", error);
-          }
-        );
-      } else {
-        // Fallback for Clipboard API not supported
-        const textArea = document.createElement("textarea");
-        textArea.value = apiKey;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          document.execCommand("copy");
-          alert("API Key가 복사되었습니다.");
-        } catch (error) {
-          console.error("Fallback: API Key 복사 오류", error);
-        }
-        document.body.removeChild(textArea);
+      const textArea = document.createElement("textarea");
+      textArea.value = apiKey;
+      // Avoid scrolling to bottom
+      textArea.style.position = "fixed";
+      textArea.style.top = 0;
+      textArea.style.left = 0;
+      textArea.style.opacity = 0;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        const successful = document.execCommand("copy");
+        const msg = successful ? "API Key가 복사되었습니다." : "API Key 복사 실패.";
+        alert(msg);
+      } catch (err) {
+        console.error("Fallback: API Key 복사 오류", err);
+        alert("API Key 복사 오류가 발생했습니다.");
       }
+      document.body.removeChild(textArea);
     }
   };
 
@@ -513,7 +508,7 @@ const ApiManagement = () => {
                       <button
                         className={`${styles.button} ${styles.copyButton}`}
                         onClick={handleCopyApiKey}
-                      >
+                      >management.js:319 Clipboard API가 지원되지 않습니다.
                         키 복사
                       </button>
                     )}
