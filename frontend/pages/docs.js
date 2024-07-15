@@ -408,7 +408,7 @@ Value: Bearer YOUR_API_KEY`)
 </div>
               <div style={{ height: "50px" }} />
 
-              <h3>3. 서버 상태 체크(Status)</h3>
+              <h3>3. 서버 상태 체크(check-api-status)</h3>
               <ul>
                 <li>URL: http://voice-verity.com/api/check-api-status/</li>
                 <li>Method: GET</li>
