@@ -163,7 +163,11 @@ export default function PostDetail() {
           </div>
           <h2>댓글</h2>
           {post.comments.map((comment) => {
-            const canEditOrDeleteComment = user && (user.is_staff || user.id === comment.author_id || user.id === post.author_id);
+            const canEditOrDeleteComment =
+              user &&
+              (user.is_staff ||
+                user.id === comment.author_id ||
+                user.id === post.author_id);
             return (
               <div
                 key={comment.id}
@@ -191,10 +195,15 @@ export default function PostDetail() {
                       />{" "}
                       전체 공개
                     </label>
-                    <button type="submit">수정</button>
-                    <button type="button" onClick={() => setEditingComment(null)}>
-                      취소
-                    </button>
+                    <div className={styles.actions}>
+                      <button type="submit">수정</button>
+                      <button
+                        type="button"
+                        onClick={() => setEditingComment(null)}
+                      >
+                        취소
+                      </button>
+                    </div>
                   </form>
                 ) : (
                   <div>
@@ -204,13 +213,18 @@ export default function PostDetail() {
                     </p>
                     <div className={styles.meta}>
                       <span>By {comment.author_name}</span>
-                      <span>{new Date(comment.created_at).toLocaleString()}</span>
+                      <span>
+                        {new Date(comment.created_at).toLocaleString()}
+                      </span>
                       {canEditOrDeleteComment && (
                         <div className={styles.actions}>
                           <button onClick={() => handleCommentEdit(comment)}>
                             수정
                           </button>
-                          <button onClick={() => handleCommentDelete(comment.id)}>
+                          <p>|</p>
+                          <button
+                            onClick={() => handleCommentDelete(comment.id)}
+                          >
                             삭제
                           </button>
                         </div>
@@ -239,7 +253,7 @@ export default function PostDetail() {
                 />{" "}
                 전체 공개
               </label>
-              <button type="submit">등록</button>
+              <button className={styles.submit} type="submit">등록</button>
             </form>
           )}
         </div>

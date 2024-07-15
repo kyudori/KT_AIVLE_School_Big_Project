@@ -41,22 +41,35 @@
 }
 
 .searchContainer {
+  background-color: #fff;
   position: absolute;
   bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 5%;
   display: flex;
   align-items: center;
+  border-radius: 30px;
+  border: solid 1px #ccc;
 }
 
 .searchSelect, .searchInput, .searchButton {
+  border: none;
+  background: none;
   margin-right: 10px;
   padding: 10px;
   font-size: 16px;
 }
 
+.searchSelect {
+  padding: 5px 10px;
+  border-right: solid 1px #ccc;
+}
+
 .searchInput {
   width: 200px;
+}
+
+.searchSelect:focus, .searchInput:focus  {
+  outline: none;
 }
 
 .writeButton {

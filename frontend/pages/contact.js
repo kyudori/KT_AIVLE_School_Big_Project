@@ -99,7 +99,7 @@ export default function Contact() {
             onChange={handleSearchChange}
             className={styles.searchInput}
           />
-          <button onClick={handleSearchClick} className={styles.searchButton}>검색</button>
+          <button onClick={handleSearchClick} className={styles.searchButton}>🔍</button>
         </div>
       </div>
       <div className={styles.content}>

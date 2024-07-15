@@ -41,7 +41,6 @@
   
   .form {
     align-self: center;
-    display: flex;
     flex-direction: column;
     width: 100%;
   }
@@ -71,13 +70,38 @@
   }
   
   .form label {
-    margin-bottom: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-bottom: 20px;
     display: flex;
-    align-items: center;
+    flex-direction: row-reverse;
   }
   
-  .form label input {
-    margin-right: 10px;
+  .form label input[type="checkbox"] {
+    display: none;
+  }
+  
+  .check {
+    margin: 0 10px;
+  }
+
+  .check::before {
+    content:'';
+    position: absolute;
+    display: block;
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: 1px solid #ccc;
+    box-sizing:border-box;
+    cursor: pointer;
+  }
+
+  .check:checked + .check::before{
+    content: '✔';
+    position: absolute;
+    text-align: -webkit-center;
   }
   
   .buttonGroup {

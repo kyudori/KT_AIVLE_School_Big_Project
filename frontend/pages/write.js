@@ -101,18 +101,22 @@ export default function Write() {
             <label>
               <input
                 type="checkbox"
+                className={styles.check}
                 checked={isNotice}
                 onChange={(e) => setIsNotice(e.target.checked)}
               />{" "}
+              <span className={styles.check}></span>
               공지사항
             </label>
           )}
           <label>
             <input
               type="checkbox"
+              className={styles.check}
               checked={isPublic}
               onChange={(e) => setIsPublic(e.target.checked)}
             />{" "}
+            <span className={styles.check}></span>
             전체공개
           </label>
           <div className={styles.buttonGroup}>
