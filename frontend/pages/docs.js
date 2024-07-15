@@ -192,7 +192,7 @@ export default function Documentation() {
               <h2>엔드 포인트</h2>
               <hr />
               <div style={{ marginBottom: "50px" }}>
-                <h3>1. 음성 파일 분석</h3>
+                <h3>1. 음성 파일 분석(voice-verity)</h3>
                 <ul>
                   <li>URL: http://voice-verity.com/api/voice-verity/</li>
                   <li>Method: POST</li>
@@ -301,7 +301,7 @@ Value: YOUR_AUDIO_FILE.wav`)
                 </div>
               </div>
               <div style={{ height: "20px" }} />
-              <h3>2. YouTube 영상 분석</h3>
+              <h3>2. YouTube 영상 분석(youtube-verity)</h3>
 <ul>
   <li>URL: http://voice-verity.com/api/youtube-verity/</li>
   <li>Method: POST</li>
@@ -406,7 +406,7 @@ Value: Bearer YOUR_API_KEY`)
   "analysis_result": "Fake"
 }`}</pre>
 </div>
-              <div style={{ height: "20px" }} />
+              <div style={{ height: "50px" }} />
 
               <h3>3. 서버 상태 체크(Status)</h3>
               <ul>
