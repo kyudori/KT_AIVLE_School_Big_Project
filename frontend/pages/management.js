@@ -508,7 +508,7 @@ const ApiManagement = () => {
                       <button
                         className={`${styles.button} ${styles.copyButton}`}
                         onClick={handleCopyApiKey}
-                      >management.js:319 Clipboard API가 지원되지 않습니다.
+                      >
                         키 복사
                       </button>
                     )}
