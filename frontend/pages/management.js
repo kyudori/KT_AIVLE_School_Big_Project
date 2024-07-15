@@ -122,7 +122,7 @@ const ApiManagement = () => {
               response.data.remaining_additional_credits +
               response.data.remaining_free_credits)
         );
-        setTotalCredits(response.data.today_total_credits);
+        setTotalCredits(response.data.used_credits + response.data.remaining_credits);
       })
       .catch((error) => {
         console.error("크레딧 가져오기 오류", error);
