@@ -422,7 +422,7 @@ const ApiManagement = () => {
                     <Doughnut data={data} options={{ cutout: '70%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
                   </div>
                   <div className={styles.usageleft}>
-                    <span>Left: {(todaytotalCredits - usedCredits)} / Total: {todaytotalCredits} | {Math.round(((todaytotalCredits - usedCredits) / todaytotalCredits) * 100)}% | {remainingCredits} Credits Left</span>
+                    <span>{Math.round(((todaytotalCredits - usedCredits) / todaytotalCredits) * 100)}% | {remainingCredits} Credits</span>
                   </div>
                 </div>
                 <div className={styles.chartLegend}>
