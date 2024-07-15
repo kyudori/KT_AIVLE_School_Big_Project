@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Comment, APIKey
+from .models import Post, Comment, APIKey, YouTubeAnalysis
 
 class CommentSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.username', read_only=True)
@@ -35,3 +35,14 @@ class APIKeySerializer(serializers.ModelSerializer):
     class Meta:
         model = APIKey
         fields = ['key', 'created_at', 'last_used_at', 'credits', 'is_active']
+
+class YouTubeAnalysisSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = YouTubeAnalysis
+        fields = ['id', 'user', 'url', 'analysis_result', 'created_at']
+        read_only_fields = ['user', 'created_at']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        validated_data['user'] = request.user
+        return super().create(validated_data)
