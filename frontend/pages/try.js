@@ -61,12 +61,7 @@ export default function TryVoice() {
   };
 
   const handleUploadClick = (e) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("로그인 후, 이용 가능합니다.");
-      e.preventDefault();
-      return;
-    }
+    // No need to check for login here
   };
 
   const handleFileChange = (e) => {
@@ -93,12 +88,7 @@ export default function TryVoice() {
   };
 
   const handleExampleClick = (exampleFile) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("로그인 후, 이용 가능합니다.");
-      return;
-    }
-
+    // No need to check for login here
     // Load the file from the public/audios directory
     const filePath = `/audios/${exampleFile}`;
 
@@ -322,7 +312,7 @@ export default function TryVoice() {
           datasets: [
             {
               data: [realCount, fakeCount],
-              backgroundColor: ["#9B90D2", "#CCCCCC"],
+              backgroundColor: ["#CCCCCC", "#9B90D2"],
             },
           ],
         },
