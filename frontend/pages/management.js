@@ -345,6 +345,16 @@ const ApiManagement = () => {
   };
 
   const renderSummary = () => {
+    if (
+      !summaryData.total_calls &&
+      !summaryData.avg_response_time &&
+      !summaryData.max_calls_time &&
+      !summaryData.min_calls_time &&
+      !summaryData.success_rate
+    ) {
+      return <p>API 사용 기록이 없습니다.</p>;
+    }
+
     return (
       <div>
         <p>총 API 호출 수: {summaryData.total_calls}</p>
@@ -432,7 +442,7 @@ const ApiManagement = () => {
                     </span>
                   </div>
                 </div>
-                <div style={{display: 'flex', alignItems: 'flex-end'}}>
+                <div style={{ display: "flex", alignItems: "flex-end" }}>
                   <div className={styles.chartLegend}>
                     <div className={styles.legendItem}>
                       <div
