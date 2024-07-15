@@ -120,7 +120,7 @@ const ApiManagement = () => {
               response.data.remaining_additional_credits +
               response.data.remaining_free_credits)
         );
-        setTotalCredits(response.data.total_credits);
+        setTotalCredits(response.data.today_total_credits);
       })
       .catch((error) => {
         console.error("크레딧 가져오기 오류", error);
@@ -309,14 +309,18 @@ const ApiManagement = () => {
 
   const handleCopyApiKey = () => {
     if (apiKey) {
-      navigator.clipboard.writeText(apiKey).then(
-        () => {
-          alert("API Key가 복사되었습니다.");
-        },
-        (error) => {
-          console.error("API Key 복사 오류", error);
-        }
-      );
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(apiKey).then(
+          () => {
+            alert("API Key가 복사되었습니다.");
+          },
+          (error) => {
+            console.error("API Key 복사 오류", error);
+          }
+        );
+      } else {
+        console.error("Clipboard API가 지원되지 않습니다.");
+      }
     }
   };
 

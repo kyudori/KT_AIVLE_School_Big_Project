@@ -566,7 +566,7 @@ def get_credits(request):
         'remaining_credits': remaining_credits,
         'total_credits': total_credits,
         'today_total_credits': today_total_credits,
-        'used_credits': total_credits - remaining_credits + (5 - free_credits)  # 사용된 크레딧 계산 추가
+        'used_credits': today_total_credits - total_credits  # 사용된 크레딧 계산 추가
     })
     
 # @csrf_exempt
