@@ -316,7 +316,19 @@ const ApiManagement = () => {
           }
         );
       } else {
-        console.error("Clipboard API가 지원되지 않습니다.");
+        // Fallback for Clipboard API not supported
+        const textArea = document.createElement("textarea");
+        textArea.value = apiKey;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          alert("API Key가 복사되었습니다.");
+        } catch (error) {
+          console.error("Fallback: API Key 복사 오류", error);
+        }
+        document.body.removeChild(textArea);
       }
     }
   };
