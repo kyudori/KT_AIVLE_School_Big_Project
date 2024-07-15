@@ -21,7 +21,7 @@ export default function TryVoice() {
   const [inputType, setInputType] = useState("file"); // 추가된 state
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
-  const [predictions, setPredictions] = useState([]);
+  const [predictions, setPredictions] = useState([]); // Ensure predictions is an array
   const [fakeCount, setFakeCount] = useState(0);
   const [realCount, setRealCount] = useState(0);
   const lineChartRef = useRef(null);
@@ -113,7 +113,7 @@ export default function TryVoice() {
         const realCount = response.data.real_cnt;
 
         setResult(analysisResult);
-        setPredictions(predictions);
+        setPredictions(predictions || []); // Ensure predictions is an array
         setFakeCount(fakeCount);
         setRealCount(realCount);
         setLoading(false); // 로딩 종료
@@ -148,7 +148,7 @@ export default function TryVoice() {
         const { analysis_result, predictions, fake_cnt, real_cnt } = response.data;
 
         setResult(analysis_result);
-        setPredictions(predictions);
+        setPredictions(predictions || []); // Ensure predictions is an array
         setFakeCount(fake_cnt);
         setRealCount(real_cnt);
         setLoading(false);
@@ -354,13 +354,15 @@ export default function TryVoice() {
 
               <h2>{inputType === "file" ? "음성파일을 업로드한 뒤," : "URL을 입력한 뒤,"} Start Detection 버튼을 눌러주세요</h2>
               <p style={{ color: "#666" }}>
-                {inputType === "file" ? "200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)" : "영상의 길이가 길수록 분석 시간이 오래 소요됩니다!"}
+                {inputType === "file"
+                  ? "200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)"
+                  : "영상의 길이가 길수록 분석 시간이 오래 소요됩니다!"}
               </p>
               <button type="submit">▶ Start Detection</button>
             </form>
           </div>
           {loading && <p>분석중...</p>}
-          {predictions.length > 0 && (
+          {Array.isArray(predictions) && predictions.length > 0 && (
             <div className={styles.resultContext}>
               <h1>Detect Report</h1>
               <h2>Voice Verity는 이렇게 분석했어요.</h2>
@@ -393,7 +395,11 @@ export default function TryVoice() {
               </div>
               <div style={{ margin: "20px", fontSize: "24px" }}>▼</div>
               <div className={styles.resultTxt}>
-                <h2>이 {inputType === "file" ? "음성 파일" : "유튜브 영상"}은 {result} 입니다.</h2>
+                {inputType === "file" ? (
+                  <h2>이 음성 파일은 {result} 입니다.</h2>
+                ) : (
+                  <h2>이 유튜브 영상은 {result} 입니다.</h2>
+                )}
               </div>
             </div>
           )}
