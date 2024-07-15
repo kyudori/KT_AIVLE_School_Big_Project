@@ -58,7 +58,7 @@ export default function TryVoice() {
     }
 
     if (fileSizeMB > MAX_FILE_SIZE_MB) {
-      alert("File size exceeds the 10MB limit.");
+      alert("File size exceeds the 200MB limit.");
       return;
     }
 
@@ -354,7 +354,7 @@ export default function TryVoice() {
 
               <h2>{inputType === "file" ? "음성파일을 업로드한 뒤," : "URL을 입력한 뒤,"} Start Detection 버튼을 눌러주세요</h2>
               <p style={{ color: "#666" }}>
-                200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)
+                {inputType === "file" ? "200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)" : "영상의 길이가 길수록 분석 시간이 오래 소요됩니다!"}
               </p>
               <button type="submit">▶ Start Detection</button>
             </form>
