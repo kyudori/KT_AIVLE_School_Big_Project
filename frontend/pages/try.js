@@ -230,7 +230,11 @@ export default function TryVoice() {
         setLoading(false);
       } catch (error) {
         console.error("Error uploading YouTube URL", error);
-        alert("Error uploading YouTube URL");
+        if (error.response && error.response.status === 400 && error.response.data.error === 'Invalid YouTube URL') {
+          alert("올바른 YouTube URL을 입력해주세요.");
+        } else {
+          alert("Error uploading YouTube URL");
+        }
         setLoading(false);
       }
     }
