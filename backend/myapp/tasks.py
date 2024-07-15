@@ -2,7 +2,7 @@
 from celery import shared_task
 from django.utils import timezone
 from datetime import datetime, date
-from myapp.models import CustomUser, UserSubscription
+from myapp.models import CustomUser, UserSubscription, UploadHistory
 
 @shared_task
 def reset_daily_credits():
@@ -44,3 +44,15 @@ def reset_free_credits():
         user.save()
 
     return f'Free credits reset for {users.count()} users.'
+
+@shared_task
+def reset_upload_counts():
+    today = timezone.now().date()
+    upload_histories = UploadHistory.objects.filter(upload_date=today)
+
+    for history in upload_histories:
+        history.upload_count = 0
+        history.youtube_upload_count = 0
+        history.save()
+
+    return f'Upload counts reset for {upload_histories.count()} histories.'
