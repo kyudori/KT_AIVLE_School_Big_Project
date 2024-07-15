@@ -58,7 +58,7 @@ export default function TryVoice() {
     }
 
     if (fileSizeMB > MAX_FILE_SIZE_MB) {
-      alert("File size exceeds the 200MB limit.");
+      alert("File size exceeds the 10MB limit.");
       return;
     }
 
@@ -393,7 +393,7 @@ export default function TryVoice() {
               </div>
               <div style={{ margin: "20px", fontSize: "24px" }}>▼</div>
               <div className={styles.resultTxt}>
-                <h2>이 음성은 {result} 입니다.</h2>
+                <h2>이 {inputType === "file" ? "음성 파일" : "유튜브 영상"}은 {result} 입니다.</h2>
               </div>
             </div>
           )}

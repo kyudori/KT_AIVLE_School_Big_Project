@@ -72,7 +72,17 @@
   color: #949494;
 }
 
-.mainContent .form {
+.uploadIcon {
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background-image: url(./images/upload.png);
+  background-position: top center;
+  background-size: cover;
+  cursor: pointer;
+}
+
+ .mainContent .form {
   display: flex;
   flex-direction: column;
   align-items: center;
