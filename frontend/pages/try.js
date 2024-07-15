@@ -3,11 +3,11 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Chart from "chart.js/auto"; // 차트 라이브러리 추가
+import Chart from "chart.js/auto";
 import annotationPlugin from "chartjs-plugin-annotation";
+import WaveSurfer from "wavesurfer.js";
 import styles from "../styles/Try.module.css";
 
-// 플러그인 등록
 Chart.register(annotationPlugin);
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -18,19 +18,43 @@ export default function TryVoice() {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
   const [url, setUrl] = useState("");
-  const [inputType, setInputType] = useState("file"); // 추가된 state
+  const [inputType, setInputType] = useState("file");
   const [result, setResult] = useState("");
-  const [loading, setLoading] = useState(false); // 로딩 상태 추가
-  const [predictions, setPredictions] = useState([]); // Ensure predictions is an array
+  const [loading, setLoading] = useState(false);
+  const [predictions, setPredictions] = useState([]);
   const [fakeCount, setFakeCount] = useState(0);
   const [realCount, setRealCount] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   const lineChartRef = useRef(null);
   const pieChartRef = useRef(null);
+  const waveSurferRef = useRef(null);
+  const waveContainerRef = useRef(null);
+  const fileInputRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
-    // No need to check for token here
-  }, [router]);
+    if (waveContainerRef.current && file) {
+      if (waveSurferRef.current) {
+        waveSurferRef.current.destroy();
+      }
+      waveSurferRef.current = WaveSurfer.create({
+        container: waveContainerRef.current,
+        waveColor: "#CCCCCC",
+        progressColor: "#9B90D2",
+      });
+
+      waveSurferRef.current.on('finish', () => {
+        setIsPlaying(false);
+        waveSurferRef.current.stop();
+      });
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        waveSurferRef.current.load(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, [file]);
 
   const handleSubscriptionPlan = () => {
     router.push("/plan");
@@ -58,12 +82,47 @@ export default function TryVoice() {
     }
 
     if (fileSizeMB > MAX_FILE_SIZE_MB) {
-      alert("File size exceeds the 10MB limit.");
+      alert("File size exceeds the 200MB limit.");
       return;
     }
 
     setFile(selectedFile);
-    setFileName(selectedFile.name); // 파일 이름 설정
+    setFileName(selectedFile.name);
+    setIsPlaying(false); // Reset the play/pause state
+    e.target.value = ""; // Reset the file input value to allow re-upload of the same file
+  };
+
+  const handleExampleClick = (exampleFile) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("로그인 후, 이용 가능합니다.");
+      return;
+    }
+
+    // Load the file from the public/audios directory
+    const filePath = `/audios/${exampleFile}`;
+
+    setFileName(exampleFile);
+    fetch(filePath)
+      .then(response => response.blob())
+      .then(blob => {
+        const newFile = new File([blob], exampleFile, { type: blob.type });
+        setFile(newFile);
+        setIsPlaying(false); // Reset the play/pause state
+      })
+      .catch(error => console.error('Error fetching example file:', error));
+  };
+
+  const handleFileRemove = () => {
+    setFile(null);
+    setFileName("");
+    setIsPlaying(false); // Reset the play/pause state
+  };
+
+  const handleFileNameClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -93,9 +152,9 @@ export default function TryVoice() {
 
       localStorage.setItem("previousFileName", fileName);
 
-      setLoading(true); // 로딩 시작
-      setResult(""); // Clear previous result
-      setPredictions([]); // Clear previous predictions
+      setLoading(true);
+      setResult("");
+      setPredictions([]);
       const formData = new FormData();
       formData.append("file", file);
       try {
@@ -115,10 +174,10 @@ export default function TryVoice() {
         const realCount = response.data.real_cnt;
 
         setResult(analysisResult);
-        setPredictions(predictions || []); // Ensure predictions is an array
+        setPredictions(predictions || []);
         setFakeCount(fakeCount);
         setRealCount(realCount);
-        setLoading(false); // 로딩 종료
+        setLoading(false);
       } catch (error) {
         console.error("Error uploading file", error);
         if (error.response && error.response.status === 403 && error.response.data.error === 'You have reached the maximum number of uploads for today') {
@@ -126,7 +185,7 @@ export default function TryVoice() {
         } else {
           alert("Error uploading file");
         }
-        setLoading(false); // 로딩 종료
+        setLoading(false);
       }
     } else {
       if (!url) {
@@ -148,8 +207,8 @@ export default function TryVoice() {
       localStorage.setItem("previousUrl", url);
 
       setLoading(true);
-      setResult(""); // Clear previous result
-      setPredictions([]); // Clear previous predictions
+      setResult("");
+      setPredictions([]);
 
       try {
         const response = await axios.post(
@@ -165,7 +224,7 @@ export default function TryVoice() {
         const { analysis_result, predictions, fake_cnt, real_cnt } = response.data;
 
         setResult(analysis_result);
-        setPredictions(predictions || []); // Ensure predictions is an array
+        setPredictions(predictions || []);
         setFakeCount(fake_cnt);
         setRealCount(real_cnt);
         setLoading(false);
@@ -295,6 +354,13 @@ export default function TryVoice() {
     }
   }, [predictions, fakeCount, realCount]);
 
+  const handlePlayPause = () => {
+    if (waveSurferRef.current) {
+      waveSurferRef.current.playPause();
+      setIsPlaying(waveSurferRef.current.isPlaying());
+    }
+  };
+
   return (
     <div className={styles.previewContext}>
       <div style={{ padding: "0 200px", background: "#fff" }}>
@@ -334,12 +400,28 @@ export default function TryVoice() {
               {inputType === "file" ? (
                 <div className={styles.form}>
                   {fileName ? (
-                    <span
-                      className={styles.fileName}
-                      onClick={() => document.getElementById("upload").click()}
-                    >
-                      {fileName}
-                    </span>
+                    <>
+                      <span className={styles.fileName} onClick={handleFileNameClick}>
+                        {fileName}
+                      </span>
+                      <button
+                          type="button"
+                          className={styles.removeButton}
+                          onClick={handleFileRemove}
+                        >
+                          X
+                        </button>
+                      <div className={styles.waveContainer}>
+                        <button
+                          type="button"
+                          className={styles.playPauseButton}
+                          onClick={handlePlayPause}
+                        >
+                          {isPlaying ? "||" : "▶"}
+                        </button>
+                        <div ref={waveContainerRef} className={styles.waveform}></div>
+                      </div>
+                    </>
                   ) : (
                     <label htmlFor="upload" className={styles.uploadLabel}>
                       <span className={styles.uploadIcon}></span>
@@ -350,6 +432,7 @@ export default function TryVoice() {
                     type="file"
                     onClick={handleUploadClick}
                     onChange={handleFileChange}
+                    ref={fileInputRef}
                     className={styles.uploadHidden}
                   />
                 </div>
@@ -363,16 +446,34 @@ export default function TryVoice() {
                     placeholder="Put here your URL."
                     className={styles.input}
                   />
-                  <button type="button" className={styles.clearButton} onClick={() => setUrl('')}>
+                  <button
+                    type="button"
+                    className={styles.clearButton}
+                    onClick={() => setUrl("")}
+                  >
                     clear
                   </button>
                 </div>
               )}
 
-              <h2>{inputType === "file" ? "음성파일을 업로드한 뒤," : "URL을 입력한 뒤,"} Start Detection 버튼을 눌러주세요</h2>
+              {inputType === "file" && (
+                <div className={styles.exampleFiles}>
+                  <button type="button" onClick={() => handleExampleClick('example(1).wav')}>example(1).wav</button>
+                  <button type="button" onClick={() => handleExampleClick('example(2).wav')}>example(2).wav</button>
+                  <button type="button" onClick={() => handleExampleClick('example(3).wav')}>example(3).wav</button>
+                  <button type="button" onClick={() => handleExampleClick('example(4).wav')}>example(4).wav</button>
+                </div>
+              )}
+
+              <h2>
+                {inputType === "file"
+                  ? "음성파일을 업로드한 뒤,"
+                  : "URL을 입력한 뒤,"}{" "}
+                Start Detection 버튼을 눌러주세요
+              </h2>
               <p style={{ color: "#666" }}>
                 {inputType === "file"
-                  ? "200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)"
+                  ? "200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .m4a)"
                   : "영상의 길이가 길수록 분석 시간이 오래 소요됩니다!"}
               </p>
               <button type="submit">▶ Start Detection</button>
@@ -402,8 +503,8 @@ export default function TryVoice() {
                     <div>
                       <canvas
                         id="pieChart"
-                        width="260px"  // 30% 확대
-                        height="260px"  // 30% 확대
+                        width="260px"
+                        height="260px"
                         className={styles.chart}
                       ></canvas>
                     </div>
