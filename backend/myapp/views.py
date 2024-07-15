@@ -535,6 +535,9 @@ def get_api_key(request):
 
         return Response({'api_key': api_key.key, 'is_active': api_key.is_active})
 
+def generate_api_key():
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=32))
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def regenerate_api_key(request):
