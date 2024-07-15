@@ -84,7 +84,7 @@ export default function TryVoice() {
 
       if (previousFileName === fileName) {
         const confirmRetry = confirm(
-          "체험하기 서비스는 하루 5회만 이용 가능한 서비스입니다.\n동일한 파일로 분석을 다시 요청하시겠습니까?"
+          "체험하기 서비스는 하루 5회만 이용 가능한 서비스입니다.\n동일한 파일 분석 내역이 있습니다. 그래도 해당 파일로 분석하시겠습니까?"
         );
         if (!confirmRetry) {
           return;
@@ -94,6 +94,8 @@ export default function TryVoice() {
       localStorage.setItem("previousFileName", fileName);
 
       setLoading(true); // 로딩 시작
+      setResult(""); // Clear previous result
+      setPredictions([]); // Clear previous predictions
       const formData = new FormData();
       formData.append("file", file);
       try {
@@ -132,7 +134,22 @@ export default function TryVoice() {
         return;
       }
 
+      const previousUrl = localStorage.getItem("previousUrl");
+
+      if (previousUrl === url) {
+        const confirmRetry = confirm(
+          "체험하기 서비스는 하루 5회만 이용 가능한 서비스입니다.\n동일한 유튜브 영상 분석 기록이 있습니다. 그래도 해당 링크를 분석하시겠습니까?"
+        );
+        if (!confirmRetry) {
+          return;
+        }
+      }
+
+      localStorage.setItem("previousUrl", url);
+
       setLoading(true);
+      setResult(""); // Clear previous result
+      setPredictions([]); // Clear previous predictions
 
       try {
         const response = await axios.post(
@@ -362,7 +379,7 @@ export default function TryVoice() {
             </form>
           </div>
           {loading && <p>분석중...</p>}
-          {Array.isArray(predictions) && predictions.length > 0 && (
+          {!loading && Array.isArray(predictions) && predictions.length > 0 && (
             <div className={styles.resultContext}>
               <h1>Detect Report</h1>
               <h2>Voice Verity는 이렇게 분석했어요.</h2>
