@@ -946,8 +946,8 @@ def call_summary(request):
     summary = {
         'total_calls': total_calls,
         'avg_response_time': avg_response_time,
-        'max_calls_time': max_calls['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시 %M분 %S초') if max_calls else None,
-        'min_calls_time': min_calls['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시 %M분 %S초') if min_calls else None,
+        'max_calls_time': max_calls['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시') if max_calls else None,
+        'min_calls_time': min_calls['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시') if min_calls else None,
         'success_rate': calculate_success_rate(user)
     }
 
