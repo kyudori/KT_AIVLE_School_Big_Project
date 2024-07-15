@@ -24,6 +24,10 @@ app.conf.beat_schedule = {
         'task': 'myapp.tasks.reset_free_credits',
         'schedule': crontab(hour=0, minute=0),
     },
+    'reset-upload-counts-every-day': {
+        'task': 'myapp.tasks.reset_upload_counts',
+        'schedule': crontab(hour=0, minute=0),
+    },
 }
 
 @app.task(bind=True)

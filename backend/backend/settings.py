@@ -27,7 +27,12 @@ SECRET_KEY = "django-insecure-i@pxotdn++f)^@he$%5=$qu1qa(lr-59!vud%41^co^x)wk364
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '54.238.129.211',  # EC2 서버의 공인 IP 주소
+    'voice-verity.com',  # 도메인 이름
+]
 
 
 # Application definition
