@@ -7,7 +7,7 @@ import styles from "../styles/Docs.module.css";
 export default function Documentation() {
   const router = useRouter();
   const [activeSection, setActiveSection] = useState("");
-  const [copyStatus, setCopyStatus] = useState("");
+  const [copyStatus, setCopyStatus] = useState({});
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,13 +48,13 @@ export default function Documentation() {
     router.push("/contact");
   };
 
-  const handleCopyClick = (textToCopy) => {
+  const handleCopyClick = (textToCopy, id) => {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard
         .writeText(textToCopy)
         .then(() => {
-          setCopyStatus("success");
-          setTimeout(() => setCopyStatus(""), 2000);
+          setCopyStatus((prevStatus) => ({ ...prevStatus, [id]: "success" }));
+          setTimeout(() => setCopyStatus((prevStatus) => ({ ...prevStatus, [id]: "" })), 2000);
         })
         .catch((error) => {
           console.error("복사 실패:", error);
@@ -69,8 +69,8 @@ export default function Documentation() {
       textArea.select();
       try {
         document.execCommand("copy");
-        setCopyStatus("success");
-        setTimeout(() => setCopyStatus(""), 2000);
+        setCopyStatus((prevStatus) => ({ ...prevStatus, [id]: "success" }));
+        setTimeout(() => setCopyStatus((prevStatus) => ({ ...prevStatus, [id]: "" })), 2000);
       } catch (err) {
         console.error("복사 실패:", err);
       }
