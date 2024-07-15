@@ -358,37 +358,6 @@ const ApiManagement = () => {
           ],
         };
 
-        // const options = {
-        //   plugins: {
-        //     tooltip: {
-        //       callbacks: {
-        //         label: function (tooltipItem) {
-        //           const label = data.labels[tooltipItem.dataIndex];
-        //           const value =
-        //             data.datasets[tooltipItem.datasetIndex].data[
-        //               tooltipItem.dataIndex
-        //             ];
-        //           return `${label}: ${value}개`;
-        //         },
-        //       },
-        //     },
-        //     title: {
-        //       display: true,
-        //       text: `${Math.round(
-        //         (remainingCredits/ todaytotalCredits) * 100
-        //       )}% | ${remainingCredits}개 남음`,
-        //       position: "top",
-        //       align: "center",
-        //       font: {
-        //         size: 18,
-        //       },
-        //     },
-        //   },
-        //   cutout: "70%",
-        //   responsive: true,
-        //   maintainAspectRatio: false,
-        // };
-
         const trafficLabels = trafficData.map((item) => item.label);
         const trafficCounts = trafficData.map((item) => item.count);
 
