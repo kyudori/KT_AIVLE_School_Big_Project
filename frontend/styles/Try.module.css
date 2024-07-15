@@ -76,7 +76,6 @@
   align-items: center;
   width: 80px;
   height: 80px;
-  background-image: url(./images/upload.png);
   background-position: top center;
   background-size: cover;
   cursor: pointer;
@@ -93,6 +92,19 @@
   background: rgba(255, 255, 255, 0.6);
   border-radius: 31px;
   border: 1px dashed #000;
+}
+
+.mainContent .uploadLabel {
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background-image: url(./images/upload.png); /* Use the correct path */
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
 }
 
 .mainContent button {
@@ -142,7 +154,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom:-35px;
 }
 
 .youtubeLabel {
