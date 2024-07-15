@@ -111,17 +111,12 @@ const ApiManagement = () => {
         withCredentials: true,
       })
       .then((response) => {
-        setTodayTotalCredits(response.data.today_total_credits);
+        setTodayTotalCredits(response.data.used_credits + response.data.remaining_credits);
         setDailyCredits(response.data.remaining_daily_credits);
         setAdditionalCredits(response.data.remaining_additional_credits);
         setRemainingCredits(response.data.remaining_credits)
         setFreeCredits(response.data.remaining_free_credits);
-        setUsedCredits(
-          response.data.today_total_credits -
-            (response.data.remaining_daily_credits +
-              response.data.remaining_additional_credits +
-              response.data.remaining_free_credits)
-        );
+        setUsedCredits(response.data.used_credits);
         setTotalCredits(response.data.used_credits + response.data.remaining_credits);
       })
       .catch((error) => {
