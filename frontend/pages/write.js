@@ -125,7 +125,7 @@ export default function Write() {
               className={`${styles.button} ${styles.cancelButton}`}
               onClick={handleCancel}
             >
-              수정 취소
+              {isEditMode ? "수정 취소" : "작성 취소"}
             </button>
             <button type="submit" className={styles.button}>
               {isEditMode ? "수정 완료" : "글 등록"}
