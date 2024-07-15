@@ -236,25 +236,34 @@ export default function PostDetail() {
             );
           })}
           {user && !editingComment && (
-            <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
-              <textarea
-                name="content"
-                value={newComment.content}
-                onChange={handleCommentChange}
-                placeholder="댓글을 입력하세요."
-                required
-              ></textarea>
-              <label style={{ width: "15%" }}>
-                <input
-                  type="checkbox"
-                  name="is_public"
-                  checked={newComment.is_public}
-                  onChange={handleCommentChange}
-                />{" "}
-                전체 공개
-              </label>
-              <button className={styles.submit} type="submit">등록</button>
-            </form>
+            <div style={{ borderTop: "solid #ccc", marginTop: "50px", padding: "50px 0" }}>
+              <form
+                onSubmit={handleCommentSubmit}
+                className={styles.commentForm}
+              >
+                <label style={{ width: "15%" }}>
+                  <input
+                    type="checkbox"
+                    name="is_public"
+                    checked={newComment.is_public}
+                    onChange={handleCommentChange}
+                  />{" "}
+                  전체 공개
+                </label>
+                <div className={styles.commentline}>
+                  <textarea
+                    name="content"
+                    value={newComment.content}
+                    onChange={handleCommentChange}
+                    placeholder="댓글을 입력하세요."
+                    required
+                  ></textarea>
+                  <button className={styles.submit} type="submit">
+                    등록
+                  </button>
+                </div>
+              </form>
+            </div>
           )}
         </div>
       </div>
