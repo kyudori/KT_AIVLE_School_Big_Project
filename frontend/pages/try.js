@@ -116,7 +116,11 @@ export default function TryVoice() {
       setLoading(false); // 로딩 종료
     } catch (error) {
       console.error("Error uploading file", error);
-      alert("Error uploading file");
+      if (error.response && error.response.status === 403 && error.response.data.error === 'You have reached the maximum number of uploads for today') {
+        alert("오늘 체험하기 횟수 초과");
+      } else {
+        alert("Error uploading file");
+      }
       setLoading(false); // 로딩 종료
     }
   };
@@ -277,7 +281,7 @@ export default function TryVoice() {
               </div>
               <h2>음성파일을 업로드한 뒤, Start Detection 버튼을 눌러주세요</h2>
               <p style={{ color: "#666" }}>
-                10MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)
+                 200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)
               </p>
               <button type="submit">▶ Start Detection</button>
             </form>
