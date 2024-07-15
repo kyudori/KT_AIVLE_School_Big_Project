@@ -182,10 +182,10 @@ export default function Documentation() {
                   <p>JSON</p>
                   <span
                     onClick={() =>
-                      handleCopyClick(`Authorization: Bearer YOUR_API_KEY`)
+                      handleCopyClick(`Authorization: Bearer YOUR_API_KEY`, 'auth')
                     }
                   >
-                    {copyStatus === "success" ? (
+                    {copyStatus.auth === "success" ? (
                       <span>✔ 복사되었습니다!</span>
                     ) : (
                       <span>📋Copy</span>
@@ -217,10 +217,10 @@ export default function Documentation() {
                     <span
                       onClick={() =>
                         handleCopyClick(`Key: Authorization
-Value: Bearer YOUR_API_KEY`)
+Value: Bearer YOUR_API_KEY`, 'header')
                       }
                     >
-                      {copyStatus === "success" ? (
+                      {copyStatus.header === "success" ? (
                         <span>✔ 복사되었습니다!</span>
                       ) : (
                         <span>📋Copy</span>
@@ -239,10 +239,10 @@ Value: Bearer YOUR_API_KEY`)
                     <span
                       onClick={() =>
                         handleCopyClick(`Key: file
-Value: YOUR_AUDIO_FILE.wav`)
+Value: YOUR_AUDIO_FILE.wav`, 'body')
                       }
                     >
-                      {copyStatus === "success" ? (
+                      {copyStatus.body === "success" ? (
                         <span>✔ 복사되었습니다!</span>
                       ) : (
                         <span>📋Copy</span>
@@ -259,10 +259,10 @@ Value: YOUR_AUDIO_FILE.wav`)
                       onClick={() =>
                         handleCopyClick(`curl -X POST http://voice-verity.com/api/voice-verity/ 
 -H "Authorization: Bearer YOUR_API_KEY_HERE" 
--F "file=@/path/to/your_audio_file.wav"`)
+-F "file=@/path/to/your_audio_file.wav"`, 'requestExample')
                       }
                     >
-                      {copyStatus === "success" ? (
+                      {copyStatus.requestExample === "success" ? (
                         <span>✔ 복사되었습니다!</span>
                       ) : (
                         <span>📋Copy</span>
@@ -296,10 +296,10 @@ Value: YOUR_AUDIO_FILE.wav`)
   "fake_cnt": 6,
   "real_cnt": 2,
   "analysis_result": "Fake"
-}`)
+}`, 'response')
                       }
                     >
-                      {copyStatus === "success" ? (
+                      {copyStatus.response === "success" ? (
                         <span>✔ 복사되었습니다!</span>
                       ) : (
                         <span>📋Copy</span>
@@ -341,10 +341,10 @@ Value: YOUR_AUDIO_FILE.wav`)
     <span
       onClick={() =>
         handleCopyClick(`Key: Authorization
-Value: Bearer YOUR_API_KEY`)
+Value: Bearer YOUR_API_KEY`, 'youtubeHeader')
       }
     >
-      {copyStatus === "success" ? (
+      {copyStatus.youtubeHeader === "success" ? (
         <span>✔ 복사되었습니다!</span>
       ) : (
         <span>📋Copy</span>
@@ -362,10 +362,10 @@ Value: Bearer YOUR_API_KEY`)
     <p>Body</p>
     <span
       onClick={() =>
-        handleCopyClick(`youtube_url: https://youtu.be/yHxXWIHOr6A`)
+        handleCopyClick(`youtube_url: https://youtu.be/yHxXWIHOr6A`, 'youtubeBody')
       }
     >
-      {copyStatus === "success" ? (
+      {copyStatus.youtubeBody === "success" ? (
         <span>✔ 복사되었습니다!</span>
       ) : (
         <span>📋Copy</span>
@@ -382,10 +382,10 @@ Value: Bearer YOUR_API_KEY`)
       onClick={() =>
         handleCopyClick(`curl -X POST http://voice-verity.com/api/youtube-verity/ 
 -H "Authorization: Bearer YOUR_API_KEY_HERE" 
--F "youtube_url=https://youtu.be/yHxXWIHOr6A"`)
+-F "youtube_url=https://youtu.be/yHxXWIHOr6A"`, 'youtubeExample')
       }
     >
-      {copyStatus === "success" ? (
+      {copyStatus.youtubeExample === "success" ? (
         <span>✔ 복사되었습니다!</span>
       ) : (
         <span>📋Copy</span>
@@ -419,10 +419,10 @@ Value: Bearer YOUR_API_KEY`)
   "fake_cnt": 6,
   "real_cnt": 2,
   "analysis_result": "Fake"
-}`)
+}`, 'youtubeResponse')
       }
     >
-      {copyStatus === "success" ? (
+      {copyStatus.youtubeResponse === "success" ? (
         <span>✔ 복사되었습니다!</span>
       ) : (
         <span>📋Copy</span>
@@ -465,10 +465,10 @@ Value: Bearer YOUR_API_KEY`)
                       handleCopyClick(`{
   "status": "OK",
   "detail": "Server is healthy"
-}`)
+}`, 'status')
                     }
                   >
-                    {copyStatus === "success" ? (
+                    {copyStatus.status === "success" ? (
                       <span>✔ 복사되었습니다!</span>
                     ) : (
                       <span>📋Copy</span>
