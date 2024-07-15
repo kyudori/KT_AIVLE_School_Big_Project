@@ -165,7 +165,6 @@ const MyPlan = () => {
         ) : (
           <>
             <div style={{ textAlign: "-webkit-center" }}>
-              <div className={styles.planCard}>
                 <div style={{ height: "30px" }}></div>
                 <div className={styles.cardcontent}>
                   <p className={styles.noPlan}>
@@ -179,7 +178,6 @@ const MyPlan = () => {
                     구독하러 가기
                   </button>
                 </div>
-              </div>
             </div>
           </>
         )}

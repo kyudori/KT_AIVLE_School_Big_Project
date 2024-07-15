@@ -56,7 +56,11 @@ const PlanCard = ({ plan }) => {
         return;
       }
 
-      if (plan.name !== "Pay As You Go" && currentPlan && planId <= currentPlan.id) {
+      if (
+        plan.name !== "Pay As You Go" &&
+        currentPlan &&
+        planId <= currentPlan.id
+      ) {
         alert("현재 구독 중인 플랜보다 상위 플랜을 선택해야 합니다.");
         return;
       }
@@ -83,7 +87,12 @@ const PlanCard = ({ plan }) => {
   return (
     <div className={styles.planCard}>
       <div style={{ height: "100px", marginTop: "50px" }}>
-        <div className={styles.circle} />
+        <div style={{backgroundColor:`#${plan.color}`}} className={styles.circle}>
+          <div
+            className={styles.img}
+            style={{ backgroundImage: `url(${plan.icon})` }}
+          />
+        </div>
       </div>
       <h2>{plan.name}</h2>
       {plan.options ? (

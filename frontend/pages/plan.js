@@ -15,11 +15,15 @@ const plans = [
       { id: 1, price: 9.99, credits: 10 },
       { id: 2, price: 45.99, credits: 65 },
     ],
+    color: 'B29191',
+    icon: "/images/p.png",
     description1: "구독이 필요하지 않습니다. 사용할 만큼만 비용을 지불하세요.",
     description2: "오래 사용할 수 있습니다. 90일 동안 자유롭게 사용하세요.",
   },
   {
     id: 3,
+    color: 'cdcdcd',
+    icon: "/images/b.png",
     name: "Basic",
     price: 9,
     dailyCalls: 10,
@@ -28,6 +32,8 @@ const plans = [
   },
   {
     id: 4,
+    color: 'fffedc',
+    icon:"/images/a.png",
     name: "Associate",
     price: 29,
     dailyCalls: 50,
@@ -36,6 +42,8 @@ const plans = [
   },
   {
     id: 5,
+    color: '78dcff',
+    icon:"/images/p.png",
     name: "Professional",
     price: 79,
     dailyCalls: 200,
