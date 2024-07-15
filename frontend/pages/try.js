@@ -472,7 +472,7 @@ export default function TryVoice() {
               <p style={{ color: "#666" }}>
                 {inputType === "file"
                   ? "200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .m4a)"
-                  : "영상의 길이가 길수록 분석 시간이 오래 소요됩니다!"}
+                  : "BGM이 섞인 영상은 분류가 어렵습니다!"}
               </p>
               <button type="submit" className={styles.startDetectionButton}>▶ Start Detection</button>
             </form>

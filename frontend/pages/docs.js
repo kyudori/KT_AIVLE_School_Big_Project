@@ -192,7 +192,7 @@ export default function Documentation() {
               <h2>엔드 포인트</h2>
               <hr />
               <div style={{ marginBottom: "50px" }}>
-                <h3>1. 분석(Predict)</h3>
+                <h3>1. 음성 파일 분석</h3>
                 <ul>
                   <li>URL: http://voice-verity.com/api/voice-verity/</li>
                   <li>Method: POST</li>
@@ -227,8 +227,7 @@ Value: Bearer YOUR_API_KEY`)
                     <p>Body</p>
                     <span
                       onClick={() =>
-                        handleCopyClick(`multipart/form-data
-Key: file
+                        handleCopyClick(`Key: file
 Value: YOUR_AUDIO_FILE.wav`)
                       }
                     >
@@ -302,7 +301,114 @@ Value: YOUR_AUDIO_FILE.wav`)
                 </div>
               </div>
               <div style={{ height: "20px" }} />
-              <h3>2. 상태(Status)</h3>
+              <h3>2. YouTube 영상 분석</h3>
+<ul>
+  <li>URL: http://voice-verity.com/api/youtube-verity/</li>
+  <li>Method: POST</li>
+  <li>
+    설명: 업로드한 YouTube Link를 기반으로 AI 모델로부터 Deep Fake 여부를 판단합니다.
+  </li>
+  <li>영상에 대한 분석은 1초 단위로 제공됩니다.</li>
+  <li>BGM, MR등이 포함된 영상은 정확도가 떨어질 수 있습니다.</li>
+</ul>
+<h3>Request Header</h3>
+<div className={styles.codeEX}>
+  <div className={styles.codetop}>
+    <p>Header</p>
+    <span
+      onClick={() =>
+        handleCopyClick(`Key: Authorization
+Value: Bearer YOUR_API_KEY`)
+      }
+    >
+      📋
+    </span>
+  </div>
+  <pre>Key: Authorization{`\n`}Value: Bearer YOUR_API_KEY</pre>
+</div>
+<h3>Request Body</h3>
+<ul>
+  <li>application/json</li>
+</ul>
+<div className={styles.codeEX}>
+  <div className={styles.codetop}>
+    <p>Body</p>
+    <span
+      onClick={() =>
+        handleCopyClick(`youtube_url: https://youtu.be/yHxXWIHOr6A`)
+      }
+    >
+      📋
+    </span>
+  </div>
+  <pre>youtube_url: https://youtu.be/yHxXWIHOr6A</pre>
+</div>
+<h3>Request Example</h3>
+<div className={styles.codeEX}>
+  <div className={styles.codetop}>
+    <p>sh</p>
+    <span
+      onClick={() =>
+        handleCopyClick(`curl -X POST http://voice-verity.com/api/youtube-verity/ 
+-H "Authorization: Bearer YOUR_API_KEY_HERE" 
+-F "youtube_url=https://youtu.be/yHxXWIHOr6A"`)
+      }
+    >
+      📋
+    </span>
+  </div>
+  <pre>{`curl -X POST http://voice-verity.com/api/youtube-verity/ 
+-H "Authorization: Bearer YOUR_API_KEY_HERE" 
+-F "youtube_url=https://youtu.be/yHxXWIHOr6A"`}</pre>
+</div>
+<h3>Response</h3>
+<ul>
+  <li>Content-Type: application/json</li>
+</ul>
+<div className={styles.codeEX}>
+  <div className={styles.codetop}>
+    <p>JSON</p>
+    <span
+      onClick={() =>
+        handleCopyClick(`{
+  "predictions": [
+    1.0,
+    0.12,
+    0.23,
+    0.984,
+    0.988,
+    0.993,
+    0.997,
+    0.817
+  ],
+  "fake_cnt": 6,
+  "real_cnt": 2,
+  "analysis_result": "Fake"
+}`)
+      }
+    >
+      📋
+    </span>
+  </div>
+  <pre>{`{
+  "predictions": [
+    1.0,
+    0.12,
+    0.23,
+    0.984,
+    0.988,
+    0.993,
+    0.997,
+    0.817
+  ],
+  "fake_cnt": 6,
+  "real_cnt": 2,
+  "analysis_result": "Fake"
+}`}</pre>
+</div>
+              <div style={{ height: "20px" }} />
+
+              <h3>3. 서버 상태 체크(Status)</h3>
               <ul>
                 <li>URL: http://voice-verity.com/api/check-api-status/</li>
                 <li>Method: GET</li>
