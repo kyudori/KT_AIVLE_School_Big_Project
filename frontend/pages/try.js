@@ -439,23 +439,26 @@ export default function TryVoice() {
                   />
                 </div>
               ) : (
-                <div className={styles.form}>
-                  <label className={styles.youtubeLabel}>YouTube URL</label>
-                  <input
+                <>
+                  <div className={styles.youtubeContainer}>
+                    <img src="/images/youtube.png" alt="YouTube Logo" className={styles.youtubeLogo} />
+                    <label className={styles.youtubeLabel}>YouTube URL</label>
+                    <button
+                    type="button"
+                    className={styles.clearButton}
+                    onClick={() => setUrl("")}
+                  >
+                    Clear
+                  </button>
+                  <input 
                     type="text"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     placeholder="Put here your URL."
                     className={styles.input}
                   />
-                  <button
-                    type="button"
-                    className={styles.clearButton}
-                    onClick={() => setUrl("")}
-                  >
-                    clear
-                  </button>
-                </div>
+                  </div>
+                </>
               )}
 
               {inputType === "file" && (
@@ -480,7 +483,6 @@ export default function TryVoice() {
               <button type="submit" className={styles.startDetectionButton}>▶ Start Detection</button>
             </form>
           </div>
-
           {loading && <p>분석중...</p>}
           {!loading && Array.isArray(predictions) && predictions.length > 0 && (
             <div className={styles.resultContext}>
