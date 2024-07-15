@@ -100,10 +100,20 @@ class AudioFile(models.Model):
     def str(self):
         return self.file_name
 
+class YouTubeAnalysis(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    url = models.URLField()
+    analysis_result = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.url} - {self.analysis_result}"
+
 class UploadHistory(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     upload_date = models.DateField()
     upload_count = models.IntegerField(default=0)
+    youtube_upload_count = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ('user', 'upload_date')
@@ -140,7 +150,7 @@ class ApiCallHistory(models.Model):
     api_key = models.CharField(max_length=32)
     endpoint = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
-    success = models.BooleanField(default=True)
+    success = models.BooleanField(default=True)  # API 호출 성공 여부
     response_time = models.FloatField(null=True, blank=True)  # 응답 시간 (밀리초 단위)
     
     def __str__(self):

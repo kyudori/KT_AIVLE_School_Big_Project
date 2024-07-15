@@ -1,6 +1,7 @@
 # views.py (myapp/views.py)
 
 import os
+import re
 import random
 import string
 import json
@@ -16,7 +17,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory, Payment, Post, Comment, ApiCallHistory
+from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory, Payment, Post, Comment, ApiCallHistory, YouTubeAnalysis
 from .serializers import PostSerializer, CommentSerializer
 from django.db import models 
 import requests
@@ -387,6 +388,7 @@ FLASK_URL = 'http://220.149.235.232:8000'
 ALLOWED_EXTENSIONS = ['.wav', '.mp3', '.m4a']
 MAX_FILE_SIZE_MB = 200
 MAX_UPLOADS_PER_DAY = 1000
+MAX_YOUTUBE_PER_DAY = 1000
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
 @api_view(['POST'])
@@ -453,6 +455,55 @@ def upload_audio(request):
         'real_cnt': real_cnt,
         'fake_cnt': fake_cnt
     }, status=status.HTTP_201_CREATED)
+    
+# Define YouTube URL pattern
+youtube_url_pattern = re.compile(
+    r'^(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def upload_youtube(request):
+    url = request.data.get('url')
+
+    if not url:
+        return Response({'error': 'No URL provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # 유효한 유튜브 URL인지 확인
+    if not re.match(youtube_url_pattern, url):
+        return Response({'error': 'Invalid YouTube link.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    today = timezone.now().date()
+    upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
+
+    if upload_history.youtube_upload_count >= MAX_YOUTUBE_PER_DAY:
+        return Response({'error': 'You have reached the maximum number of YouTube uploads for today'}, status=status.HTTP_403_BAD_REQUEST)
+
+    # AI 서버에 YouTube URL 전송
+    try:
+        response = requests.post(f"{FLASK_URL}/predict", json={'file_path': url, 'data_type': 'youtube', 'key_verity': True})
+        response.raise_for_status()
+        ai_result = response.json()
+
+        # 분석 결과에서 필요한 데이터를 추출
+        analysis_result = ai_result.get('analysis_result', 'Unknown')
+
+        # DB에 저장
+        YouTubeAnalysis.objects.create(
+            user=request.user,
+            url=url,
+            analysis_result=analysis_result
+        )
+
+        # 업로드 기록 업데이트 (성공한 경우에만)
+        upload_history.youtube_upload_count += 1
+        upload_history.save()
+
+        return Response({
+            'analysis_result': analysis_result
+        }, status=status.HTTP_201_CREATED)
+
+    except requests.RequestException as e:
+        return Response({'error': 'Error processing YouTube link', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 def generate_api_key():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=32))

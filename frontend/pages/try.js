@@ -17,6 +17,8 @@ const MAX_FILE_SIZE_MB = 200;
 export default function TryVoice() {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
+  const [url, setUrl] = useState("");
+  const [inputType, setInputType] = useState("file"); // 추가된 state
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const [predictions, setPredictions] = useState([]);
@@ -72,56 +74,89 @@ export default function TryVoice() {
       return;
     }
 
-    if (!file) {
-      alert("음성 파일을 업로드가 필요합니다.");
-      return;
-    }
-
-    const previousFileName = localStorage.getItem("previousFileName");
-
-    if (previousFileName === fileName) {
-      const confirmRetry = confirm(
-        "체험하기 서비스는 하루 5회만 이용 가능한 서비스입니다.\n동일한 파일로 분석을 다시 요청하시겠습니까?"
-      );
-      if (!confirmRetry) {
+    if (inputType === "file") {
+      if (!file) {
+        alert("음성 파일을 업로드가 필요합니다.");
         return;
       }
-    }
 
-    localStorage.setItem("previousFileName", fileName);
+      const previousFileName = localStorage.getItem("previousFileName");
 
-    setLoading(true); // 로딩 시작
-    const formData = new FormData();
-    formData.append("file", file);
-    try {
-      const response = await axios.post(
-        `${BACKEND_URL}/api/upload-audio/`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Token ${token}`,
-          },
+      if (previousFileName === fileName) {
+        const confirmRetry = confirm(
+          "체험하기 서비스는 하루 5회만 이용 가능한 서비스입니다.\n동일한 파일로 분석을 다시 요청하시겠습니까?"
+        );
+        if (!confirmRetry) {
+          return;
         }
-      );
-      const analysisResult = response.data.analysis_result;
-      const predictions = response.data.predictions;
-      const fakeCount = response.data.fake_cnt;
-      const realCount = response.data.real_cnt;
-
-      setResult(analysisResult);
-      setPredictions(predictions);
-      setFakeCount(fakeCount);
-      setRealCount(realCount);
-      setLoading(false); // 로딩 종료
-    } catch (error) {
-      console.error("Error uploading file", error);
-      if (error.response && error.response.status === 403 && error.response.data.error === 'You have reached the maximum number of uploads for today') {
-        alert("오늘 체험하기 횟수 초과");
-      } else {
-        alert("Error uploading file");
       }
-      setLoading(false); // 로딩 종료
+
+      localStorage.setItem("previousFileName", fileName);
+
+      setLoading(true); // 로딩 시작
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const response = await axios.post(
+          `${BACKEND_URL}/api/upload-audio/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        const analysisResult = response.data.analysis_result;
+        const predictions = response.data.predictions;
+        const fakeCount = response.data.fake_cnt;
+        const realCount = response.data.real_cnt;
+
+        setResult(analysisResult);
+        setPredictions(predictions);
+        setFakeCount(fakeCount);
+        setRealCount(realCount);
+        setLoading(false); // 로딩 종료
+      } catch (error) {
+        console.error("Error uploading file", error);
+        if (error.response && error.response.status === 403 && error.response.data.error === 'You have reached the maximum number of uploads for today') {
+          alert("오늘 체험하기 횟수 초과");
+        } else {
+          alert("Error uploading file");
+        }
+        setLoading(false); // 로딩 종료
+      }
+    } else {
+      if (!url) {
+        alert("YouTube URL을 입력해주세요.");
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const response = await axios.post(
+          `${BACKEND_URL}/api/upload-youtube/`,
+          { url },
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+
+        const { analysis_result, predictions, fake_cnt, real_cnt } = response.data;
+
+        setResult(analysis_result);
+        setPredictions(predictions);
+        setFakeCount(fake_cnt);
+        setRealCount(real_cnt);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error uploading YouTube URL", error);
+        alert("Error uploading YouTube URL");
+        setLoading(false);
+      }
     }
   };
 
@@ -258,30 +293,68 @@ export default function TryVoice() {
           <h2>Fake Voice를 탐지하는 순간을 체험해보세요.</h2>
           <div style={{ textAlign: "-webkit-center" }}>
             <form onSubmit={handleSubmit}>
-              <div className={styles.form}>
-                {fileName ? (
-                  <span
-                    className={styles.fileName}
-                    onClick={() => document.getElementById("upload").click()}
-                  >
-                    {fileName}
-                  </span>
-                ) : (
-                  <label htmlFor="upload" className={styles.uploadLabel}>
-                    <span className={styles.uploadIcon}></span>
-                  </label>
-                )}
-                <input
-                  id="upload"
-                  type="file"
-                  onClick={handleUploadClick}
-                  onChange={handleFileChange}
-                  className={styles.uploadHidden}
-                />
+              <div className={styles.radioButtons}>
+                <label>
+                  <input
+                    type="radio"
+                    value="file"
+                    checked={inputType === "file"}
+                    onChange={() => setInputType("file")}
+                  />
+                  File
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    value="url"
+                    checked={inputType === "url"}
+                    onChange={() => setInputType("url")}
+                  />
+                  URL
+                </label>
               </div>
-              <h2>음성파일을 업로드한 뒤, Start Detection 버튼을 눌러주세요</h2>
+
+              {inputType === "file" ? (
+                <div className={styles.form}>
+                  {fileName ? (
+                    <span
+                      className={styles.fileName}
+                      onClick={() => document.getElementById("upload").click()}
+                    >
+                      {fileName}
+                    </span>
+                  ) : (
+                    <label htmlFor="upload" className={styles.uploadLabel}>
+                      <span className={styles.uploadIcon}></span>
+                    </label>
+                  )}
+                  <input
+                    id="upload"
+                    type="file"
+                    onClick={handleUploadClick}
+                    onChange={handleFileChange}
+                    className={styles.uploadHidden}
+                  />
+                </div>
+              ) : (
+                <div className={styles.form}>
+                  <label className={styles.youtubeLabel}>YouTube URL</label>
+                  <input
+                    type="text"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="Put here your URL."
+                    className={styles.input}
+                  />
+                  <button type="button" className={styles.clearButton} onClick={() => setUrl('')}>
+                    clear
+                  </button>
+                </div>
+              )}
+
+              <h2>{inputType === "file" ? "음성파일을 업로드한 뒤," : "URL을 입력한 뒤,"} Start Detection 버튼을 눌러주세요</h2>
               <p style={{ color: "#666" }}>
-                 200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)
+                200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .mp4)
               </p>
               <button type="submit">▶ Start Detection</button>
             </form>

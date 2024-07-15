@@ -12,55 +12,54 @@
   top: 0;
 }
 
-
 .mainContent {
-text-align: center;
-min-height: 100vh;
-min-width: 100vh;
-margin: 0 200px;
+  text-align: center;
+  min-height: 100vh;
+  min-width: 100vh;
+  margin: 0 200px;
 }
 
 .mainContent h1 {
-font-size: 48px;
-font-weight: normal;
+  font-size: 48px;
+  font-weight: normal;
 }
 
 .mainContent h2 {
-font-weight: normal;
+  font-weight: normal;
 }
 
 .mainContent button {
-background: inherit ;
-border: none; 
-box-shadow: none; 
-border-radius: 0; 
-padding: 0; 
-overflow: visible; 
-cursor: pointer;
-color: white;
-font-family: fontA;
-font-size: large;
+  background: inherit;
+  border: none; 
+  box-shadow: none; 
+  border-radius: 0; 
+  padding: 0; 
+  overflow: visible; 
+  cursor: pointer;
+  color: white;
+  font-family: fontA;
+  font-size: large;
 }
 
 .playcontent {
-display: flex;
-margin: 0px 200px;
-flex-direction: column;
-border-style: dashed;
-border-radius: 15px;
+  display: flex;
+  margin: 0px 200px;
+  flex-direction: column;
+  border-style: dashed;
+  border-radius: 15px;
 }
 
 .pbox {
-display: flex;
-justify-content: space-around;
-margin: 30px;
-align-items: center;
+  display: flex;
+  justify-content: space-around;
+  margin: 30px;
+  align-items: center;
 }
 
 .fileupload {
-text-align: center;
-height: 500px;
-background-image: linear-gradient(rgba(255, 255, 255, 0) 0% , black 20% 60%, rgba(255, 255, 255, 0) 100%);
+  text-align: center;
+  height: 500px;
+  background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, black 20% 60%, rgba(255, 255, 255, 0) 100%);
 }
 
 .fileName {
@@ -74,72 +73,101 @@ background-image: linear-gradient(rgba(255, 255, 255, 0) 0% , black 20% 60%, rgb
 }
 
 .mainContent .form {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: space-evenly;
-text-align: center;
-height: 300px;
-width: 700px;
-background: rgba(255, 255, 255, 0.6);
-border-radius: 31px;
-border: 1px dashed #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  text-align: center;
+  height: 300px;
+  width: 700px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 31px;
+  border: 1px dashed #000;
 }
 
 .mainContent button {
-color: #fff;
-background-color: rgb(155, 144, 210);
-border-radius: 60px;
-width: 300px;
-height: 50px;
-margin: 20px 0 100px 0;
+  color: #fff;
+  background-color: rgb(155, 144, 210);
+  border-radius: 60px;
+  width: 300px;
+  height: 50px;
+  margin: 20px 0 100px 0;
 }
 
 .mainContent input[type="file"] {
-position: absolute;
-width: 1px;
-height: 1px;
-padding: 0;
-margin: -1px;
-overflow: hidden;
-clip: rect(0, 0, 0, 0);
-border: 0;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
 .mainContent label {
-align-items: center;
-width: 80px;
-height: 80px;
-background-image: url(./images/upload.png);
-background-position: top center;
-background-size: cover;
-cursor: pointer;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background-image: url(./images/upload.png);
+  background-position: top center;
+  background-size: cover;
+  cursor: pointer;
 }
 
 .mainContent .uploadname {
-display: inline-block;
-padding: .5em .75em;  /* label의 패딩값과 일치 */
-font-size: inherit;
-font-family: inherit;
-line-height: normal;
-vertical-align: middle;
-background-color: #f5f5f5;
-border: 1px solid #ebebeb;
-border-bottom-color: #e2e2e2;
-border-radius: .25em;
--webkit-appearance: none; /* 네이티브 외형 감추기 */
--moz-appearance: none;
-appearance: none;
+  display: inline-block;
+  padding: .5em .75em;  /* label의 패딩값과 일치 */
+  font-size: inherit;
+  font-family: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #f5f5f5;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.radioButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.youtubeLabel {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.input {
+  width: 80%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.clearButton {
+  padding: 5px 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #f5f5f5;
 }
 
 .resultContext {
-margin: 50px;
+  margin: 50px;
 }
 
-.chartContainer p{
+.chartContainer p {
   text-align: left;
 }
-
 
 .chartContainer {
   display: flex;
@@ -154,10 +182,10 @@ margin: 50px;
 }
 
 .chart {
-width: 10%; /* 차트를 좌우로 작게 조정 */
+  width: 10%; /* 차트를 좌우로 작게 조정 */
 }
 
-.chartContainer div{
+.chartContainer div {
   width: 300px;
 }
 
@@ -175,18 +203,18 @@ width: 10%; /* 차트를 좌우로 작게 조정 */
 }
 
 .previewContext hr {
-align-self: center;
-margin: 0px;
-height: 15px;
+  align-self: center;
+  margin: 0px;
+  height: 15px;
 }
 
 .previewContext li {
-margin: 10px;
+  margin: 10px;
 }
 
 .fontsize {
-font-size: 40px;
-font-weight: normal;
+  font-size: 40px;
+  font-weight: normal;
 }
 
 .plan {
