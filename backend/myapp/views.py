@@ -854,6 +854,81 @@ s3_client = boto3.client(
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+def youtube_verity(request):
+    api_key = request.headers.get('Authorization')
+    if not api_key:
+        return Response({'error': 'Missing API key'}, status=401)
+
+    api_key = api_key.replace('Bearer ', '')
+    try:
+        key = APIKey.objects.get(key=api_key)
+        user = key.user
+
+        # AI 서버 호출
+        youtube_url = request.data.get('youtube_url')
+        if not youtube_url:
+            return Response({'error': 'No YouTube URL provided'}, status=402)
+
+        # 유튜브 링크 패턴 확인
+        if not re.match(YOUTUBE_URL_PATTERN, youtube_url):
+            return Response({'error': 'Invalid YouTube link'}, status=400)
+
+        try:
+            start_time = timezone.now()
+            response = requests.post(f"{FLASK_URL}/predict", json={'file_path': youtube_url, 'data_type': 'youtube', 'key_verity': True})
+            response.raise_for_status()
+            ai_result = response.json()
+            end_time = timezone.now()
+            response_time = (end_time - start_time).total_seconds() * 1000  # milliseconds
+
+            # API 호출 기록 저장 (성공)
+            ApiCallHistory.objects.create(user=user, api_key = key, endpoint='youtube_verity', success=True, response_time=response_time)
+
+            # 크레딧 차감
+            today = timezone.now().date()
+            # 유효한 일일 크레딧 구독
+            daily_subscription = UserSubscription.objects.filter(
+                user=user, 
+                plan__is_recurring=True, 
+                is_active=True
+            ).first()
+            
+            # 유효한 추가 크레딧 구독
+            additional_subscription = UserSubscription.objects.filter(
+                user=user, 
+                plan__is_recurring=False, 
+                end_date__gt=today, 
+                is_active=True
+            ).first()
+
+            # free_credits 차감
+            if user.free_credits > 0:
+                user.free_credits -= 1
+                user.save()
+            elif daily_subscription and daily_subscription.daily_credits > 0:
+                daily_subscription.daily_credits -= 1
+                daily_subscription.save()
+            elif additional_subscription and additional_subscription.total_credits > 0:
+                additional_subscription.total_credits -= 1
+                additional_subscription.save()
+            else:
+                return Response({'error': 'Insufficient credits'}, status=403)
+
+            key.last_used_at = timezone.now()
+            key.save()
+
+            return Response(ai_result)
+        except requests.RequestException as e:
+            # API 호출 기록 저장 (실패)
+            ApiCallHistory.objects.create(user=user, endpoint='youtube_verity', success=False)
+            return Response({'error': 'AI server OFF', 'details': str(e)}, status=503)
+    except APIKey.DoesNotExist:
+        return Response({'error': 'Invalid API key'}, status=401)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def voice_verity(request):
     api_key = request.headers.get('Authorization')
     if not api_key:

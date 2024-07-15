@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import signup, login, find_id, reset_password, user_info, change_password, current_plan, subscription_plans, upload_audio, upload_youtube, get_api_key, generate_api_key, regenerate_api_key, delete_api_key, toggle_api_status, get_credits, user_files, delete_account, subscription_plans, create_payment, approve_payment, cancel_payment, fail_payment, posts_list_create, post_detail, create_comment, comment_detail, user_posts, user_comments, check_api_status, voice_verity, call_history, call_summary
+from .views import signup, login, find_id, reset_password, user_info, change_password, current_plan, subscription_plans, upload_audio, upload_youtube, get_api_key, generate_api_key, regenerate_api_key, delete_api_key, toggle_api_status, get_credits, user_files, delete_account, subscription_plans, create_payment, approve_payment, cancel_payment, fail_payment, posts_list_create, post_detail, create_comment, comment_detail, user_posts, user_comments, check_api_status, voice_verity, youtube_verity, call_history, call_summary
 
 
 urlpatterns = [
@@ -37,6 +37,7 @@ urlpatterns = [
     path('user/comments/', user_comments, name='user_comments'),
     path('check-api-status/', check_api_status, name='check-api-status'),
     path('voice-verity/', voice_verity, name='voice-verity'),
+    path('youtube-verity/', youtube_verity, name='youtube-verity'),
     path('call-history/', call_history, name='call-history'),
     path('call-summary/', call_summary, name='call-summary'),
 ]

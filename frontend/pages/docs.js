@@ -345,11 +345,15 @@ Value: YOUR_AUDIO_FILE.wav`)
                 <tbody>
                   <tr>
                     <td className={styles.td1}>400 Bad Request</td>
-                    <td>| 음성 파일 또는 API 키가 누락되었습니다.</td>
+                    <td>| 음성 파일/YOUTUBE URL/API 키 중 하나가 누락되었습니다.</td>
                   </tr>
                   <tr>
                     <td className={styles.td1}>401 Unauthorized</td>
                     <td>| 인증 실패입니다. 올바른 API 키를 제공하십시오.</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.td1}>402 No YOUTUBE URL</td>
+                    <td>| YOUTUBE URL이 올바르지 않습니다.</td>
                   </tr>
                   <tr>
                     <td className={styles.td1}>403 Insufficient Credits</td>
