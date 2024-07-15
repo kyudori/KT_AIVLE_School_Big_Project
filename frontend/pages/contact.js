@@ -127,7 +127,7 @@ export default function Contact() {
                 <td>
                   {!post.is_public && <span>(비공개) </span>}
                   {post.title}
-                  {post.comments_count > 0 && <span> ({post.comments_count})</span>}
+                  {post.comments_count > 0 && <span style={{color:'#999'}}> [{post.comments_count}]</span>}
                 </td>
                 <td>{post.author_name}</td>
                 <td style={{ fontSize: '12px' }}>{new Date(post.created_at).toLocaleString()}</td>
@@ -149,7 +149,7 @@ export default function Contact() {
                   <td>
                     {!post.is_public && <span>(비공개) </span>}
                     {post.title}
-                    {post.comments_count > 0 && <span> ({post.comments_count})</span>}
+                    {post.comments_count > 0 && <span style={{color:'#999'}}> [{post.comments_count}]</span>}
                   </td>
                   <td>{post.author_name}</td>
                   <td style={{ fontSize: '12px' }}>{new Date(post.created_at).toLocaleString()}</td>

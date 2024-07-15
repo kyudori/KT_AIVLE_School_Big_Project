@@ -114,6 +114,7 @@
 .actions {
   display: flex;
   gap: 10px;
+  justify-content: flex-end;
 }
 
 .actions button {
@@ -132,7 +133,7 @@
 
 .commentForm {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   justify-content: space-between;
   align-items: stretch;
@@ -152,6 +153,12 @@
 
 .commentForm textarea:focus {
   outline: none;
+}
+
+.commentline {
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
 }
 
 .submit {

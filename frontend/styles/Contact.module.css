@@ -136,3 +136,16 @@
 .notice {
   background-color: #ddd;
 }
+
+.pagination button {
+  font-family: fontA;
+  border: none;
+  background: none;
+  margin: 10px;
+  color: #999;
+}
+
+.pagination button.active {
+  outline: none;
+  color: #000;
+}
