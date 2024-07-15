@@ -316,15 +316,15 @@ const ApiManagement = () => {
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
+      let successful = false;
       try {
-        const successful = document.execCommand("copy");
-        const msg = successful ? "API Key가 복사되었습니다." : "API Key 복사 실패.";
-        alert(msg);
+        successful = document.execCommand("copy");
       } catch (err) {
         console.error("Fallback: API Key 복사 오류", err);
-        alert("API Key 복사 오류가 발생했습니다.");
       }
       document.body.removeChild(textArea);
+      const msg = successful ? "API Key가 복사되었습니다." : "API Key 복사 실패.";
+      alert(msg);
     }
   };
 
