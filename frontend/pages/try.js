@@ -43,7 +43,7 @@ export default function TryVoice() {
         progressColor: "#9B90D2",
       });
 
-      waveSurferRef.current.on('finish', () => {
+      waveSurferRef.current.on("finish", () => {
         setIsPlaying(false);
         waveSurferRef.current.stop();
       });
@@ -94,13 +94,13 @@ export default function TryVoice() {
 
     setFileName(exampleFile);
     fetch(filePath)
-      .then(response => response.blob())
-      .then(blob => {
+      .then((response) => response.blob())
+      .then((blob) => {
         const newFile = new File([blob], exampleFile, { type: blob.type });
         setFile(newFile);
         setIsPlaying(false); // Reset the play/pause state
       })
-      .catch(error => console.error('Error fetching example file:', error));
+      .catch((error) => console.error("Error fetching example file:", error));
   };
 
   const handleFileRemove = () => {
@@ -170,7 +170,12 @@ export default function TryVoice() {
         setLoading(false);
       } catch (error) {
         console.error("Error uploading file", error);
-        if (error.response && error.response.status === 403 && error.response.data.error === 'You have reached the maximum number of uploads for today') {
+        if (
+          error.response &&
+          error.response.status === 403 &&
+          error.response.data.error ===
+            "You have reached the maximum number of uploads for today"
+        ) {
           alert("오늘 체험하기 횟수 초과");
         } else {
           alert("Error uploading file");
@@ -211,7 +216,8 @@ export default function TryVoice() {
           }
         );
 
-        const { analysis_result, predictions, fake_cnt, real_cnt } = response.data;
+        const { analysis_result, predictions, fake_cnt, real_cnt } =
+          response.data;
 
         setResult(analysis_result);
         setPredictions(predictions || []);
@@ -220,7 +226,11 @@ export default function TryVoice() {
         setLoading(false);
       } catch (error) {
         console.error("Error uploading YouTube URL", error);
-        if (error.response && error.response.status === 400 && error.response.data.error === 'Invalid YouTube URL') {
+        if (
+          error.response &&
+          error.response.status === 400 &&
+          error.response.data.error === "Invalid YouTube URL"
+        ) {
           alert("올바른 YouTube URL을 입력해주세요.");
         } else {
           alert("Error uploading YouTube URL");
@@ -322,14 +332,15 @@ export default function TryVoice() {
             afterDraw: function (chart) {
               const ctx = chart.ctx;
               const meta = chart.getDatasetMeta(0);
-              const fakePercentage = (fakeCount / (fakeCount + realCount)) * 100;
+              const fakePercentage =
+                (fakeCount / (fakeCount + realCount)) * 100;
               const fakeAngle = (fakePercentage / 100) * 2 * Math.PI;
 
               if (fakePercentage > 30) {
                 ctx.save();
                 ctx.beginPath();
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = '#FF0000';
+                ctx.strokeStyle = "#FF0000";
                 ctx.setLineDash([5, 5]);
 
                 const chartArea = chart.chartArea;
@@ -396,7 +407,10 @@ export default function TryVoice() {
                   {fileName ? (
                     <>
                       <div className={styles.fileNameContainer}>
-                        <span className={styles.fileName} onClick={handleFileNameClick}>
+                        <span
+                          className={styles.fileName}
+                          onClick={handleFileNameClick}
+                        >
                           {fileName}
                         </span>
                         <button
@@ -413,9 +427,18 @@ export default function TryVoice() {
                           className={styles.playPauseButton}
                           onClick={handlePlayPause}
                         >
-                          {isPlaying ? "||" : "▶"}
+                          {isPlaying ? (
+                            <p style={{ margin: "0", alignSelf: "center" }}>
+                              ||
+                            </p>
+                          ) : (
+                            " ▶ "
+                          )}
                         </button>
-                        <div ref={waveContainerRef} className={styles.waveform}></div>
+                        <div
+                          ref={waveContainerRef}
+                          className={styles.waveform}
+                        ></div>
                       </div>
                     </>
                   ) : (
@@ -435,32 +458,66 @@ export default function TryVoice() {
               ) : (
                 <>
                   <div className={styles.youtubeContainer}>
-                    <img src="/images/youtube.png" alt="YouTube Logo" className={styles.youtubeLogo} />
-                    <label className={styles.youtubeLabel}>YouTube URL</label>
-                    <button
-                    type="button"
-                    className={styles.clearButton}
-                    onClick={() => setUrl("")}
-                  >
-                    Clear
-                  </button>
-                  <input 
-                    type="text"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="Put here your URL."
-                    className={styles.input}
-                  />
+                    <div className={styles.youtubehead}>
+                      <div style={{display:"flex", alignItems: 'center'}}>
+                        <img
+                          src="/images/youtube.png"
+                          alt="YouTube Logo"
+                          className={styles.youtubeLogo}
+                        />
+                        <p className={styles.youtubeLabel}>
+                          YouTube URL
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className={styles.clearButton}
+                        onClick={() => setUrl("")}
+                      >
+                        clear
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                      placeholder="Put here your URL."
+                      className={styles.input}
+                    />
                   </div>
                 </>
               )}
 
               {inputType === "file" && (
                 <div className={styles.exampleFiles}>
-                  <button type="button" onClick={() => handleExampleClick('example(1).wav')} className={styles.exampleFile}>example(1).wav</button>
-                  <button type="button" onClick={() => handleExampleClick('example(2).wav')} className={styles.exampleFile}>example(2).wav</button>
-                  <button type="button" onClick={() => handleExampleClick('example(3).wav')} className={styles.exampleFile}>example(3).wav</button>
-                  <button type="button" onClick={() => handleExampleClick('example(4).wav')} className={styles.exampleFile}>example(4).wav</button>
+                  <button
+                    type="button"
+                    onClick={() => handleExampleClick("example(1).wav")}
+                    className={styles.exampleFile}
+                  >
+                    example(1).wav
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleExampleClick("example(2).wav")}
+                    className={styles.exampleFile}
+                  >
+                    example(2).wav
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleExampleClick("example(3).wav")}
+                    className={styles.exampleFile}
+                  >
+                    example(3).wav
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleExampleClick("example(4).wav")}
+                    className={styles.exampleFile}
+                  >
+                    example(4).wav
+                  </button>
                 </div>
               )}
 
@@ -474,7 +531,9 @@ export default function TryVoice() {
                   ? "200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .m4a)"
                   : "BGM이 섞인 영상은 분류가 어렵습니다!"}
               </p>
-              <button type="submit" className={styles.startDetectionButton}>▶ Start Detection</button>
+              <button type="submit" className={styles.startDetectionButton}>
+                ▶ Start Detection
+              </button>
             </form>
           </div>
           {loading && <p>분석중...</p>}
@@ -521,7 +580,12 @@ export default function TryVoice() {
           )}
           <div className={styles.plan}>
             <h2>우리의 더 나은 서비스를 원하시나요?</h2>
-            <button onClick={handleSubscriptionPlan} className={styles.planButton}>구독플랜 보기</button>
+            <button
+              onClick={handleSubscriptionPlan}
+              className={styles.planButton}
+            >
+              구독플랜 보기
+            </button>
           </div>
         </div>
       </div>
