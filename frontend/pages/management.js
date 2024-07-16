@@ -15,6 +15,7 @@ import {
 import { Doughnut, Line } from "react-chartjs-2";
 import styles from "../styles/Apimanagement.module.css";
 import Footer from "../components/Footer";
+import PasswordModal from "../components/PasswordModal"; // Import PasswordModal
 
 ChartJS.register(
   ArcElement,
@@ -50,8 +51,9 @@ const ApiManagement = () => {
   const [summaryData, setSummaryData] = useState({});
   const [inputWidth, setInputWidth] = useState("auto");
   const [text, setText] = useState("");
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [passwordAction, setPasswordAction] = useState(null);
   const router = useRouter();
-
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -191,90 +193,92 @@ const ApiManagement = () => {
       });
   };
 
-  const handleGenerateApiKey = () => {
-    const password = prompt("비밀번호를 입력해주세요:");
-    if (password) {
-      axios
-        .post(
-          `${BACKEND_URL}/api/get-api-key/`,
-          { password },
-          {
-            headers: {
-              Authorization: `Token ${localStorage.getItem("token")}`,
-            },
-            withCredentials: true, // 세션 인증을 위해 필요
-          }
-        )
-        .then((response) => {
-          setApiKey(response.data.api_key);
-          setText(response.data.api_key);
-          setApiStatus(true); // 활성화 상태
-        })
-        .catch((error) => {
-          if (error.response && error.response.data.error) {
-            alert(error.response.data.error);
-          } else {
-            console.error("API Key 생성 오류", error);
-          }
-        });
+  const openPasswordModal = (action) => {
+    setPasswordAction(() => action);
+    setIsPasswordModalOpen(true);
+  };
+
+  const handlePasswordSubmit = (password) => {
+    if (passwordAction) {
+      passwordAction(password);
     }
   };
 
-  const handleRegenerateApiKey = () => {
-    const password = prompt("비밀번호를 입력해주세요:");
-    if (password) {
-      axios
-        .post(
-          `${BACKEND_URL}/api/regenerate-api-key/`,
-          { password },
-          {
-            headers: {
-              Authorization: `Token ${localStorage.getItem("token")}`,
-            },
-            withCredentials: true, // 세션 인증을 위해 필요
-          }
-        )
-        .then((response) => {
-          setApiKey(response.data.api_key);
-          setText(response.data.api_key);
-        })
-        .catch((error) => {
-          if (error.response && error.response.data.error) {
-            alert(error.response.data.error);
-          } else {
-            console.error("API Key 재생성 오류", error);
-          }
-        });
-    }
+  const handleGenerateApiKey = (password) => {
+    axios
+      .post(
+        `${BACKEND_URL}/api/get-api-key/`,
+        { password },
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        setApiKey(response.data.api_key);
+        setText(response.data.api_key);
+        setApiStatus(true);
+      })
+      .catch((error) => {
+        if (error.response && error.response.data.error) {
+          alert(error.response.data.error);
+        } else {
+          console.error("API Key 생성 오류", error);
+        }
+      });
   };
 
-  const handleDeleteApiKey = () => {
-    const password = prompt("비밀번호를 입력해주세요:");
-    if (password) {
-      axios
-        .post(
-          `${BACKEND_URL}/api/delete-api-key/`,
-          { password },
-          {
-            headers: {
-              Authorization: `Token ${localStorage.getItem("token")}`,
-            },
-            withCredentials: true, // 세션 인증을 위해 필요
-          }
-        )
-        .then(() => {
-          setApiKey(null);
-          setText("발급된 키 없음");
-          setApiStatus(false); // 비활성화 상태
-        })
-        .catch((error) => {
-          if (error.response && error.response.data.error) {
-            alert(error.response.data.error);
-          } else {
-            console.error("API Key 삭제 오류", error);
-          }
-        });
-    }
+  const handleRegenerateApiKey = (password) => {
+    axios
+      .post(
+        `${BACKEND_URL}/api/regenerate-api-key/`,
+        { password },
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        setApiKey(response.data.api_key);
+        setText(response.data.api_key);
+      })
+      .catch((error) => {
+        if (error.response && error.response.data.error) {
+          alert(error.response.data.error);
+        } else {
+          console.error("API Key 재생성 오류", error);
+        }
+      });
+  };
+
+  const handleDeleteApiKey = (password) => {
+    axios
+      .post(
+        `${BACKEND_URL}/api/delete-api-key/`,
+        { password },
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        }
+      )
+      .then(() => {
+        setApiKey(null);
+        setText("발급된 키 없음");
+        setApiStatus(false);
+      })
+      .catch((error) => {
+        if (error.response && error.response.data.error) {
+          alert(error.response.data.error);
+        } else {
+          console.error("API Key 삭제 오류", error);
+        }
+      });
   };
 
   const handleToggleApiStatus = (status) => {
@@ -288,7 +292,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
-            withCredentials: true, // 세션 인증을 위해 필요
+            withCredentials: true,
           }
         )
         .then((response) => {
@@ -328,7 +332,7 @@ const ApiManagement = () => {
   const handleChange = (event) => {
     const newText = event.target.value;
     setText(newText);
-  
+
     // Update input width based on new text length
     const newWidth = `${newText.length + 1}ch`;
     setInputWidth(newWidth);
@@ -582,7 +586,7 @@ const ApiManagement = () => {
                 {apiKey && (
                   <button
                     className={styles.deleteButton}
-                    onClick={handleDeleteApiKey}
+                    onClick={() => openPasswordModal(handleDeleteApiKey)}
                   >
                     키 삭제
                   </button>
@@ -605,7 +609,9 @@ const ApiManagement = () => {
                       <button
                         className={styles.button}
                         onClick={
-                          apiKey ? handleRegenerateApiKey : handleGenerateApiKey
+                          apiKey
+                            ? () => openPasswordModal(handleRegenerateApiKey)
+                            : () => openPasswordModal(handleGenerateApiKey)
                         }
                       >
                         {apiKey ? "재발급" : "키 발급"}
@@ -729,6 +735,11 @@ const ApiManagement = () => {
           {renderContent()}
         </div>
       </div>
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onRequestClose={() => setIsPasswordModalOpen(false)}
+        onSubmit={handlePasswordSubmit}
+      />
       <Footer />
     </div>
   );
