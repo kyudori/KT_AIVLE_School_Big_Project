@@ -188,6 +188,7 @@
 }
 
 .input {
+  color: #666;
   width: 90%;
   padding: 0 10px;
   font-size: 1em;
@@ -212,6 +213,11 @@
   border-radius: 5px;
   cursor: pointer;
   background-color: #fff;
+}
+
+.clearButton:hover {
+  background-color: #ccc;
+  transition: all 0.2s;
 }
 
 .resultContext {

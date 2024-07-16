@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import {
@@ -96,6 +96,7 @@ const ApiManagement = () => {
         setApiKey(response.data.api_key);
         setApiLastUsed(response.data.last_used_at);
         setApiStatus(response.data.is_active);
+        setText(response.data.api_key || '발급된 키 없음');
       })
       .catch((error) => {
         console.error("API Key 가져오기 오류", error);
@@ -193,6 +194,7 @@ const ApiManagement = () => {
         )
         .then((response) => {
           setApiKey(response.data.api_key);
+          setText(response.data.api_key);
           setApiStatus(true); // 활성화 상태
         })
         .catch((error) => {
@@ -248,6 +250,7 @@ const ApiManagement = () => {
         )
         .then(() => {
           setApiKey(null);
+          setText('발급된 키 없음');
           setApiStatus(false); // 비활성화 상태
         })
         .catch((error) => {
@@ -366,6 +369,21 @@ const ApiManagement = () => {
     );
   };
 
+
+  const [text, setText] = useState('');
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      // 글자 길이에 따라 input 필드의 너비를 업데이트
+      inputRef.current.style.width = `${text.length + 1}ch`;
+    }
+  }, [text]);
+
+  const handleChange = (event) => {
+    setText(event.target.value);
+  };
+
   const renderContent = () => {
     switch (currentPage) {
       case "dashboard":
@@ -419,30 +437,38 @@ const ApiManagement = () => {
               <div className={styles.separator}></div>
               <div className={styles.card}>
                 <h3>Credit Usage</h3>
-                <div className={styles.cardcontent}>
-                  <div className={styles.doughnutWrapper}>
-                    <Doughnut
-                      data={data}
-                      options={{
-                        cutout: "70%",
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                      }}
-                    />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "-20px",
+                  }}
+                >
+                  <div className={styles.cardcontent}>
+                    <div className={styles.doughnutWrapper}>
+                      <Doughnut
+                        width="100px"
+                        data={data}
+                        style={{ width: "100px", height: "150px" }}
+                        options={{
+                          cutout: "70%",
+                          responsive: false,
+                          maintainAspectRatio: false,
+                          plugins: { legend: { display: false } },
+                        }}
+                      />
+                    </div>
+                    <div className={styles.usageleft}>
+                      <span>
+                        {Math.round(
+                          ((todaytotalCredits - usedCredits) /
+                            todaytotalCredits) *
+                            100
+                        )}
+                        % | {remainingCredits} Credits
+                      </span>
+                    </div>
                   </div>
-                  <div className={styles.usageleft}>
-                    <span>
-                      {Math.round(
-                        ((todaytotalCredits - usedCredits) /
-                          todaytotalCredits) *
-                          100
-                      )}
-                      % | {remainingCredits} Credits
-                    </span>
-                  </div>
-                </div>
-                <div style={{ display: "flex", alignItems: "flex-end" }}>
                   <div className={styles.chartLegend}>
                     <div className={styles.legendItem}>
                       <div
@@ -473,13 +499,13 @@ const ApiManagement = () => {
                       Used
                     </div>
                   </div>
-                  <button
-                    className={styles.purchaseButton}
-                    onClick={() => router.push("/plan")}
-                  >
-                    Buy More Credits
-                  </button>
                 </div>
+                <button
+                  className={styles.purchaseButton}
+                  onClick={() => router.push("/plan")}
+                >
+                  Buy More Credits
+                </button>
               </div>
               <div className={styles.separator}></div>
               <div className={styles.card}>
@@ -554,55 +580,59 @@ const ApiManagement = () => {
                   </button>
                 )}
               </div>
-              <div className={styles.keySection}>
-                <h3>Key Value</h3>
-                <div className={styles.keyContainer}>
-                  <input
-                    className={styles.keyValue}
-                    value={apiKey || "발급된 키 없음"}
-                    disabled
-                    size={apiKey ? apiKey.length : 32}
-                  />
-                  <div className={styles.buttonContainer}>
-                    <button
-                      className={styles.button}
-                      onClick={
-                        apiKey ? handleRegenerateApiKey : handleGenerateApiKey
-                      }
-                    >
-                      {apiKey ? "재발급" : "키 발급"}
-                    </button>
-                    {apiKey && (
+              <div style={{ margin: "0 50px" }}>
+                <div className={styles.keySection}>
+                  <h3 style={{width: "30%"}}>Key Value</h3>
+                  <div className={styles.keyContainer}>
+                    <input
+                      className={styles.keyValue}
+                      onChange={handleChange}
+                      ref={inputRef}
+                      value={text}
+                      disabled
+                      size={apiKey ? apiKey.length : 32}
+                    />
+                    <div className={styles.buttonContainer}>
                       <button
-                        className={`${styles.button} ${styles.copyButton}`}
-                        onClick={handleCopyApiKey}
+                        className={styles.button}
+                        onClick={
+                          apiKey ? handleRegenerateApiKey : handleGenerateApiKey
+                        }
                       >
-                        키 복사
+                        {apiKey ? "재발급" : "키 발급"}
                       </button>
-                    )}
+                      {apiKey && (
+                        <button
+                          className={`${styles.button} ${styles.copyButton}`}
+                          onClick={handleCopyApiKey}
+                        >
+                          키 복사
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className={styles.statusSection}>
-                <h3>Activate Status</h3>
-                <div className={styles.use}>
-                  <input
-                    type="radio"
-                    name="status"
-                    value="사용함"
-                    checked={apiStatus}
-                    onChange={() => handleToggleApiStatus(true)}
-                  />{" "}
-                  사용함
-                  <input
-                    type="radio"
-                    name="status"
-                    value="사용 안함"
-                    style={{ marginLeft: "20px" }}
-                    checked={!apiStatus}
-                    onChange={() => handleToggleApiStatus(false)}
-                  />{" "}
-                  사용 안함
+                <div className={styles.statusSection}>
+                  <h3 style={{width: "50%"}}>Activate Status</h3>
+                  <div className={styles.use}>
+                    <input
+                      type="radio"
+                      name="status"
+                      value="사용함"
+                      checked={apiStatus}
+                      onChange={() => handleToggleApiStatus(true)}
+                    />{" "}
+                    사용함
+                    <input
+                      type="radio"
+                      name="status"
+                      value="사용 안함"
+                      style={{ marginLeft: "20px" }}
+                      checked={!apiStatus}
+                      onChange={() => handleToggleApiStatus(false)}
+                    />{" "}
+                    사용 안함
+                  </div>
                 </div>
               </div>
             </div>

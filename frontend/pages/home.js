@@ -1,9 +1,9 @@
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { useRouter } from 'next/router';
-import styles from '../styles/Home.module.css';
-import ReactAudioPlayer from 'react-audio-player';
-import { useState, useEffect, useRef } from 'react';
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { useRouter } from "next/router";
+import styles from "../styles/Home.module.css";
+import ReactAudioPlayer from "react-audio-player";
+import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
   const router = useRouter();
@@ -24,26 +24,26 @@ export default function Home() {
         setPlayingAudio(null);
       };
 
-      realAudioEl.addEventListener('ended', handleAudioEnded);
-      fakeAudioEl.addEventListener('ended', handleAudioEnded);
+      realAudioEl.addEventListener("ended", handleAudioEnded);
+      fakeAudioEl.addEventListener("ended", handleAudioEnded);
 
       return () => {
-        realAudioEl.removeEventListener('ended', handleAudioEnded);
-        fakeAudioEl.removeEventListener('ended', handleAudioEnded);
+        realAudioEl.removeEventListener("ended", handleAudioEnded);
+        fakeAudioEl.removeEventListener("ended", handleAudioEnded);
       };
     }
   }, []);
 
   const handleTryVoiceVerity = () => {
-    router.push('/try');
+    router.push("/try");
   };
 
   const handleSubscriptionPlan = () => {
-    router.push('/plan');
+    router.push("/plan");
   };
 
   const handleContactUs = () => {
-    router.push('/contact');
+    router.push("/contact");
   };
 
   const stopCurrentAudio = () => {
@@ -54,22 +54,24 @@ export default function Home() {
     if (fakeAudioRef.current.audioEl.current.src) {
       fakeAudioRef.current.audioEl.current.pause();
       fakeAudioRef.current.audioEl.current.currentTime = 0;
-    } 
+    }
     setPlayingAudio(null);
   };
 
   const toggleHandler1 = () => {
     stopCurrentAudio();
-    setisOn1(prevState => !prevState);
+    setisOn1((prevState) => !prevState);
   };
 
   const toggleHandler2 = () => {
     stopCurrentAudio();
-    setisOn2(prevState => !prevState);
+    setisOn2((prevState) => !prevState);
   };
 
   const playAudio = (profile, isReal) => {
-    const audioToPlay = isReal ? `/audios/real_voice${profile}.wav` : `/audios/fake_voice${profile}.wav`;
+    const audioToPlay = isReal
+      ? `/audios/real_voice${profile}.wav`
+      : `/audios/fake_voice${profile}.wav`;
 
     if (playingAudio === audioToPlay) {
       // 이미 재생 중인 오디오를 다시 클릭하면 정지
@@ -100,33 +102,54 @@ export default function Home() {
 
   return (
     <div className={styles.homeContainer}>
+      <div style={{ padding: "0 200px", background: "#fff" }}>
+        <Navbar />
+      </div>
       <div className={styles.mainContent}>
-      <Navbar />
         <div className={styles.textContainer}>
-          <p className='phrase'>
+          <p className="phrase">
             <span> 파헤치다, </span>
-            <br className='gap'></br><span>구분하다,</span>
-            <br className='gap'></br><span><span style={{color:'#0300A7', margin:'0px'}}>진실</span>을 말하다.</span>
+            <br className="gap"></br>
+            <span>구분하다,</span>
+            <br className="gap"></br>
+            <span>
+              <span style={{ color: "#0300A7", margin: "0px" }}>진실</span>을
+              말하다.
+            </span>
           </p>
           <div className={styles.buttonContainer}>
-            <div className={styles.logo}/>
+            <div className={styles.logo} />
             <button onClick={handleTryVoiceVerity}>Try Voice Verity</button>
           </div>
         </div>
         <div className={styles.infoSection}>
-          <h2>Voice Verity, 목소리에 <span style={{color:"#0300A7"}}>진실성</span>을 더하다.</h2>
+          <h2>
+            Voice Verity, 목소리에{" "}
+            <span style={{ color: "#0300A7" }}>진실성</span>을 더하다.
+          </h2>
           <p>수화기 너머의 목소리가 진짜 목소리일까요?</p>
           <div className={styles.infoItems}>
             <div className={styles.infoItem}>
               <h2>Preview</h2>
-              <h3>슈뢰딩거의 목소리를 <span style={{color:"#0300A7"}}>체험해보려면</span></h3>
+              <h3>
+                슈뢰딩거의 목소리를{" "}
+                <span style={{ color: "#0300A7" }}>체험해보려면</span>
+              </h3>
               <p>이거 내 목소리 맞아?</p>
               <p>얼마나 진짜 같을까? Fake Voice!</p>
-              <button className={styles.infobutton} onClick={handleTryVoiceVerity}>체험하러 가기</button>
+              <button
+                className={styles.infobutton}
+                onClick={handleTryVoiceVerity}
+              >
+                체험하러 가기
+              </button>
             </div>
             <div className={styles.infoItem}>
               <h2>API Service</h2>
-              <h3>우리 서비스를 <span style={{color:"#0300A7"}}>구독하고 싶다면</span></h3>
+              <h3>
+                우리 서비스를{" "}
+                <span style={{ color: "#0300A7" }}>구독하고 싶다면</span>
+              </h3>
               <p>아 싸다싸!</p>
               <p>우리 서비스 완전 싸요!</p>
               <button onClick={handleSubscriptionPlan}>구독플랜 보기</button>
@@ -135,32 +158,58 @@ export default function Home() {
         </div>
         <div className={styles.voiceverity}>
           <h2>독보적인 AI 음성 탐지 기술, Voice Verity</h2>
-          <p>Voice Verity는 짧은 시간의 통화음으로도 목소리를 구별하는 기술을 갖추고 있습니다.</p>
+          <p>
+            Voice Verity는 짧은 시간의 통화음으로도 목소리를 구별하는 기술을
+            갖추고 있습니다.
+          </p>
           <div>
-            <div className={styles.dataicon} /><ul>Building a Deep Voice Dataset
-            <li>생성형 AI를 이용한 고품질 한국어 딥보이스 데이터셋을 자체 구축했습니다.</li>
+            <div className={styles.dataicon} />
+            <ul>
+              Building a Deep Voice Dataset
+              <li>
+                생성형 AI를 이용한 고품질 한국어 딥보이스 데이터셋을 자체
+                구축했습니다.
+              </li>
             </ul>
           </div>
           <div>
-            <div className={styles.callicon} /><ul>Deep Learning Deep Voice Classifier
-            <li>딥러닝 기반의 딥보이스 분류 모델을 개발하여 정확하게 딥보이스를 감지합니다.</li>
+            <div className={styles.callicon} />
+            <ul>
+              Deep Learning Deep Voice Classifier
+              <li>
+                딥러닝 기반의 딥보이스 분류 모델을 개발하여 정확하게 딥보이스를
+                감지합니다.
+              </li>
             </ul>
           </div>
           <div>
-            <div className={styles.timeicon} /><ul>Real-Time Deep Voice Classifier
-            <li>최신 딥러닝 모델을 이용하여 높은 정확성과 빠른 추론 속도의 모델을 이용하여 통화 상태에서의 실시간 딥보이스 분류를 지원합니다.</li>
+            <div className={styles.timeicon} />
+            <ul>
+              Real-Time Deep Voice Classifier
+              <li>
+                최신 딥러닝 모델을 이용하여 높은 정확성과 빠른 추론 속도의
+                모델을 이용하여 통화 상태에서의 실시간 딥보이스 분류를
+                지원합니다.
+              </li>
             </ul>
           </div>
         </div>
         <div className={styles.listensection}>
-          <div style={{height: "fit-content"}}>
+          <div style={{ height: "fit-content" }}>
             <h2>Deep Voice(딥보이스)를 들어보세요</h2>
-            <p>사이버 범죄 수법으로 Deep Voice를 사용하는 비율이 늘어나고 있습니다.<br />
-              <span>실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.</span>
+            <p>
+              사이버 범죄 수법으로 Deep Voice를 사용하는 비율이 늘어나고
+              있습니다.
+              <br />
+              <span>
+                실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.
+              </span>
             </p>
           </div>
           <section>
-            <li>* 사진 속 인물과 목소리의 주인은 전혀 다른 사람임을 알려드립니다.</li>
+            <li>
+              * 사진 속 인물과 목소리의 주인은 전혀 다른 사람임을 알려드립니다.
+            </li>
             <div className={styles.profileSection}>
               <div className={styles.profileContainer}>
                 <div
@@ -168,69 +217,147 @@ export default function Home() {
                   onMouseEnter={() => setHoveredProfile(1)}
                   onMouseLeave={() => setHoveredProfile(null)}
                   onClick={() => playAudio(1, isOn1)}
-                ><div className={styles.profileeek}/>
-                  {playingAudio === `/audios/real_voice1.wav` || playingAudio === `/audios/fake_voice1.wav` ? (
+                >
+                  <div className={styles.profileeek} />
+                  {playingAudio === `/audios/real_voice1.wav` ||
+                  playingAudio === `/audios/fake_voice1.wav` ? (
                     <div className={styles.playButton}>⏸</div>
                   ) : (
-                    hoveredProfile === 1 && <div className={styles.playButton}>▶</div>
+                    hoveredProfile === 1 && (
+                      <div className={styles.playButton}>▶</div>
+                    )
                   )}
                 </div>
                 <div className={styles.toggleline}>
-                  <button className={`${styles.toggle} ${isOn1 ? styles.real : styles.fake}`} onClick={toggleHandler1}>
-                   <div className={styles.toggleitem}></div>
+                  <button
+                    className={`${styles.toggle} ${
+                      isOn1 ? styles.real : styles.fake
+                    }`}
+                    onClick={toggleHandler1}
+                  >
+                    <div className={styles.toggleitem}></div>
                   </button>
-                  <p style={{fontSize:'24px'}}> {isOn1 ? 'Real Voice' : 'Fake Voice'}</p></div>
+                  <p style={{ fontSize: "24px" }}>
+                    {" "}
+                    {isOn1 ? "Real Voice" : "Fake Voice"}
+                  </p>
                 </div>
+              </div>
               <div className={styles.profileContainer}>
                 <div
                   className={styles.profile}
                   onMouseEnter={() => setHoveredProfile(2)}
                   onMouseLeave={() => setHoveredProfile(null)}
-                  onClick={() => playAudio(2, isOn2)}><div className={styles.profilejuj} />
-                  {playingAudio === `/audios/real_voice2.wav` || playingAudio === `/audios/fake_voice2.wav` ? (
+                  onClick={() => playAudio(2, isOn2)}
+                >
+                  <div className={styles.profilejuj} />
+                  {playingAudio === `/audios/real_voice2.wav` ||
+                  playingAudio === `/audios/fake_voice2.wav` ? (
                     <div className={styles.playButton}>⏸</div>
                   ) : (
-                    hoveredProfile === 2 && <div className={styles.playButton}>▶</div>
+                    hoveredProfile === 2 && (
+                      <div className={styles.playButton}>▶</div>
+                    )
                   )}
                 </div>
                 <div className={styles.toggleline}>
-                  <button className={`${styles.toggle} ${isOn2 ? styles.real : styles.fake}`} onClick={toggleHandler2}>
+                  <button
+                    className={`${styles.toggle} ${
+                      isOn2 ? styles.real : styles.fake
+                    }`}
+                    onClick={toggleHandler2}
+                  >
                     <div className={styles.toggleitem}></div>
                   </button>
-                  <p style={{fontSize:'24px'}}> {isOn2 ? 'Real Voice' : 'Fake Voice'}</p>
+                  <p style={{ fontSize: "24px" }}>
+                    {" "}
+                    {isOn2 ? "Real Voice" : "Fake Voice"}
+                  </p>
                 </div>
               </div>
             </div>
-            <ReactAudioPlayer src={audioSrc} ref={realAudioRef} controls style={{ display: 'none' }} />
-            <ReactAudioPlayer src={audioSrc} ref={fakeAudioRef} controls style={{ display: 'none' }} />
+            <ReactAudioPlayer
+              src={audioSrc}
+              ref={realAudioRef}
+              controls
+              style={{ display: "none" }}
+            />
+            <ReactAudioPlayer
+              src={audioSrc}
+              ref={fakeAudioRef}
+              controls
+              style={{ display: "none" }}
+            />
           </section>
         </div>
         <div className={styles.do}>
           <div>
-            <div style={{height:'fit-content'}}>
+            <div style={{ height: "fit-content" }}>
               <h2>Voice Verity로 어떤 걸 할 수 있을까?</h2>
-              <p>Voice Verity는 생각지도 못한 다양한 곳에 사용될 수 있습니다.</p>
+              <p>
+                Voice Verity는 생각지도 못한 다양한 곳에 사용될 수 있습니다.
+              </p>
             </div>
             <div className={styles.row}>
               <div className={styles.column}>
-               <section>
-                <div className={styles.space}><div className={styles.icon}><div className={styles.enter} /></div></div>
-                <h2 style={{margin:"0px 0px 0px 20px", fontSize:'34px', textAlign:'left'}}>Entertainment</h2>
-                <ul><li>성우 및 가수의 딥보이스 무단 사용 탐지</li>
-                <li>음성 합성 기술의 품질 평가</li></ul>
-               </section>
-               <section>
-                <div className={styles.space}><div className={styles.prevent} /></div>
-                <h2 style={{margin:"0px 0px 0px 20px", fontSize:'34px', textAlign:'left'}}>Prevention</h2>
-                <ul><li>음성 인증 시스템의 보안 강화</li>
-                <li>통화 중 실시간 딥페이크 음성 탐지</li></ul>
-               </section>
-               <section>
-                <div className={styles.space}><div className={styles.icon}><div className={styles.media} /></div></div>
-                <h2 style={{margin:"0px 0px 0px 20px", fontSize:'34px', textAlign:'left'}}>Media literacy</h2>
-                <ul><li>뉴스나 라디오의 음성 진위 여부 확인</li>
-                <li>영화나 TV 프로그램에서 사용된 음성의 진위 여부 검증</li></ul>
-               </section>
+                <section>
+                  <div className={styles.space}>
+                    <div className={styles.icon}>
+                      <div className={styles.enter} />
+                    </div>
+                  </div>
+                  <h2
+                    style={{
+                      margin: "0px 0px 0px 20px",
+                      fontSize: "34px",
+                      textAlign: "left",
+                    }}
+                  >
+                    Entertainment
+                  </h2>
+                  <ul>
+                    <li>성우 및 가수의 딥보이스 무단 사용 탐지</li>
+                    <li>음성 합성 기술의 품질 평가</li>
+                  </ul>
+                </section>
+                <section>
+                  <div className={styles.space}>
+                    <div className={styles.prevent} />
+                  </div>
+                  <h2
+                    style={{
+                      margin: "0px 0px 0px 20px",
+                      fontSize: "34px",
+                      textAlign: "left",
+                    }}
+                  >
+                    Prevention
+                  </h2>
+                  <ul>
+                    <li>음성 인증 시스템의 보안 강화</li>
+                    <li>통화 중 실시간 딥페이크 음성 탐지</li>
+                  </ul>
+                </section>
+                <section>
+                  <div className={styles.space}>
+                    <div className={styles.icon}>
+                      <div className={styles.media} />
+                    </div>
+                  </div>
+                  <h2
+                    style={{
+                      margin: "0px 0px 0px 20px",
+                      fontSize: "34px",
+                      textAlign: "left",
+                    }}
+                  >
+                    Media literacy
+                  </h2>
+                  <ul>
+                    <li>뉴스나 라디오의 음성 진위 여부 확인</li>
+                    <li>영화나 TV 프로그램에서 사용된 음성의 진위 여부 검증</li>
+                  </ul>
+                </section>
               </div>
             </div>
           </div>
@@ -239,22 +366,28 @@ export default function Home() {
         <div className={styles.youtubeSection}>
           <div>
             <h2>우리의 Dev Story</h2>
-            <p>Voice Verity의 시작은 어디서부터였을까? Voice Verity의 이야기를 만나보세요.<br />
-            <span>우리의 이야기는 끝나지 않았습니다.</span></p>
+            <p>
+              Voice Verity의 시작은 어디서부터였을까? Voice Verity의 이야기를
+              만나보세요.
+              <br />
+              <span>우리의 이야기는 끝나지 않았습니다.</span>
+            </p>
           </div>
           <div className={styles.youtubeContainer}>
-            <iframe 
+            <iframe
               src="https://www.youtube.com/embed/yHxXWIHOr6A"
-              title="YouTube video player" 
-              frameBorder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowFullScreen>
-            </iframe>
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
         <div className={styles.contactUs}>
           <h2>Voice Verity와 함께해요.</h2>
-          <p style={{margin:"20px"}}>당신의 든든한 파트너가 될 수 있습니다.</p>
+          <p style={{ margin: "20px" }}>
+            당신의 든든한 파트너가 될 수 있습니다.
+          </p>
           <button onClick={handleContactUs}>Contact Us</button>
         </div>
       </div>
