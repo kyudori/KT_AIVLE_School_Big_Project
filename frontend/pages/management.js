@@ -48,7 +48,11 @@ const ApiManagement = () => {
   const [selectedInterval, setSelectedInterval] = useState("hourly");
   const [trafficData, setTrafficData] = useState([]);
   const [summaryData, setSummaryData] = useState({});
+  const [inputWidth, setInputWidth] = useState("auto");
+  const [text, setText] = useState("");
   const router = useRouter();
+
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -84,6 +88,14 @@ const ApiManagement = () => {
     }
   }, [selectedInterval, user]);
 
+  useEffect(() => {
+    // Set initial input width based on the text length
+    if (text) {
+      const width = `${text.length + 1}ch`;
+      setInputWidth(width);
+    }
+  }, [text]);
+
   const fetchApiKey = (token) => {
     axios
       .get(`${BACKEND_URL}/api/get-api-key/`, {
@@ -96,7 +108,8 @@ const ApiManagement = () => {
         setApiKey(response.data.api_key);
         setApiLastUsed(response.data.last_used_at);
         setApiStatus(response.data.is_active);
-        setText(response.data.api_key || '발급된 키 없음');
+        const apiKeyText = response.data.api_key || "발급된 키 없음";
+        setText(apiKeyText);
       })
       .catch((error) => {
         console.error("API Key 가져오기 오류", error);
@@ -108,8 +121,8 @@ const ApiManagement = () => {
       .get(`${BACKEND_URL}/api/get-credits/`, {
         headers: {
           Authorization: `Token ${token}`,
+          withCredentials: true, // 세션 인증을 위해 필요
         },
-        withCredentials: true,
       })
       .then((response) => {
         setTodayTotalCredits(
@@ -152,7 +165,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${localStorage.getItem("token")}`,
         },
-        withCredentials: true,
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setTrafficData(response.data);
@@ -168,7 +181,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${localStorage.getItem("token")}`,
         },
-        withCredentials: true,
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setSummaryData(response.data);
@@ -223,6 +236,7 @@ const ApiManagement = () => {
         )
         .then((response) => {
           setApiKey(response.data.api_key);
+          setText(response.data.api_key);
         })
         .catch((error) => {
           if (error.response && error.response.data.error) {
@@ -250,7 +264,7 @@ const ApiManagement = () => {
         )
         .then(() => {
           setApiKey(null);
-          setText('발급된 키 없음');
+          setText("발급된 키 없음");
           setApiStatus(false); // 비활성화 상태
         })
         .catch((error) => {
@@ -311,6 +325,15 @@ const ApiManagement = () => {
     setSelectedInterval(interval);
   };
 
+  const handleChange = (event) => {
+    const newText = event.target.value;
+    setText(newText);
+  
+    // Update input width based on new text length
+    const newWidth = `${newText.length + 1}ch`;
+    setInputWidth(newWidth);
+  };
+
   const handleCopyApiKey = () => {
     if (apiKey) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -367,21 +390,6 @@ const ApiManagement = () => {
         <p>성공률: {summaryData.success_rate} %</p>
       </div>
     );
-  };
-
-
-  const [text, setText] = useState('');
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    if (inputRef.current) {
-      // 글자 길이에 따라 input 필드의 너비를 업데이트
-      inputRef.current.style.width = `${text.length + 1}ch`;
-    }
-  }, [text]);
-
-  const handleChange = (event) => {
-    setText(event.target.value);
   };
 
   const renderContent = () => {
@@ -513,7 +521,7 @@ const ApiManagement = () => {
                 <div className={styles.apiStatus}>
                   <p>내 API Key: {apiKey || "현재 키 없음"}</p>
                   <p>
-                    현재 API 상태:{" "}
+                    현재 API 서버:{" "}
                     {isApiServerOn ? (
                       <span style={{ color: "green" }}>ON</span>
                     ) : (
@@ -582,15 +590,16 @@ const ApiManagement = () => {
               </div>
               <div style={{ margin: "0 50px" }}>
                 <div className={styles.keySection}>
-                  <h3 style={{width: "30%"}}>Key Value</h3>
+                  <h3 style={{ width: "30%" }}>Key Value</h3>
                   <div className={styles.keyContainer}>
                     <input
                       className={styles.keyValue}
-                      onChange={handleChange}
+                      onChange={handleChange} // Use handleChange function
                       ref={inputRef}
                       value={text}
                       disabled
                       size={apiKey ? apiKey.length : 32}
+                      style={{ width: inputWidth }} // Apply the dynamic width
                     />
                     <div className={styles.buttonContainer}>
                       <button
@@ -613,7 +622,7 @@ const ApiManagement = () => {
                   </div>
                 </div>
                 <div className={styles.statusSection}>
-                  <h3 style={{width: "50%"}}>Activate Status</h3>
+                  <h3 style={{ width: "50%" }}>Activate Status</h3>
                   <div className={styles.use}>
                     <input
                       type="radio"

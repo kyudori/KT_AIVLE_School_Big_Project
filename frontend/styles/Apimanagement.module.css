@@ -418,7 +418,7 @@
   margin: 20px 0;
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 52%;
   justify-content: space-between;
 }
 
@@ -437,22 +437,26 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: auto; 
+  transition: width 0.2s; 
 }
 
 .buttonContainer {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: nowrap;
 }
 
 .button {
   font-family: fontA;
-  font-size: 16px;
+  font-size: 20px;
   padding: 8px 12px;
   background: none;
   border: solid 1px;
   border-radius: 15px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .statusSection {
@@ -540,8 +544,14 @@
   font-weight: bold;
 }
 
+.doughnutWrapper {
+  width: 150px;
+  text-align: -webkit-center;
+  /* Updated size */
+}
+
 .noDataMessage {
   text-align: center;
-  color: gray;
+  color: black; /* Change text color to black */
   margin-top: 20px;
 }
