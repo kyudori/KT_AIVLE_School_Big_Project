@@ -169,6 +169,7 @@ export default function Documentation() {
                   <span className={styles.fileFormat}>.wav</span>
                   <span className={styles.fileFormat}>.mp3</span>
                   <span className={styles.fileFormat}>.m4a</span>
+                  <span className={styles.fileFormat}>URL</span>
                 </div>
                 <p>10MB 이하의 음성 파일</p>
               </div>

@@ -25,6 +25,8 @@ export default function TryVoice() {
   const [fakeCount, setFakeCount] = useState(0);
   const [realCount, setRealCount] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [dragFileName, setDragFileName] = useState(""); 
   const lineChartRef = useRef(null);
   const pieChartRef = useRef(null);
   const waveSurferRef = useRef(null);
@@ -366,6 +368,58 @@ export default function TryVoice() {
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      const selectedFile = e.dataTransfer.items[0].getAsFile(); // 드래그 중인 파일 가져오기
+      if (selectedFile) {
+        setDragFileName(selectedFile.name); // 드래그 파일 이름 설정
+      }
+    }
+    setDragging(true); // 드래그 상태 설정
+  };
+  
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragging(false); // 드래그 상태 초기화
+    setDragFileName(""); // 드래그 파일 이름 초기화
+  
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const selectedFile = e.dataTransfer.files[0];
+      const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+      const fileSizeMB = selectedFile.size / (1024 * 1024);
+  
+      if (!ALLOWED_EXTENSIONS.includes(`.${fileExtension}`)) {
+        alert("Invalid file type. Allowed extensions are: .wav, .mp3, .m4a");
+        return;
+      }
+  
+      if (fileSizeMB > MAX_FILE_SIZE_MB) {
+        alert("File size exceeds the 200MB limit.");
+        return;
+      }
+  
+      setFile(selectedFile);
+      setFileName(selectedFile.name);
+      setIsPlaying(false); // 재생/일시정지 상태 초기화
+    }
+  };
+  
+  const handleDragLeave = () => {
+    setDragging(false); // 드래그 상태 초기화
+    setDragFileName(""); // 드래그 파일 이름 초기화
+  };
+
+  const handleInputChange = (e) => {
+    setInputType(e.target.value);
+    if (e.target.value === "file") {
+      setUrl("");
+    } else {
+      setFile(null);
+      setFileName("");
+    }
+  };
+
   return (
     <div className={styles.previewContext}>
       <div style={{ padding: "0 200px", background: "#fff" }}>
@@ -378,7 +432,7 @@ export default function TryVoice() {
           <h2>
             Voice Verity에서는 실시간 통화 중 딥보이스를 감지할 수 있습니다.
           </h2>
-          <h2>Fake Voice를 탐지하는 순간을 체험해보세요.</h2>
+          <h2>Deep Fake Voice를 탐지하는 순간을 체험해보세요.</h2>
           <div style={{ textAlign: "-webkit-center" }}>
             <form onSubmit={handleSubmit}>
               <div className={styles.radioButtons}>
@@ -387,7 +441,7 @@ export default function TryVoice() {
                     type="radio"
                     value="file"
                     checked={inputType === "file"}
-                    onChange={() => setInputType("file")}
+                    onChange={handleInputChange}
                   />
                   File
                 </label>
@@ -396,96 +450,109 @@ export default function TryVoice() {
                     type="radio"
                     value="url"
                     checked={inputType === "url"}
-                    onChange={() => setInputType("url")}
+                    onChange={handleInputChange}
                   />
                   URL
                 </label>
               </div>
-
               {inputType === "file" ? (
-                <div className={styles.form}>
-                  {fileName ? (
-                    <>
-                      <div className={styles.fileNameContainer}>
-                        <span
-                          className={styles.fileName}
-                          onClick={handleFileNameClick}
-                        >
-                          {fileName}
-                        </span>
-                        <button
-                          type="button"
-                          className={styles.removeButton}
-                          onClick={handleFileRemove}
-                        >
-                          X
-                        </button>
-                      </div>
-                      <div className={styles.waveContainer}>
-                        <button
-                          type="button"
-                          className={styles.playPauseButton}
-                          onClick={handlePlayPause}
-                        >
-                          {isPlaying ? (
-                            <p style={{ margin: "0", alignSelf: "center" }}>
-                              ||
-                            </p>
-                          ) : (
-                            " ▶ "
-                          )}
-                        </button>
-                        <div
-                          ref={waveContainerRef}
-                          className={styles.waveform}
-                        ></div>
-                      </div>
-                    </>
-                  ) : (
-                    <label htmlFor="upload" className={styles.uploadLabel}>
-                      <span className={styles.uploadIcon}></span>
-                    </label>
-                  )}
+  <div
+    className={`${styles.form} ${dragging ? styles.fileDragging : ""}`}
+    onDragOver={handleDragOver}
+    onDragLeave={handleDragLeave}
+    onDrop={handleDrop}
+  >
+    {dragging && dragFileName ? ( // 드래그 중일 때 파일 이름 표시
+      <div className={styles.dragFileNameContainer}>
+        <span className={styles.dragFileName}>{dragFileName}</span>
+      </div>
+    ) : fileName ? (
+      <>
+        <div className={styles.fileNameContainer}>
+          <span
+            className={styles.fileName}
+            onClick={handleFileNameClick}
+          >
+            {fileName}
+          </span>
+          <button
+            type="button"
+            className={styles.removeButton}
+            onClick={handleFileRemove}
+          >
+            X
+          </button>
+        </div>
+        <div className={styles.waveContainer}>
+          <button
+            type="button"
+            className={styles.playPauseButton}
+            onClick={handlePlayPause}
+          >
+            {isPlaying ? (
+              <p style={{ margin: "0", alignSelf: "center" }}>
+                ||
+              </p>
+            ) : (
+              " ▶ "
+            )}
+          </button>
+          <div
+            ref={waveContainerRef}
+            className={styles.waveform}
+          ></div>
+        </div>
+      </>
+    ) : (
+      <>
+        <label htmlFor="upload" className={styles.uploadLabel}>
+          <span className={styles.uploadIcon}></span>
+        </label>
+        <p className={styles.uploadText}>
+          Click Upload Icon or Drag and Drop Your File.
+        </p>
+      </>
+    )}
+    <input
+      id="upload"
+      type="file"
+      onClick={handleUploadClick}
+      onChange={handleFileChange}
+      ref={fileInputRef}
+      className={styles.uploadHidden}
+    />
+  </div>
+) : (
+                <div
+                  className={styles.youtubeContainer}
+                  onClick={() => document.getElementById("urlInput").focus()}
+                >
+                  <div className={styles.youtubehead}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <img
+                        src="/images/youtube.png"
+                        alt="YouTube Logo"
+                        className={styles.youtubeLogo}
+                      />
+                      <p className={styles.youtubeLabel}>YouTube URL</p>
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.clearButton}
+                      onClick={() => setUrl("")}
+                    >
+                      Clear
+                    </button>
+                  </div>
                   <input
-                    id="upload"
-                    type="file"
-                    onClick={handleUploadClick}
-                    onChange={handleFileChange}
-                    ref={fileInputRef}
-                    className={styles.uploadHidden}
+                    type="text"
+                    id="urlInput"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="Put here your URL."
+                    className={styles.input}
                   />
                 </div>
-              ) : (
-                <>
-                  <div className={styles.youtubeContainer}>
-                    <div className={styles.youtubehead}>
-                      <div style={{display:"flex", alignItems: 'center'}}>
-                        <img
-                          src="/images/youtube.png"
-                          alt="YouTube Logo"
-                          className={styles.youtubeLogo}
-                        />
-                        <p className={styles.youtubeLabel}>
-                          YouTube URL
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        className={styles.clearButton}
-                        onClick={() => setUrl("")}
-                      >
-                        clear
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                      placeholder="Put here your URL."
-                      className={styles.input}
-                    />
-                  </div>
-                </>
               )}
 
               {inputType === "file" && (
