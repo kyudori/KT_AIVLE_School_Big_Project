@@ -30,18 +30,12 @@ const MyPlan = () => {
 
         if (currentPlanResponse.data.plan) {
           setCurrentPlan(currentPlanResponse.data.plan);
-          setNextPaymentDate(currentPlanResponse.data.next_payment_date);
+          if (currentPlanResponse.data.plan.is_recurring) {
+            setNextPaymentDate(currentPlanResponse.data.next_payment_date);
+          } else {
+            setNextPaymentDate(null);
+          }
         }
-
-        // // 테스트용 하드코딩된 데이터 설정
-        // setCurrentPlan({
-        //   id: 3,
-        //   name: "Basic",
-        //   price: 9900,
-        //   description: "0.9$ / 1회\n30일 구독 상품",
-        // });
-        // setNextPaymentDate("2024-09-09");
-
 
         const userInfoResponse = await axios.get(
           `${BACKEND_URL}/api/user-info/`,
@@ -102,20 +96,25 @@ const MyPlan = () => {
       name: "Basic",
       price: 9900,
       description: "0.9$ / 1회\n30일 구독 상품",
+      is_recurring: 1,
     },
     {
       id: 4,
       name: "Associate",
       price: 29900,
       description: "0.58$ / 1회\n30일 구독 상품",
+      is_recurring: 1,
     },
     {
       id: 5,
       name: "Professional",
       price: 79900,
       description: "0.39$ / 1회\n30일 구독 상품",
+      is_recurring: 1,
     },
   ];
+
+  const recurringPlans = plans.filter((plan) => plan.is_recurring === 1);
 
   return (
     <div className={styles.container}>
@@ -132,16 +131,18 @@ const MyPlan = () => {
         </div>
         <div className={styles.text}>
           <h1>현재 구독플랜</h1>
-          <p className={styles.paymentDate}>
-            다음 결제일 :{" "}
-            {nextPaymentDate
-              ? new Date(nextPaymentDate).toLocaleDateString()
-              : "정보 없음"}
-          </p>
+          {currentPlan && currentPlan.is_recurring && (
+            <p className={styles.paymentDate}>
+              다음 결제일 :{" "}
+              {nextPaymentDate
+                ? new Date(nextPaymentDate).toLocaleDateString()
+                : "정보 없음"}
+            </p>
+          )}
         </div>
-        {currentPlan ? (
+        {currentPlan && currentPlan.is_recurring ? (
           <div className={styles.plans}>
-            {plans.map((plan, index) => (
+            {recurringPlans.map((plan, index) => (
               <React.Fragment key={plan.id}>
                 <div
                   className={`${styles.planCard} ${
@@ -156,7 +157,7 @@ const MyPlan = () => {
                     ))}
                   </div>
                 </div>
-                {index < plans.length - 1 && (
+                {index < recurringPlans.length - 1 && (
                   <div className={styles.arrow}>▶</div>
                 )}
               </React.Fragment>
@@ -165,19 +166,17 @@ const MyPlan = () => {
         ) : (
           <>
             <div style={{ textAlign: "-webkit-center" }}>
-                <div style={{ height: "30px" }}></div>
-                <div className={styles.cardcontent}>
-                  <p className={styles.noPlan}>
-                    구독 중인 플랜이 없습니다.
-                  </p>
-                  <h3 style={{ margin: "0", marginTop: "20px" }}>▼</h3>
-                  <button
-                    className={styles.subscribeButton}
-                    onClick={() => router.push("/plan")}
-                  >
-                    구독하러 가기
-                  </button>
-                </div>
+              <div style={{ height: "30px" }}></div>
+              <div className={styles.cardcontent}>
+                <p className={styles.noPlan}>구독 중인 플랜이 없습니다.</p>
+                <h3 style={{ margin: "0", marginTop: "20px" }}>▼</h3>
+                <button
+                  className={styles.subscribeButton}
+                  onClick={() => router.push("/plan")}
+                >
+                  구독하러 가기
+                </button>
+              </div>
             </div>
           </>
         )}

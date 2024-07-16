@@ -29,6 +29,7 @@ const plans = [
     dailyCalls: 10,
     description1: "0.9$ / 1회",
     description2: "30일 구독 상품",
+    is_recurring: 1,
   },
   {
     id: 4,
@@ -39,6 +40,7 @@ const plans = [
     dailyCalls: 50,
     description1: "0.58$ / 1회",
     description2: "30일 구독 상품",
+    is_recurring: 1,
   },
   {
     id: 5,
@@ -49,6 +51,7 @@ const plans = [
     dailyCalls: 200,
     description1: "0.39$ / 1회",
     description2: "30일 구독 상품",
+    is_recurring: 1,
   },
 ];
 
