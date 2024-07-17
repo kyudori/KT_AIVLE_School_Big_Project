@@ -236,7 +236,7 @@ def create_payment(request):
 
     # 정기 결제 플랜인 경우, 상위 플랜을 구독 중일 때 하위 플랜 결제 방지
     if plan.is_recurring:
-        if current_subscription and current_subscription.plan.price > plan.price:
+        if current_subscription and current_subscription.plan.is_recurring and current_subscription.plan.price > plan.price:
             return Response({'error': 'Cannot downgrade subscription plan while an active higher plan exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
     kakao_api_url = 'https://open-api.kakaopay.com/online/v1/payment/ready'
@@ -600,24 +600,23 @@ def get_credits(request):
 
     # 유효한 추가 크레딧 계산 (만료되지 않은 추가 크레딧만 포함)
     today = timezone.now().date()
-    valid_additional_subs = subscriptions.filter(end_date__gt=today)
+    valid_additional_subs = subscriptions.filter(plan__is_recurring=False, end_date__gt=today)
     total_additional_credits = valid_additional_subs.aggregate(total=Sum('total_credits'))['total'] or 0
-    used_additional_credits = valid_additional_subs.aggregate(used=Sum(F('total_credits') - F('total_credits')))['used'] or 0
 
     # 유효한 일일 크레딧 계산
     daily_subs = subscriptions.filter(plan__is_recurring=True)
     total_daily_credits = daily_subs.aggregate(total=Sum('plan__api_calls_per_day'))['total'] or 0
     used_daily_credits = daily_subs.aggregate(used=Sum(F('plan__api_calls_per_day') - F('daily_credits')))['used'] or 0
+    remaining_daily_credits = total_daily_credits - used_daily_credits
 
     # 남은 크레딧 계산
     remaining_free_credits = free_credits
-    remaining_daily_credits = total_daily_credits - used_daily_credits
-    remaining_additional_credits = total_additional_credits - used_additional_credits
+    remaining_additional_credits = total_additional_credits
+    remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
 
     # 전체 크레딧 계산
     total_credits = free_credits + total_daily_credits + total_additional_credits
-    today_total_credits = 5 + total_daily_credits + total_additional_credits
-    remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
+    today_total_credits = free_credits + total_daily_credits + total_additional_credits
 
     return Response({
         'remaining_free_credits': remaining_free_credits,
@@ -626,7 +625,7 @@ def get_credits(request):
         'remaining_credits': remaining_credits,
         'total_credits': total_credits,
         'today_total_credits': today_total_credits,
-        'used_credits': today_total_credits - total_credits  # 사용된 크레딧 계산 추가
+        'used_credits': today_total_credits - remaining_credits  # 사용된 크레딧 계산 추가
     })
     
 # @csrf_exempt
