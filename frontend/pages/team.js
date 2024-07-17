@@ -90,6 +90,7 @@ export default function Team() {
           </div>
         </div>
       </div>
+      <div style={{height:'100px'}}></div>
       <Footer />
     </div>
   );
