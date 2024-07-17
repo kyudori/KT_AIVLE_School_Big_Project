@@ -87,6 +87,7 @@ export default function Contact() {
       </div>
       <div className={styles.head}>
         <h1>Contact Us</h1>
+        <p>Voice Verity에 관한 비즈니스 문의를 남겨주세요.</p>
         <div className={styles.searchContainer}>
           <select value={searchOption} onChange={handleSearchOptionChange} className={styles.searchSelect}>
             <option value="title">제목</option>

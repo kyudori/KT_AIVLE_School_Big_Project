@@ -26,7 +26,7 @@
 .container h1 {
   font-weight: normal;
   font-size: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: #333;
 }
 
@@ -42,7 +42,15 @@
   align-items: center;
 }
 
+.head p {
+  font-size: 20px;
+  color: #666;
+  margin-top: 0;
+}
+
 .searchContainer {
+  margin-left: auto;
+  margin-right: 20px;
   background-color: #fff;
   border-radius: 30px;
   border: solid 1px #ccc;
