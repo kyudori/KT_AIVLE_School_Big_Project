@@ -96,12 +96,11 @@
   color: #555;
 }
 
-.checkboxContainer input[type="checkbox"],
-.checkboxGroup input[type="checkbox"] {
+.checkboxContainer input[type="checkbox"] {
   appearance: none;
   background-color: #fff;
   border: 2px solid #ccc;
-  border-radius: 4px; /* Square */
+  border-radius: 50%;
   width: 20px;
   height: 20px;
   display: inline-block;
@@ -109,17 +108,18 @@
   margin-right: 10px;
 }
 
-.checkboxContainer input[type="checkbox"]:checked,
-.checkboxGroup input[type="checkbox"]:checked {
-  background-color: #007bff; /* Blue background */
+.checkboxContainer input[type="checkbox"]:checked {
+  background-color: #007bff;
+  border: none;
 }
 
-.checkboxContainer input[type="checkbox"]:checked::after,
-.checkboxGroup input[type="checkbox"]:checked::after {
-  content: '✔'; /* Check mark */
+.checkboxContainer input[type="checkbox"]:checked::after {
+  content: '';
   display: block;
-  font-size: 14px;
-  color: white; /* White check mark */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: white;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -154,7 +154,7 @@
   border: none;
   border-radius: 15px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .signupButton:hover {
@@ -216,6 +216,33 @@
   flex-direction: row;
   justify-content: space-between;
   width: 80%;
+}
+
+.checkboxGroup input[type="checkbox"] {
+  appearance: none;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 4px; /* Square */
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+  margin-right: 10px;
+}
+
+.checkboxGroup input[type="checkbox"]:checked {
+  background-color: #007bff; /* Blue background */
+}
+
+.checkboxGroup input[type="checkbox"]:checked::after {
+  content: '✔'; /* Check mark */
+  display: block;
+  font-size: 14px;
+  color: white; /* White check mark */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .checkboxLabel {
