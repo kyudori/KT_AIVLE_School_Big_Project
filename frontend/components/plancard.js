@@ -56,9 +56,14 @@ const PlanCard = ({ plan }) => {
         return;
       }
 
-      if (plan.is_recurring && currentPlan && planId <= currentPlan.id) {
-        alert("현재 구독 중인 플랜보다 상위 플랜을 선택해야 합니다.");
-        return;
+      // Check if the plan is recurring and if the current plan exists
+      if (plan.is_recurring && currentPlan) {
+        if (currentPlan.id < 3 && planId > 2) {
+          // Current plan is not a subscription plan, allow purchase
+        } else if (planId <= currentPlan.id) {
+          alert("현재 구독 중인 플랜보다 상위 플랜을 선택해야 합니다.");
+          return;
+        }
       }
 
       const response = await axios.post(
