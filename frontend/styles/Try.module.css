@@ -73,9 +73,9 @@
   align-items: center;
   justify-content: space-evenly;
   text-align: center;
-  height: 180px;
+  gap: 20px;
   width: 640px;
-  padding: 20px;
+  padding: 40px 20px;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 31px;
   border: 1px dashed #000;
@@ -328,7 +328,7 @@
   align-content: space-between;
   align-items: center;
   margin-top: 10px;
-  width: 500px;
+  width: 90%;
   gap: 10px;
 }
 
@@ -363,7 +363,7 @@
   display: flex;
   justify-content: center;
   gap: 15px;
-  margin-top: 25px;
+  margin-top: 50px;
 }
 
 .exampleFile {
@@ -379,17 +379,10 @@
 }
 
 .playPauseButton {
-  margin-right: 10px;
-  font-size: 30px;
-  background-color: #ccc; /* 이 값을 원하는 색상으로 변경 */
-  color: #fff;
+  background: none;
   border: none;
-  border-radius: 50%;
-  min-height: 50px;
-  min-width: 50px;
-  display: flex;
-  justify-content: center;
   cursor: pointer;
+  border-radius: 50%;
 }
 
 .startDetectionButton {
@@ -421,4 +414,12 @@
   padding: 10px 20px;
   font-size: 1.2em;
   cursor: pointer;
+}
+
+.img {
+  width: 60px;
+  height: 60px;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
 }
