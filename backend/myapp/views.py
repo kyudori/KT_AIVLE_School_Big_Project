@@ -417,9 +417,14 @@ def upload_audio(request):
     if upload_history.upload_count >= MAX_UPLOADS_PER_DAY:
         return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_BAD_REQUEST)
 
+    # UUID 생성 및 파일 경로 설정
+    unique_id = uuid.uuid4()
+    file_name = os.path.splitext(file.name)[0]
+    file_path = f'audio_files/{file_name}_{unique_id}{file_extension}'
+
     # S3에 파일 업로드
-    file_path = default_storage.save(f'audio_files/{file.name}', file)
-    file_url = default_storage.url(file_path)
+    saved_file_path = default_storage.save(file_path, file)
+    file_url = default_storage.url(saved_file_path)
 
     # AI 서버에 파일 경로 전송
     try:
@@ -434,6 +439,7 @@ def upload_audio(request):
         predictions = [0.1, 0.1, 0.9, 0.9, 0.9, 0.9]
         fake_cnt = 4
         real_cnt = 2
+
     # DB에 저장
     audio_file = AudioFile(
         user=request.user,
@@ -451,7 +457,7 @@ def upload_audio(request):
 
     return Response({
         'file_name': file.name,
-        'file_path': file_url,
+        'file_path': default_storage.url(f'audio_files/{file.name}'),
         'analysis_result': result,
         'predictions': predictions,
         'real_cnt': real_cnt,
