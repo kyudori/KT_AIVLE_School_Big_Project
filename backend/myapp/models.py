@@ -91,7 +91,7 @@ class APIKey(models.Model):
 class AudioFile(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     file_name = models.CharField(max_length=255)
-    file_path = models.CharField(max_length=255)
+    file_path = models.CharField(max_length=1024)
     file_size = models.PositiveIntegerField()
     file_extension = models.CharField(max_length=10)
     analysis_result = models.CharField(max_length=255)
@@ -152,7 +152,7 @@ class ApiCallHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     success = models.BooleanField(default=True)  # API 호출 성공 여부
     response_time = models.FloatField(null=True, blank=True)  # 응답 시간 (밀리초 단위)
-    file_path = models.CharField(max_length=255, null=True, blank=True)
+    file_path = models.CharField(max_length=1024, null=True, blank=True)
     youtube_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
