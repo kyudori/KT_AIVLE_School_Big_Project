@@ -1053,7 +1053,7 @@ def call_history(request):
     # Format the label to be more readable
     formatted_history = []
     for item in history:
-        item['label'] = item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시 %M분 %S초')
+        item['label'] = item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시')
         formatted_history.append(item)
 
     return Response(formatted_history, status=status.HTTP_200_OK)
