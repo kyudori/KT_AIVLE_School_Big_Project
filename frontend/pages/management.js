@@ -454,6 +454,7 @@ const ApiManagement = () => {
                     display: "flex",
                     alignItems: "center",
                     marginTop: "-20px",
+                    justifyContent: 'center'
                   }}
                 >
                   <div className={styles.cardcontent}>
@@ -516,7 +517,7 @@ const ApiManagement = () => {
                   className={styles.purchaseButton}
                   onClick={() => router.push("/plan")}
                 >
-                  Buy More Credits
+                  크레딧 추가구매
                 </button>
               </div>
               <div className={styles.separator}></div>
