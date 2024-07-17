@@ -7,10 +7,14 @@ Modal.setAppElement('#__next');
 const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
   const [password, setPassword] = useState('');
 
-  const handleSubmit = () => {
-    onSubmit(password);
-    setPassword('');
-    onRequestClose();
+  const handleSubmit = async () => {
+    try {
+      await onSubmit(password);
+      setPassword('');
+      onRequestClose();
+    } catch (error) {
+      console.error('Failed to submit password:', error);
+    }
   };
 
   const handleKeyDown = (e) => {
