@@ -16,7 +16,7 @@ const plans = [
       { id: 2, price: 45.99, credits: 65 },
     ],
     color: 'B29191',
-    icon: "/images/p.png",
+    icon: "/images/moneyclip.png",
     description1: "구독이 필요하지 않습니다. 사용할 만큼만 비용을 지불하세요.",
     description2: "오래 사용할 수 있습니다. 90일 동안 자유롭게 사용하세요.",
   },
