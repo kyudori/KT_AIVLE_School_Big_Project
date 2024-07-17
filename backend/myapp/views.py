@@ -602,7 +602,7 @@ def get_credits(request):
     today = timezone.now().date()
     valid_additional_subs = subscriptions.filter(end_date__gt=today)
     total_additional_credits = valid_additional_subs.aggregate(total=Sum('total_credits'))['total'] or 0
-    used_additional_credits = valid_additional_subs.aggregate(used=Sum(F('total_credits') - F('daily_credits')))['used'] or 0
+    used_additional_credits = valid_additional_subs.aggregate(used=Sum(F('total_credits') - F('total_credits')))['used'] or 0
 
     # 유효한 일일 크레딧 계산
     daily_subs = subscriptions.filter(plan__is_recurring=True)
