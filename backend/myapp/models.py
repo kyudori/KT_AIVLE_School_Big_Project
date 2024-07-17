@@ -152,6 +152,8 @@ class ApiCallHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     success = models.BooleanField(default=True)  # API 호출 성공 여부
     response_time = models.FloatField(null=True, blank=True)  # 응답 시간 (밀리초 단위)
-    
+    file_path = models.CharField(max_length=255, null=True, blank=True)
+    youtube_url = models.URLField(null=True, blank=True)
+
     def __str__(self):
         return f"{self.user.email} - {self.endpoint} - {self.timestamp}"
