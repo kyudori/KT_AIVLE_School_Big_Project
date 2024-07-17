@@ -244,7 +244,7 @@ def create_payment(request):
         'Authorization': f'SECRET_KEY {settings.KAKAO_DEV_SECRET_KEY}',
         'Content-Type': 'application/json',
     }
-    
+
     # 고유한 partner_order_id 생성
     partner_order_id = f"{request.user.email}_{uuid.uuid4()}"
 
@@ -291,7 +291,7 @@ def create_payment(request):
         })
     except requests.RequestException as e:
         return Response({'error': 'Failed to initiate payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+    
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
