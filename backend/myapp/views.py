@@ -1043,24 +1043,57 @@ def call_history(request):
     user = request.user
     interval = request.query_params.get('interval', 'hourly')
 
+    now = timezone.now()
+
     if interval == 'hourly':
-        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncHour('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
+        start_time = now - timedelta(hours=24)
+        history = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_time) \
+            .annotate(label=TruncHour('timestamp')) \
+            .values('label') \
+            .annotate(count=Count('id')) \
+            .order_by('label')
+        
+        # Format the label to "10시"
+        formatted_history = [{'label': item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%H시'), 'count': item['count']} for item in history]
+
     elif interval == 'daily':
-        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncDay('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
+        start_date = now - timedelta(days=30)
+        history = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_date) \
+            .annotate(label=TruncDay('timestamp')) \
+            .values('label') \
+            .annotate(count=Count('id')) \
+            .order_by('label')
+        
+        # Format the label to "7월16일"
+        formatted_history = [{'label': item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%m월%d일'), 'count': item['count']} for item in history]
+
     elif interval == 'weekly':
-        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncWeek('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
+        start_date = now - timedelta(weeks=26)
+        history = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_date) \
+            .annotate(label=TruncWeek('timestamp')) \
+            .values('label') \
+            .annotate(count=Count('id')) \
+            .order_by('label')
+        
+        # Format the label to "7월 2주차"
+        formatted_history = [{'label': item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%m월 %U주차'), 'count': item['count']} for item in history]
+
     elif interval == 'monthly':
-        history = ApiCallHistory.objects.filter(user=user).annotate(label=TruncMonth('timestamp')).values('label').annotate(count=Count('id')).order_by('label')
+        start_date = now - timedelta(days=365)
+        history = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_date) \
+            .annotate(label=TruncMonth('timestamp')) \
+            .values('label') \
+            .annotate(count=Count('id')) \
+            .order_by('label')
+        
+        # Format the label to "7월"
+        formatted_history = [{'label': item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%m월'), 'count': item['count']} for item in history]
+
     else:
         return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Format the label to be more readable
-    formatted_history = []
-    for item in history:
-        item['label'] = item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%Y년 %m월 %d일 %H시')
-        formatted_history.append(item)
-
     return Response(formatted_history, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
