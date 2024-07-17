@@ -441,7 +441,7 @@ const ApiManagement = () => {
               <div className={styles.card}>
                 <h3>Total Credits</h3>
                 <div className={styles.totalcredit}>
-                  <p>⦁ Free: {freeCredits + dailyCredits}개</p>
+                  <p>⦁ Daily: {freeCredits + dailyCredits}개</p>
                   <p>⦁ Additional: {additionalCredits}개</p>
                 </div>
               </div>
