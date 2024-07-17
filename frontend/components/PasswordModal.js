@@ -13,6 +13,12 @@ const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
     onRequestClose();
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -27,6 +33,7 @@ const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        onKeyDown={handleKeyDown}
         className={styles.passwordInput}
         placeholder="Input Your Password."
       />
