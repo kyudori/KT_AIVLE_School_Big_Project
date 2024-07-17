@@ -59,6 +59,8 @@ def signup(request):
         consent_personal_info=data.get('consent_personal_info', False),
         consent_service_terms=data.get('consent_service_terms', False),
         consent_voice_data=data.get('consent_voice_data', False),
+        sms_marketing = data.get('sms_marketing',False),
+        email_marketing = data.get('email_marketing',False),
     )
     token, created = Token.objects.get_or_create(user=user)
     return Response({'token': token.key}, status=status.HTTP_201_CREATED)

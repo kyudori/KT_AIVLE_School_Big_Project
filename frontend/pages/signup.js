@@ -24,6 +24,8 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [company, setCompany] = useState("");
   const [contact, setContact] = useState("");
+  const [smsMarketing, setSmsMarketing] = useState(false);
+  const [emailMarketing, setEmailMarketing] = useState(false);
 
   useEffect(() => {
     localStorage.removeItem("termsChecked");
@@ -141,6 +143,8 @@ export default function Signup() {
         password,
         company,
         contact,
+        sms_marketing: smsMarketing,
+        email_marketing: emailMarketing,
       });
       localStorage.setItem("token", response.data.token);
       alert("회원가입 성공");
@@ -323,6 +327,36 @@ export default function Signup() {
                 required
                 className={styles.inputField}
               />
+              <div style={{ marginTop: "0px" }}>
+                <p
+                  style={{
+                    color: "#868686",
+                    textAlign: "left",
+                  }}
+                >
+                  마케팅활용동의 및 광고수신동의
+                </p>
+              </div>
+              <div className={styles.marketing}>
+                <div className={styles.checkboxGroup}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={smsMarketing}
+                      onChange={() => setSmsMarketing(!smsMarketing)}
+                    />
+                    SMS 수신 동의
+                  </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={emailMarketing}
+                      onChange={() => setEmailMarketing(!emailMarketing)}
+                    />
+                    E-mail 수신 동의
+                  </label>
+                </div>
+              </div>
               <div style={{ margin: '10px' }} />
               <button type="submit" className={styles.signupButton}>
                 회원 가입
