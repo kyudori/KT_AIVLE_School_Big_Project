@@ -544,19 +544,19 @@ const ApiManagement = () => {
                 <h3>Traffic</h3>
                 <div className={styles.intervalTabs}>
                   <button onClick={() => handleIntervalChange("hourly")}>
-                    시간별
+                    시간별(24시간)
                   </button>
                   <button onClick={() => handleIntervalChange("daily")}>
-                    일별
+                    일별(일주일)
                   </button>
                   <button onClick={() => handleIntervalChange("weekly")}>
-                    주별
+                    주별(6개월)
                   </button>
                   <button
                     onClick={() => handleIntervalChange("monthly")}
                     style={{ border: "none" }}
                   >
-                    월별
+                    월별(1년)
                   </button>
                 </div>
                 <div className={styles.graph}>

@@ -1057,7 +1057,7 @@ def call_history(request):
         formatted_history = [{'label': item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%H시'), 'count': item['count']} for item in history]
 
     elif interval == 'daily':
-        start_date = now - timedelta(days=30)
+        start_date = now - timedelta(days=7)
         history = ApiCallHistory.objects.filter(user=user, timestamp__gte=start_date) \
             .annotate(label=TruncDay('timestamp')) \
             .values('label') \
@@ -1086,8 +1086,8 @@ def call_history(request):
             .annotate(count=Count('id')) \
             .order_by('label')
         
-        # Format the label to "7월"
-        formatted_history = [{'label': item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%m월'), 'count': item['count']} for item in history]
+        # Format the label to "24년 7월"
+        formatted_history = [{'label': item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%y년 %m월'), 'count': item['count']} for item in history]
 
     else:
         return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
