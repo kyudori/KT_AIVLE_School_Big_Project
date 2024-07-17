@@ -490,11 +490,14 @@ export default function TryVoice() {
             onClick={handlePlayPause}
           >
             {isPlaying ? (
-              <p style={{ margin: "0", alignSelf: "center" }}>
-                ||
-              </p>
+              <div 
+              className={styles.img}
+              style={{ backgroundImage: `url("/images/stopbtn.png")` }}>
+              </div>
             ) : (
-              " ▶ "
+              <div 
+              className={styles.img}
+              style={{ backgroundImage: `url("/images/playbtn.png")` }} />
             )}
           </button>
           <div
@@ -588,6 +591,7 @@ export default function TryVoice() {
                 </div>
               )}
 
+              <div style={{margin:'50px'}}>
               <h2>
                 {inputType === "file"
                   ? "음성파일을 업로드한 뒤, Start Detection 버튼을 눌러주세요."
@@ -601,9 +605,10 @@ export default function TryVoice() {
               <button type="submit" className={styles.startDetectionButton}>
                 ▶ Start Detection
               </button>
+              </div>
             </form>
           </div>
-          {loading && <p>분석중...</p>}
+          {loading && <p style={{fontSize:'24px', margin: "100px 0"}}>분석중...</p>}
           {!loading && Array.isArray(predictions) && predictions.length > 0 && (
             <div className={styles.resultContext}>
               <h1>Detect Report</h1>
