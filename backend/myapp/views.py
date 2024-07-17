@@ -522,7 +522,12 @@ def get_api_key(request):
     if request.method == 'GET':
         try:
             api_key = APIKey.objects.get(user=user)
-            last_used_at = api_key.last_used_at.strftime("%Y/%m/%d %H:%M:%S") if api_key.last_used_at else "사용한 기록이 없습니다."
+            # last_used_at을 한국 시간으로 변환
+            if api_key.last_used_at:
+                kst = pytz.timezone('Asia/Seoul')
+                last_used_at = api_key.last_used_at.astimezone(kst).strftime("%Y/%m/%d %H:%M:%S")
+            else:
+                last_used_at = "사용한 기록이 없습니다."
             return Response({
                 'api_key': api_key.key, 
                 'is_active': api_key.is_active,
