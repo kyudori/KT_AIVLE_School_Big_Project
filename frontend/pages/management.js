@@ -64,7 +64,7 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${token}`,
           },
-          //withCredentials: true, // 세션 인증을 위해 필요
+          withCredentials: true, // 세션 인증을 위해 필요
         })
         .then((response) => {
           setUser(response.data);
@@ -104,7 +104,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
-        //withCredentials: true, // 세션 인증을 위해 필요
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setApiKey(response.data.api_key);
@@ -124,7 +124,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
-        //withCredentials: true, // 세션 인증을 위해 필요
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setTodayTotalCredits(
@@ -150,7 +150,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
-        //withCredentials: true, // 세션 인증을 위해 필요
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setIsApiServerOn(response.data.status === "OK");
@@ -167,7 +167,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${localStorage.getItem("token")}`,
         },
-        //withCredentials: true, // 세션 인증을 위해 필요
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setTrafficData(response.data);
@@ -183,7 +183,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${localStorage.getItem("token")}`,
         },
-        //withCredentials: true, // 세션 인증을 위해 필요
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setSummaryData(response.data);
@@ -213,7 +213,7 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${localStorage.getItem("token")}`,
           },
-          //withCredentials: true,
+          withCredentials: true,
         }
       )
       .then((response) => {
@@ -239,7 +239,7 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${localStorage.getItem("token")}`,
           },
-          //withCredentials: true,
+          withCredentials: true,
         }
       )
       .then((response) => {
@@ -264,7 +264,7 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${localStorage.getItem("token")}`,
           },
-          //withCredentials: true,
+          withCredentials: true,
         }
       )
       .then(() => {
@@ -292,7 +292,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
-            //withCredentials: true,
+            withCredentials: true,
           }
         )
         .then((response) => {
@@ -400,11 +400,11 @@ const ApiManagement = () => {
     switch (currentPage) {
       case "dashboard":
         const data = {
-          labels: ["Free", "Daily", "Additional", "Used"],
+          labels: ["Daily", "Additional", "Used"],
           datasets: [
             {
-              data: [freeCredits, dailyCredits, additionalCredits, usedCredits],
-              backgroundColor: ["#36A2EB", "#FFCE56", "#FF6384", "#CCCCCC"],
+              data: [freeCredits + dailyCredits, additionalCredits, usedCredits],
+              backgroundColor: ["#FFCE56", "#FF6384", "#CCCCCC"],
             },
           ],
         };
@@ -441,8 +441,7 @@ const ApiManagement = () => {
               <div className={styles.card}>
                 <h3>Total Credits</h3>
                 <div className={styles.totalcredit}>
-                  <p>⦁ Free: {freeCredits}개</p>
-                  <p>⦁ Daily: {dailyCredits}개</p>
+                  <p>⦁ Free: {freeCredits + dailyCredits}개</p>
                   <p>⦁ Additional: {additionalCredits}개</p>
                 </div>
               </div>
@@ -483,13 +482,6 @@ const ApiManagement = () => {
                     </div>
                   </div>
                   <div className={styles.chartLegend}>
-                    <div className={styles.legendItem}>
-                      <div
-                        className={styles.legendColorBox}
-                        style={{ backgroundColor: "#36A2EB" }}
-                      ></div>
-                      Free
-                    </div>
                     <div className={styles.legendItem}>
                       <div
                         className={styles.legendColorBox}
