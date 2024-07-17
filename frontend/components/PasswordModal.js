@@ -20,6 +20,12 @@ const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
     onRequestClose();
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -37,6 +43,7 @@ const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
         className={styles.passwordInput}
         placeholder="Input Your Password."
         ref={passwordInputRef}
+        onKeyDown={handleKeyDown}
       />
       <button onClick={handleSubmit} className={styles.submitButton}>
         확인
