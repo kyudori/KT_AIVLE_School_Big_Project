@@ -384,6 +384,11 @@ export default function TryVoice() {
     setDragging(false); // 드래그 상태 초기화
     setDragFileName(""); // 드래그 파일 이름 초기화
   
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 1) {
+      alert("하나의 File만 업로드 해주세요.");
+      return;
+    }
+  
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const selectedFile = e.dataTransfer.files[0];
       const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
