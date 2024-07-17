@@ -123,8 +123,8 @@ const ApiManagement = () => {
       .get(`${BACKEND_URL}/api/get-credits/`, {
         headers: {
           Authorization: `Token ${token}`,
-          withCredentials: true, // 세션 인증을 위해 필요
         },
+        withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setTodayTotalCredits(
