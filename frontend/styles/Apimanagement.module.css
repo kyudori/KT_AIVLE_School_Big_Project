@@ -418,7 +418,7 @@
   margin: 20px 0;
   display: flex;
   align-items: center;
-  width: 52%;
+  width: 86%; /* 너비 제한을 100%로 설정 */
   justify-content: space-between;
 }
 

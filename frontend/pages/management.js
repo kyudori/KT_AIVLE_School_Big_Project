@@ -64,7 +64,7 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${token}`,
           },
-          withCredentials: true, // 세션 인증을 위해 필요
+          //withCredentials: true, // 세션 인증을 위해 필요
         })
         .then((response) => {
           setUser(response.data);
@@ -104,7 +104,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
-        withCredentials: true, // 세션 인증을 위해 필요
+        //withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setApiKey(response.data.api_key);
@@ -124,7 +124,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
-        withCredentials: true, // 세션 인증을 위해 필요
+        //withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setTodayTotalCredits(
@@ -150,7 +150,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${token}`,
         },
-        withCredentials: true, // 세션 인증을 위해 필요
+        //withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setIsApiServerOn(response.data.status === "OK");
@@ -167,7 +167,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${localStorage.getItem("token")}`,
         },
-        withCredentials: true, // 세션 인증을 위해 필요
+        //withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setTrafficData(response.data);
@@ -183,7 +183,7 @@ const ApiManagement = () => {
         headers: {
           Authorization: `Token ${localStorage.getItem("token")}`,
         },
-        withCredentials: true, // 세션 인증을 위해 필요
+        //withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
         setSummaryData(response.data);
@@ -213,7 +213,7 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${localStorage.getItem("token")}`,
           },
-          withCredentials: true,
+          //withCredentials: true,
         }
       )
       .then((response) => {
@@ -239,7 +239,7 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${localStorage.getItem("token")}`,
           },
-          withCredentials: true,
+          //withCredentials: true,
         }
       )
       .then((response) => {
@@ -264,7 +264,7 @@ const ApiManagement = () => {
           headers: {
             Authorization: `Token ${localStorage.getItem("token")}`,
           },
-          withCredentials: true,
+          //withCredentials: true,
         }
       )
       .then(() => {
@@ -292,7 +292,7 @@ const ApiManagement = () => {
             headers: {
               Authorization: `Token ${localStorage.getItem("token")}`,
             },
-            withCredentials: true,
+            //withCredentials: true,
           }
         )
         .then((response) => {
