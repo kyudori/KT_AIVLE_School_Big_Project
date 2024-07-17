@@ -197,13 +197,12 @@ export default function Home() {
         <div className={styles.listensection}>
           <div style={{ height: "fit-content" }}>
             <h2>Deep Voice(딥보이스)를 들어보세요</h2>
-            <p>
+            <p style={{ margin: "30px 0 5px 0" }}>
               사이버 범죄 수법으로 Deep Voice를 사용하는 비율이 늘어나고
               있습니다.
-              <br />
-              <span>
-                실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.
-              </span>
+            </p>
+            <p style={{ margin: "5px 0 30px 0" }}>
+              실제 사람의 목소리와 얼마나 비슷한지 귀 기울여 들어보세요.
             </p>
           </div>
           <section>
@@ -366,12 +365,11 @@ export default function Home() {
         <div className={styles.youtubeSection}>
           <div>
             <h2>우리의 Dev Story</h2>
-            <p>
+            <p style={{margin:'30px 0 5px 0'}}>
               Voice Verity의 시작은 어디서부터였을까? Voice Verity의 이야기를
               만나보세요.
-              <br />
-              <span>우리의 이야기는 끝나지 않았습니다.</span>
             </p>
+            <p style={{margin:'5px 0 30px 0'}}>우리의 이야기는 끝나지 않았습니다.</p>
           </div>
           <div className={styles.youtubeContainer}>
             <iframe
