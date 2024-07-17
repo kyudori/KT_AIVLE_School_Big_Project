@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import styles from '../styles/PasswordModal.module.css';
 
@@ -6,13 +6,6 @@ Modal.setAppElement('#__next');
 
 const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
   const [password, setPassword] = useState('');
-  const passwordInputRef = useRef(null);
-
-  useEffect(() => {
-    if (isOpen && passwordInputRef.current) {
-      passwordInputRef.current.focus();
-    }
-  }, [isOpen]);
 
   const handleSubmit = () => {
     onSubmit(password);
@@ -40,10 +33,9 @@ const PasswordModal = ({ isOpen, onRequestClose, onSubmit }) => {
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        onKeyDown={handleKeyDown}
         className={styles.passwordInput}
         placeholder="Input Your Password."
-        ref={passwordInputRef}
-        onKeyDown={handleKeyDown}
       />
       <button onClick={handleSubmit} className={styles.submitButton}>
         확인
