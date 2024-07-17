@@ -148,7 +148,7 @@ export default function Documentation() {
                     className={styles.card}
                     onClick={handleNavigateToSetting}
                   >
-                    <div className={styles.cardicon2}></div>
+                    <div className={styles.cardicon2}>🗝️</div>
                     <div className={styles.cardtext}>
                       <h2>Key 발급</h2>
                       <p style={{ color: "#444", fontSize: "20px" }}>Get Key</p>
@@ -169,7 +169,8 @@ export default function Documentation() {
                   <span className={styles.fileFormat}>.wav</span>
                   <span className={styles.fileFormat}>.mp3</span>
                   <span className={styles.fileFormat}>.m4a</span>
-                  <span className={styles.fileFormat}>URL</span>
+                  <span className={styles.fileFormat}
+                    style={{background:'red', width:'max-content'}}>YouTube URL</span>
                 </div>
                 <p>10MB 이하의 음성 파일</p>
               </div>
@@ -180,7 +181,7 @@ export default function Documentation() {
               <hr />
               <div className={styles.codeEX}>
                 <div className={styles.codetop}>
-                  <p>JSON</p>
+                  <p>KEY</p>
                   <span
                     onClick={() =>
                       handleCopyClick(`Authorization: Bearer YOUR_API_KEY`, 'auth')
