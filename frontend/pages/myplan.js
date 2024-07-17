@@ -133,7 +133,7 @@ const MyPlan = () => {
           <h1>현재 구독플랜</h1>
           {currentPlan && currentPlan.is_recurring && (
             <p className={styles.paymentDate}>
-              다음 결제일 :{" "}
+              구독 만료일 :{" "}
               {nextPaymentDate
                 ? new Date(nextPaymentDate).toLocaleDateString()
                 : "정보 없음"}
