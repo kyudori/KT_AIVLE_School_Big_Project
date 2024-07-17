@@ -890,22 +890,22 @@ def youtube_verity(request):
             response_time = (end_time - start_time).total_seconds() * 1000  # milliseconds
 
             # API 호출 기록 저장 (성공)
-            ApiCallHistory.objects.create(user=user, api_key = key, endpoint='youtube_verity', success=True, response_time=response_time)
+            ApiCallHistory.objects.create(user=user, api_key=key, endpoint='youtube_verity', success=True, response_time=response_time, youtube_url=youtube_url)
 
             # 크레딧 차감
             today = timezone.now().date()
             # 유효한 일일 크레딧 구독
             daily_subscription = UserSubscription.objects.filter(
-                user=user, 
-                plan__is_recurring=True, 
+                user=user,
+                plan__is_recurring=True,
                 is_active=True
             ).first()
-            
+
             # 유효한 추가 크레딧 구독
             additional_subscription = UserSubscription.objects.filter(
-                user=user, 
-                plan__is_recurring=False, 
-                end_date__gt=today, 
+                user=user,
+                plan__is_recurring=False,
+                end_date__gt=today,
                 is_active=True
             ).first()
 
@@ -928,7 +928,7 @@ def youtube_verity(request):
             return Response(ai_result)
         except requests.RequestException as e:
             # API 호출 기록 저장 (실패)
-            ApiCallHistory.objects.create(user=user, endpoint='youtube_verity', success=False)
+            ApiCallHistory.objects.create(user=user, endpoint='youtube_verity', success=False, youtube_url=youtube_url)
             return Response({'error': 'AI server OFF', 'details': str(e)}, status=503)
     except APIKey.DoesNotExist:
         return Response({'error': 'Invalid API key'}, status=401)
@@ -966,7 +966,10 @@ def voice_verity(request):
             return Response({'error': f'File size exceeds {MAX_FILE_SIZE_MB} MB limit'}, status=413)
 
         # Upload the file to S3
-        file_key = f'audio_files/{file.name}'
+        unique_id = uuid.uuid4()
+        file_name = os.path.splitext(file.name)[0]
+        file_key = f'audio_files/{file_name}_{unique_id}{file_extension}'
+
         try:
             s3_client.upload_fileobj(file, AWS_STORAGE_BUCKET_NAME, file_key)
         except Exception as e:
@@ -985,22 +988,22 @@ def voice_verity(request):
             response_time = (end_time - start_time).total_seconds() * 1000  # milliseconds
 
             # API 호출 기록 저장 (성공)
-            ApiCallHistory.objects.create(user=user, api_key = key, endpoint='voice_verity', success=True, response_time=response_time)
+            ApiCallHistory.objects.create(user=user, api_key=key, endpoint='voice_verity', success=True, response_time=response_time, file_path=file_url)
 
             # 크레딧 차감
             today = timezone.now().date()
             # 유효한 일일 크레딧 구독
             daily_subscription = UserSubscription.objects.filter(
-                user=user, 
-                plan__is_recurring=True, 
+                user=user,
+                plan__is_recurring=True,
                 is_active=True
             ).first()
-            
+
             # 유효한 추가 크레딧 구독
             additional_subscription = UserSubscription.objects.filter(
-                user=user, 
-                plan__is_recurring=False, 
-                end_date__gt=today, 
+                user=user,
+                plan__is_recurring=False,
+                end_date__gt=today,
                 is_active=True
             ).first()
 
@@ -1023,7 +1026,7 @@ def voice_verity(request):
             return Response(ai_result)
         except requests.RequestException as e:
             # API 호출 기록 저장 (실패)
-            ApiCallHistory.objects.create(user=user, endpoint='voice_verity', success=False)
+            ApiCallHistory.objects.create(user=user, endpoint='voice_verity', success=False, file_path=file_url)
             return Response({'error': 'AI server OFF', 'details': str(e)}, status=503)
     except APIKey.DoesNotExist:
         return Response({'error': 'Invalid API key'}, status=401)
