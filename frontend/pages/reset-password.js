@@ -51,7 +51,9 @@ export default function ResetPassword() {
 
   return (
     <div className={styles.container}>
-      <Navbar />
+      <div style={{ padding: "0 200px", background: "#fff" }}>
+        <Navbar />
+      </div>
       <div className={styles.main}>
         <div className={styles.resetPasswordBox}>
         <div className={styles.logoContainer}>

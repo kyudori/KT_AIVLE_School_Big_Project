@@ -7,7 +7,9 @@ import styles from '../styles/Planafter.module.css';
 const PlanCancel = () => {
   return (
     <div className={styles.container}>
-      <Navbar />
+      <div style={{ padding: "0 200px", background: "#fff" }}>
+        <Navbar />
+      </div>
       <div className={styles.main}>
         <h1>결제 취소</h1>
         <p>결제가 취소되었습니다.</p>

@@ -142,16 +142,17 @@
   margin: 10px;
 }
 
+
 .contactUs {
-  background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
   padding: 20px;
-  height: 190px;
 }
+
 
 .contactUs h2 {
   font-weight: normal;
   font-size: 32px;
+  margin: 0;
 }
 
 .contactUs button {
@@ -162,7 +163,7 @@
   border: none;
   font-family: fontA;
   font-size: 20px;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: #fff;
   color: #000;
   outline: solid 1px #000;
   border-radius: 40px;
@@ -170,7 +171,7 @@
 }
 
 .contactUs button:hover {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .daily p {
