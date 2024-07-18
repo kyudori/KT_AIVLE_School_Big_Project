@@ -58,8 +58,10 @@ export default function TryVoice() {
 
       waveSurferRef.current.on("seek", (progress) => {
         const newTime = waveSurferRef.current.getDuration() * progress;
-        console.log(`Seek event called. Progress: ${progress}, New Time: ${newTime}`);
+        waveSurferRef.current.setCurrentTime(newTime);
         setCurrentTime(formatTime(newTime));
+        waveSurferRef.current.play();
+        setIsPlaying(true);
       });
 
       waveSurferRef.current.on("finish", () => {
@@ -74,6 +76,25 @@ export default function TryVoice() {
       reader.readAsDataURL(file);
     }
   }, [file]);
+
+  useEffect(() => {
+    const handleWaveformClick = () => {
+      if (!isPlaying) {
+        handlePlayPause();
+        handlePlayPause();
+      }
+    };
+
+    if (waveContainerRef.current) {
+      waveContainerRef.current.addEventListener("click", handleWaveformClick);
+    }
+
+    return () => {
+      if (waveContainerRef.current) {
+        waveContainerRef.current.removeEventListener("click", handleWaveformClick);
+      }
+    };
+  }, [isPlaying, waveContainerRef.current]);
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
