@@ -13,8 +13,8 @@ export default function Contact() {
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [query, setQuery] = useState('');
-  const [searchOption, setSearchOption] = useState('title');
+  const [query, setQuery] = useState("");
+  const [searchOption, setSearchOption] = useState("title");
   const [searchInitiated, setSearchInitiated] = useState(false);
   const router = useRouter();
 
@@ -34,7 +34,7 @@ export default function Contact() {
   const fetchPosts = (page, query, searchOption) => {
     axios
       .get(`${BACKEND_URL}/api/posts/`, {
-        params: { page, query, searchOption }
+        params: { page, query, searchOption },
       })
       .then((response) => {
         const { notices, posts, count } = response.data.results;
@@ -54,7 +54,10 @@ export default function Contact() {
   };
 
   const handlePostClick = (post) => {
-    if (!post.is_public && (!user || (user.id !== post.author_id && !user.is_staff))) {
+    if (
+      !post.is_public &&
+      (!user || (user.id !== post.author_id && !user.is_staff))
+    ) {
       alert("비공개 게시글입니다.");
       return;
     }
@@ -86,21 +89,34 @@ export default function Contact() {
         <Navbar />
       </div>
       <div className={styles.head}>
-        <h1>Contact Us</h1>
-        <p>Voice Verity에 관한 비즈니스 문의를 남겨주세요.</p>
-        <div className={styles.searchContainer}>
-          <select value={searchOption} onChange={handleSearchOptionChange} className={styles.searchSelect}>
-            <option value="title">제목</option>
-            <option value="author">글쓴이</option>
-          </select>
-          <input
-            type="text"
-            placeholder="검색어를 입력하세요"
-            value={query}
-            onChange={handleSearchChange}
-            className={styles.searchInput}
-          />
-          <button onClick={handleSearchClick} className={styles.searchButton}>🔍</button>
+        <div style={{ width: "30%" }} />
+        <div style={{ width: "40%" }}>
+          <div>
+            <h1>Contact Us</h1>
+            <p>Voice Verity에 관한 비즈니스 문의를 남겨주세요.</p>
+          </div>
+        </div>
+        <div style={{ width: "30%" }}>
+          <div className={styles.searchContainer}>
+            <select
+              value={searchOption}
+              onChange={handleSearchOptionChange}
+              className={styles.searchSelect}
+            >
+              <option value="title">제목</option>
+              <option value="author">글쓴이</option>
+            </select>
+            <input
+              type="text"
+              placeholder="검색"
+              value={query}
+              onChange={handleSearchChange}
+              className={styles.searchInput}
+            />
+            <button onClick={handleSearchClick} className={styles.searchButton}>
+              🔍
+            </button>
+          </div>
         </div>
       </div>
       <div className={styles.content}>
@@ -110,31 +126,39 @@ export default function Contact() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th style={{ width: '10%' }}>No</th>
-              <th style={{ width: '50%' }}>제목</th>
+              <th style={{ width: "10%" }}>No</th>
+              <th style={{ width: "50%" }}>제목</th>
               <th>글쓴이</th>
-              <th style={{ width: '10%' }}>작성시간</th>
-              <th style={{ width: '10%' }}>조회수</th>
+              <th style={{ width: "10%" }}>작성시간</th>
+              <th style={{ width: "10%" }}>조회수</th>
             </tr>
           </thead>
           <tbody>
-            {notices.length > 0 && notices.map((post, index) => (
-              <tr
-                key={post.id}
-                onClick={() => handlePostClick(post)}
-                className={styles.notice}
-              >
-                <td>공지</td>
-                <td>
-                  {!post.is_public && <span>(비공개) </span>}
-                  {post.title}
-                  {post.comments_count > 0 && <span style={{color:'#999'}}> [{post.comments_count}]</span>}
-                </td>
-                <td>{post.author_name}</td>
-                <td style={{ fontSize: '12px' }}>{new Date(post.created_at).toLocaleString()}</td>
-                <td>{post.views}</td>
-              </tr>
-            ))}
+            {notices.length > 0 &&
+              notices.map((post, index) => (
+                <tr
+                  key={post.id}
+                  onClick={() => handlePostClick(post)}
+                  className={styles.notice}
+                >
+                  <td>공지</td>
+                  <td>
+                    {!post.is_public && <span>(비공개) </span>}
+                    {post.title}
+                    {post.comments_count > 0 && (
+                      <span style={{ color: "#999" }}>
+                        {" "}
+                        [{post.comments_count}]
+                      </span>
+                    )}
+                  </td>
+                  <td>{post.author_name}</td>
+                  <td style={{ fontSize: "12px" }}>
+                    {new Date(post.created_at).toLocaleString()}
+                  </td>
+                  <td>{post.views}</td>
+                </tr>
+              ))}
             {posts.length === 0 && searchInitiated ? (
               <tr>
                 <td colSpan="5">일치하는 결과가 없습니다.</td>
@@ -150,10 +174,17 @@ export default function Contact() {
                   <td>
                     {!post.is_public && <span>(비공개) </span>}
                     {post.title}
-                    {post.comments_count > 0 && <span style={{color:'#999'}}> [{post.comments_count}]</span>}
+                    {post.comments_count > 0 && (
+                      <span style={{ color: "#999" }}>
+                        {" "}
+                        [{post.comments_count}]
+                      </span>
+                    )}
                   </td>
                   <td>{post.author_name}</td>
-                  <td style={{ fontSize: '12px' }}>{new Date(post.created_at).toLocaleString()}</td>
+                  <td style={{ fontSize: "12px" }}>
+                    {new Date(post.created_at).toLocaleString()}
+                  </td>
                   <td>{post.views}</td>
                 </tr>
               ))
