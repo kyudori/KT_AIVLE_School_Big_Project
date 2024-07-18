@@ -25,6 +25,8 @@ export default function TryVoice() {
   const [fakeCount, setFakeCount] = useState(0);
   const [realCount, setRealCount] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState("00:00");
+  const [duration, setDuration] = useState("00:00");
   const [dragging, setDragging] = useState(false);
   const [dragFileName, setDragFileName] = useState(""); 
   const lineChartRef = useRef(null);
@@ -48,6 +50,16 @@ export default function TryVoice() {
       waveSurferRef.current.on("finish", () => {
         setIsPlaying(false);
         waveSurferRef.current.stop();
+      });
+
+      waveSurferRef.current.on("audioprocess", () => {
+        const currentTime = waveSurferRef.current.getCurrentTime();
+        setCurrentTime(formatTime(currentTime));
+      });
+
+      waveSurferRef.current.on("ready", () => {
+        const duration = waveSurferRef.current.getDuration();
+        setDuration(formatTime(duration));
       });
 
       const reader = new FileReader();
@@ -85,13 +97,11 @@ export default function TryVoice() {
 
     setFile(selectedFile);
     setFileName(selectedFile.name);
-    setIsPlaying(false); // Reset the play/pause state
-    e.target.value = ""; // Reset the file input value to allow re-upload of the same file
+    setIsPlaying(false); 
+    e.target.value = "";
   };
 
   const handleExampleClick = (exampleFile) => {
-    // No need to check for login here
-    // Load the file from the public/audios directory
     const filePath = `/audios/${exampleFile}`;
 
     setFileName(exampleFile);
@@ -100,7 +110,7 @@ export default function TryVoice() {
       .then((blob) => {
         const newFile = new File([blob], exampleFile, { type: blob.type });
         setFile(newFile);
-        setIsPlaying(false); // Reset the play/pause state
+        setIsPlaying(false); 
       })
       .catch((error) => console.error("Error fetching example file:", error));
   };
@@ -108,7 +118,7 @@ export default function TryVoice() {
   const handleFileRemove = () => {
     setFile(null);
     setFileName("");
-    setIsPlaying(false); // Reset the play/pause state
+    setIsPlaying(false); 
   };
 
   const handleFileNameClick = () => {
@@ -425,6 +435,14 @@ export default function TryVoice() {
     }
   };
 
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
   return (
     <div className={styles.previewContext}>
       <div style={{ padding: "0 200px", background: "#fff" }}>
@@ -509,6 +527,11 @@ export default function TryVoice() {
             ref={waveContainerRef}
             className={styles.waveform}
           ></div>
+        </div>
+        <div className={styles.timeContainer}>
+          <span>{currentTime}</span>
+          <span>/</span>
+          <span>{duration}</span>
         </div>
       </>
     ) : (
@@ -670,3 +693,4 @@ export default function TryVoice() {
     </div>
   );
 }
+
