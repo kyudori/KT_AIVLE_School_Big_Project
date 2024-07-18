@@ -148,7 +148,7 @@ export default function Documentation() {
                     className={styles.card}
                     onClick={handleNavigateToSetting}
                   >
-                    <div className={styles.cardicon2}>🗝️</div>
+                    <div style={{padding:' 40px', alignContent: 'center'}}><div className={styles.cardicon2}></div></div>
                     <div className={styles.cardtext}>
                       <h2>Key 발급</h2>
                       <p style={{ color: "#444", fontSize: "20px" }}>Get Key</p>
