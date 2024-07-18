@@ -65,6 +65,17 @@ def signup(request):
     token, created = Token.objects.get_or_create(user=user)
     return Response({'token': token.key}, status=status.HTTP_201_CREATED)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def confirm_delete_account(request):
+    user = request.user
+    password = request.data.get('password')
+    
+    if not user.check_password(password):
+        return Response({'error': '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response({'status': '비밀번호가 확인되었습니다.'}, status=status.HTTP_200_OK)
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_account(request):

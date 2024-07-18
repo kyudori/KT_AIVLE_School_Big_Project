@@ -151,6 +151,7 @@ export default function UserInfo() {
       }
       const token = localStorage.getItem("token");
       try {
+        // 비밀번호 확인 요청
         await axios.post(
           `${BACKEND_URL}/api/confirm-delete-account/`,
           {
@@ -162,6 +163,8 @@ export default function UserInfo() {
             },
           }
         );
+
+        // 비밀번호 확인 후 계정 삭제 요청
         await axios.delete(`${BACKEND_URL}/api/delete-account/`, {
           headers: {
             Authorization: `Token ${token}`,
@@ -172,7 +175,7 @@ export default function UserInfo() {
         router.push("/");
       } catch (error) {
         console.error("계정 삭제 오류", error);
-        alert("계정 삭제 오류: " + error.response.data.error);
+        alert("계정 삭제 오류: " + (error.response.data.error || error.message));
       }
     }
   };
