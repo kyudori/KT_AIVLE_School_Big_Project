@@ -11,7 +11,7 @@ export default function Write() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isNotice, setIsNotice] = useState(false);
-  const [isPublic, setIsPublic] = useState(true);  // 전체공개 여부
+  const [isPublic, setIsPublic] = useState(true); // 전체공개 여부
   const [isEditMode, setIsEditMode] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
@@ -48,7 +48,7 @@ export default function Write() {
         setTitle(post.title);
         setContent(post.content);
         setIsNotice(post.is_notice);
-        setIsPublic(post.is_public);  // 전체공개 여부 설정
+        setIsPublic(post.is_public); // 전체공개 여부 설정
       })
       .catch((error) => console.error("Error fetching post", error));
   };
@@ -56,7 +56,7 @@ export default function Write() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    const data = { title, content, is_notice: isNotice, is_public: isPublic };  // 전체공개 여부 추가
+    const data = { title, content, is_notice: isNotice, is_public: isPublic }; // 전체공개 여부 추가
     const headers = { Authorization: `Token ${token}` };
 
     if (isEditMode) {
@@ -81,7 +81,9 @@ export default function Write() {
       <div style={{ padding: "0 200px", background: "#fff" }}>
         <Navbar />
       </div>
-      <div className={styles.head}><h1>{isEditMode ? "게시글 수정" : "게시글 작성"}</h1></div>
+      <div className={styles.head}>
+        <h1>{isEditMode ? "게시글 수정" : "게시글 작성"}</h1>
+      </div>
       <div className={styles.content}>
         <form onSubmit={handleSubmit} className={styles.form}>
           <input
@@ -92,8 +94,21 @@ export default function Write() {
             required
           />
           <textarea
-            placeholder="Content"
-            value={content}
+            value={
+              isEditMode
+                ? content
+                : `<비즈니스 문의 양식>
+
+담당자 이름:
+이메일:
+연락처: 
+부서:
+직급:
+회사:
+국가:
+문의 주제:
+문의 내용:`
+            }
             onChange={(e) => setContent(e.target.value)}
             required
           />
