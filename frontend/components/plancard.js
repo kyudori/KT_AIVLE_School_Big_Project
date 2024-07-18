@@ -159,7 +159,7 @@ const PlanCard = ({ plan }) => {
           </button>
           {isLoggedIn && (
             <div style={{ margin: "3px 10px" }}>
-              <p>현재 {dailyCredits+freeCredits}개의 Daily Credit이 남아있습니다.</p>
+              <p>현재 {dailyCredits + freeCredits}개의 Daily Credit이 남아있습니다.</p>
             </div>
           )}
           <ul>
