@@ -8,7 +8,8 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const PlanCard = ({ plan }) => {
   const router = useRouter();
   const [generalCredits, setGeneralCredits] = useState(null);
-  const [dailyCredits, setDailyCredits] = useState(null);
+  const [dailyCredits, setDailyCredits] = useState(0);
+  const [freeCredits, setFreeCredits] = useState(0);
   const [currentPlan, setCurrentPlan] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -28,8 +29,9 @@ const PlanCard = ({ plan }) => {
           Authorization: `Token ${token}`,
         },
       });
-      setGeneralCredits(response.data.remaining_additional_credits);
-      setDailyCredits(response.data.remaining_daily_credits);
+      setGeneralCredits(Number(response.data.remaining_additional_credits));
+      setDailyCredits(Number(response.data.remaining_daily_credits));
+      setFreeCredits(Number(response.data.remaining_free_credits));
     } catch (error) {
       console.error("Failed to fetch user credits:", error);
     }
@@ -157,7 +159,7 @@ const PlanCard = ({ plan }) => {
           </button>
           {isLoggedIn && (
             <div style={{ margin: "3px 10px" }}>
-              <p>현재 {dailyCredits}개의 Daily Credit이 남아있습니다.</p>
+              <p>현재 {dailyCredits + freeCredits}개의 Daily Credit이 남아있습니다.</p>
             </div>
           )}
           <ul>

@@ -14,7 +14,7 @@ export default function Team() {
         <div className={styles.teamGrid}>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/member3.gif"
+              src="/images/team/문동규.png"
               alt="문동규"
               className={styles.profileImage}
             />
@@ -33,7 +33,7 @@ export default function Team() {
           </div>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/member1.gif"
+              src="/images/team/김아영.png"
               alt="김아영"
               className={styles.profileImage}
             />
@@ -52,7 +52,7 @@ export default function Team() {
           </div>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/member5.gif"
+              src="/images/team/박종범.png"
               alt="박종범"
               className={styles.profileImage}
             />
@@ -61,7 +61,7 @@ export default function Team() {
           </div>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/member6.gif"
+              src="/images/team/정주영.png"
               alt="정주영"
               className={styles.profileImage}
             />
@@ -81,7 +81,7 @@ export default function Team() {
           </div>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/member8.gif"
+              src="/images/team/한규현.png"
               alt="한규현"
               className={styles.profileImage}
             />
