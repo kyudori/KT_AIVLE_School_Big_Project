@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import DeleteAccountModal from "../components/DeleteAccountModal"; // 모달 컴포넌트 추가
 import { useRouter } from "next/router";
 import styles from "../styles/UserInfo.module.css";
 
@@ -23,8 +24,7 @@ export default function UserInfo() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [deletePassword, setDeletePassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
   const router = useRouter();
 
   useEffect(() => {
@@ -144,82 +144,8 @@ export default function UserInfo() {
     }
   };
 
-  const handleAccountDeletion = async () => {
-    if (confirm("회원을 탈퇴한 경우, 활동한 모든 기록이 삭제되게 됩니다.\n그래도 탈퇴하시겠습니까?")) {
-      setErrorMessage(""); // Reset error message
-      const token = localStorage.getItem("token");
-      try {
-        // 비밀번호 확인 요청
-        const confirmResponse = await axios.post(
-          `${BACKEND_URL}/api/confirm-delete-account/`,
-          {
-            password: deletePassword,
-          },
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
-
-        // 비밀번호 확인 후 계정 삭제 요청
-        await axios.delete(`${BACKEND_URL}/api/delete-account/`, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
-        alert("계정이 성공적으로 삭제되었습니다.");
-        localStorage.removeItem("token");
-        router.push("/");
-      } catch (error) {
-        console.error("계정 삭제 오류", error);
-        if (error.response && error.response.status === 400) {
-          setErrorMessage("비밀번호가 틀렸습니다.");
-        } else {
-          alert("계정 삭제 오류: " + (error.response?.data.error || error.message));
-        }
-      }
-    }
-  };
-
-  const handleImageChange = async (e) => {
-    e.preventDefault();
-    let reader = new FileReader();
-    let file = e.target.files[0];
-
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      alert("이미지 파일만 업로드해주세요 (jpg, jpeg, png, gif).");
-      return;
-    }
-
-    if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
-      alert("파일 크기가 10MB를 초과합니다.");
-      return;
-    }
-
-    reader.onloadend = () => {
-      setProfileImage(file);
-      setImagePreviewUrl(reader.result);
-    };
-
-    reader.readAsDataURL(file);
-
-    const formData = new FormData();
-    formData.append("profile_image", file);
-
-    const token = localStorage.getItem("token");
-    try {
-      await axios.put(`${BACKEND_URL}/api/user-info/`, formData, {
-        headers: {
-          Authorization: `Token ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      alert("프로필 이미지가 성공적으로 업데이트되었습니다.");
-    } catch (error) {
-      console.error("프로필 이미지 업데이트 오류", error);
-      alert("프로필 이미지 업데이트 오류: " + error.response.data.error);
-    }
+  const handleAccountDeletion = () => {
+    setIsModalOpen(true);
   };
 
   return (
@@ -392,19 +318,12 @@ export default function UserInfo() {
                   변경사항 저장
                 </button>
               </div>
-              <div className={styles.deleteContainer}>
-                <input
-                  type="password"
-                  value={deletePassword}
-                  onChange={(e) => setDeletePassword(e.target.value)}
-                  className={styles.inputField}
-                  placeholder="비밀번호 입력"
-                />
-                {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-                <span className={styles.deleteText} onClick={handleAccountDeletion}>
-                  회원 탈퇴하기
-                </span>
-              </div>
+              <span
+                className={styles.deleteText}
+                onClick={handleAccountDeletion}
+              >
+                회원 탈퇴하기
+              </span>
             </form>
           ) : (
             <p>로딩 중...</p>
@@ -413,6 +332,7 @@ export default function UserInfo() {
       </div>
       <div style={{ height: "100px" }} />
       <Footer />
+      <DeleteAccountModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
