@@ -85,6 +85,7 @@
 .planCard li {
   font-size: 18px;
   color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 5px;
 }
 
 .option {
@@ -132,7 +133,6 @@
 
 .planCard ul {
   padding: 0;
-  margin: 40px;
   text-align: left;
 }
 
@@ -140,6 +140,11 @@
   list-style: none;
   font-size: 15px;
   margin: 10px;
+}
+
+.optli pre {
+  font-family: fontA;
+  font-size: 1.1em;
 }
 
 .contactUs {

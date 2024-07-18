@@ -114,12 +114,12 @@ const PlanCard = ({ plan }) => {
             </div>
           ))}
           {isLoggedIn && (
-            <div style={{ margin: "3px 10px" }}>
-              <p>현재 {generalCredits}개의 Additional Credit이 남아있습니다.</p>
+            <div style={{ margin: "10px 5px" , textAlign: 'start' , fontSize:'15px'}}>
+              <p>현재 {generalCredits}개의 Credit이 남았습니다.</p>
               <p>구매한 Credit은 90일 후 만료됩니다.</p>
             </div>
           )}
-          <div style={{ width: "80%", marginTop: "20px" }}>
+          <div style={{ width: "80%", marginTop: "10px" }}>
             <hr style={{ border: "solid 1px #A0A0A0", margin: "-2px" }} />
           </div>
           <ul
@@ -129,8 +129,8 @@ const PlanCard = ({ plan }) => {
             }}
             className={styles.optli}
           >
-            <li>{plan.description1}</li>
-            <li>{plan.description2}</li>
+            <li><pre>{plan.description1}</pre></li>
+            <li><pre>{plan.description2}</pre></li>
           </ul>
         </>
       ) : (
@@ -159,7 +159,7 @@ const PlanCard = ({ plan }) => {
           </button>
           {isLoggedIn && (
             <div style={{ margin: "3px 10px" }}>
-              <p>현재 {dailyCredits + freeCredits}개의 Daily Credit이 남아있습니다.</p>
+              <p>현재 {dailyCredits + freeCredits}개의 Credit이 남았습니다.</p>
             </div>
           )}
           <ul>
