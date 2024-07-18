@@ -42,7 +42,7 @@ export default function Team() {
           </div>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/member4.gif"
+              src="/images/team/박성훈.png"
               alt="박성훈"
               className={styles.profileImage}
             />
