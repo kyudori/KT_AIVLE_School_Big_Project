@@ -162,6 +162,15 @@ export default function Signup() {
     }
   };
 
+  const handlePopup = (url) => {
+    const popup = window.open(
+      url,
+      "popup",
+      "width=600,height=800,scrollbars=yes,resizable=no"
+    );
+    popup.focus();
+  };
+
   return (
     <div className={styles.container}>
       <div style={{ padding: "0 200px", background: "#fff" }}>
@@ -215,13 +224,12 @@ export default function Signup() {
                       checked={termsChecked.personalInfo}
                       onChange={() => handleCheck("personalInfo")}
                     />
-                    <a
-                      href="/terms/personal-info"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <span
+                      onClick={() => handlePopup("/terms/personal-info")}
+                      style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
                     >
                       [필수] 개인정보 수집 및 이용 동의
-                    </a>
+                    </span>
                   </label>
                   <label>
                     <input
@@ -229,13 +237,12 @@ export default function Signup() {
                       checked={termsChecked.serviceTerms}
                       onChange={() => handleCheck("serviceTerms")}
                     />
-                    <a
-                      href="/terms/service-terms"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <span
+                      onClick={() => handlePopup("/terms/service-terms")}
+                      style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
                     >
                       [필수] Voice Verity 통합서비스 약관
-                    </a>
+                    </span>
                   </label>
                   <label>
                     <input
@@ -243,13 +250,12 @@ export default function Signup() {
                       checked={termsChecked.voiceCollection}
                       onChange={() => handleCheck("voiceCollection")}
                     />
-                    <a
-                      href="/terms/voice-collection"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <span
+                      onClick={() => handlePopup("/terms/voice-collection")}
+                      style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
                     >
                       [선택] 음성 보이스 수집 및 이용 동의
-                    </a>
+                    </span>
                   </label>
                 </div>
               </div>

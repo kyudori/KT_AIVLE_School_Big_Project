@@ -5,10 +5,10 @@ import styles from "../../styles/Terms.module.css";
 export default function VoiceCollectionTerms() {
   return (
     <div className={styles.container}>
-      <div style={{ padding: "0 200px", background: "#fff" }}>
+      <div className={styles.navFooter}>
         <Navbar />
       </div>
-      <div style={{ height: "100px" }} />
+      <div style={{ height: "40px" }} />
       <div className={styles.main}>
         <h1>음성 보이스 수집 및 이용 동의</h1>
         <div className={styles.space}>
@@ -48,8 +48,9 @@ export default function VoiceCollectionTerms() {
           </p>
         </div>
       </div>
-      <div style={{ height: "100px" }} />
-      <Footer />
+      <div className={styles.footer}>
+        <Footer />
+      </div>
     </div>
   );
 }
