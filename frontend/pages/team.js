@@ -71,7 +71,7 @@ export default function Team() {
           </div>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/member7.gif"
+              src="/images/team/정주영.png"
               alt="하세호"
               className={styles.profileImage}
             />
