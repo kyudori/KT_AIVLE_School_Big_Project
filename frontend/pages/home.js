@@ -373,7 +373,7 @@ export default function Home() {
           </div>
           <div className={styles.youtubeContainer}>
             <iframe
-              src="https://www.youtube.com/embed/yHxXWIHOr6A"
+              src="https://www.youtube.com/embed/OIbLEwy_O1s"
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
