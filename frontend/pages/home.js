@@ -100,12 +100,33 @@ export default function Home() {
     }
   };
 
-  return (
-    <div className={styles.homeContainer}>
-      <div style={{ padding: "0 200px", background: "#fff" }}>
-        <Navbar />
+  const Panel = ({ pages }) => {
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const nextPage = () => {
+      setCurrentPage((prevPage) => (prevPage + 1) % pages.length);
+    };
+
+    const prevPage = () => {
+      setCurrentPage(
+        (prevPage) => (prevPage - 1 + pages.length) % pages.length
+      );
+    };
+
+    return (
+      <div className="panel">
+        <div className={styles.panel}>
+          <button className={styles.prevbtn} onClick={prevPage}>◀</button>
+          <button className={styles.nextbtn} onClick={nextPage}>▶</button>
+          {pages[currentPage].content}
+        </div>
       </div>
-      <div className={styles.mainContent}>
+    );
+  };
+
+  const pages = [
+    {
+      content: (
         <div className={styles.textContainer}>
           <p className="phrase">
             <span> 파헤치다, </span>
@@ -122,6 +143,49 @@ export default function Home() {
             <button onClick={handleTryVoiceVerity}>Try Voice Verity</button>
           </div>
         </div>
+      ),
+    },
+    {
+      content: 
+      <div className={styles.payContainer}>
+      <div className={styles.payinfo}>
+      <p className="phrase">
+        <span> 우리의 서비스, </span>
+        <br className="gap"></br>
+        <span>딱, 한 장</span>
+        <br className="gap"></br>
+      </p>
+      <div className={styles.paylogo} style={{backgroundImage:'url(/images/pay.png)'}}></div>
+      </div> 
+      <div className={styles.buttonContainer}>
+        <button onClick={handleSubscriptionPlan}>Subscription Plan</button>
+      </div>
+    </div>,
+    },
+    {
+      content: 
+      <div className={styles.textContainer}>
+      <p className="phrase">
+        <span> 우리랑, </span>
+        <br className="gap"></br>
+        <span>일하고</span>
+        <br className="gap"></br>
+        <span>싶니?</span>
+      </p>
+      <div className={styles.buttonContainer}>
+        <button onClick={handleContactUs}>Contact Us</button>
+      </div>
+    </div>,
+    },
+  ];
+
+  return (
+    <div className={styles.homeContainer}>
+      <div style={{ padding: "0 200px", background: "#fff" }}>
+        <Navbar />
+      </div>
+      <div className={styles.mainContent}>
+          <Panel pages={pages} />
         <div className={styles.infoSection}>
           <h2>
             Voice Verity, 목소리에{" "}
@@ -365,11 +429,13 @@ export default function Home() {
         <div className={styles.youtubeSection}>
           <div>
             <h2>우리의 Dev Story</h2>
-            <p style={{margin:'30px 0 5px 0'}}>
+            <p style={{ margin: "30px 0 5px 0" }}>
               Voice Verity의 시작은 어디서부터였을까? Voice Verity의 이야기를
               만나보세요.
             </p>
-            <p style={{margin:'5px 0 30px 0'}}>우리의 이야기는 끝나지 않았습니다.</p>
+            <p style={{ margin: "5px 0 30px 0" }}>
+              우리의 이야기는 끝나지 않았습니다.
+            </p>
           </div>
           <div className={styles.youtubeContainer}>
             <iframe
