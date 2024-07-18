@@ -58,6 +58,7 @@ export default function TryVoice() {
 
       waveSurferRef.current.on("seek", (progress) => {
         const newTime = waveSurferRef.current.getDuration() * progress;
+        console.log(`Seek event called. Progress: ${progress}, New Time: ${newTime}`);
         setCurrentTime(formatTime(newTime));
       });
 
