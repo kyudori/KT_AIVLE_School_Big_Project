@@ -137,7 +137,8 @@ export default function Documentation() {
                     className={styles.card}
                     onClick={() => handleScrollToSection("start")}
                   >
-                    <div className={styles.cardicon}></div>
+                    
+                    <div style={{height:'200px', alignContent: 'center'}}><div className={styles.cardicon}/></div>
                     <div className={styles.cardtext}>
                       <h2>시작 하기</h2>
                       <p style={{ color: "#444", fontSize: "20px" }}>Get start</p>
@@ -148,7 +149,7 @@ export default function Documentation() {
                     className={styles.card}
                     onClick={handleNavigateToSetting}
                   >
-                    <div style={{padding:' 40px', alignContent: 'center'}}><div className={styles.cardicon2}></div></div>
+                    <div style={{height:'200px', alignContent: 'center'}}><div className={styles.cardicon2}/></div>
                     <div className={styles.cardtext}>
                       <h2>Key 발급</h2>
                       <p style={{ color: "#444", fontSize: "20px" }}>Get Key</p>
@@ -170,7 +171,7 @@ export default function Documentation() {
                   <span className={styles.fileFormat}>.mp3</span>
                   <span className={styles.fileFormat}>.m4a</span>
                   <span className={styles.fileFormat}
-                    style={{background:'red', width:'max-content'}}>YouTube URL</span>
+                    style={{width:'max-content'}}>YouTube URL</span>
                 </div>
                 <p>10MB 이하의 음성 파일</p>
               </div>

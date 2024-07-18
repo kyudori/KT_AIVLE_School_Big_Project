@@ -151,10 +151,9 @@
 }
 
 .card .cardicon {
-  background-image: url(./images/starticon.png);
-  height: 150px;
-  width: 150px;
-  padding: 40px;
+  background-image: url(../public/images/docsstarticon.png);
+  height: 140px;
+  width: 195px;
   background-repeat: no-repeat;
   background-position: top center;
   background-size: cover;
