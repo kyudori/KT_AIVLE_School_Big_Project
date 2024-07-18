@@ -61,7 +61,7 @@ export default function Team() {
           </div>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/정주영png"
+              src="/images/team/정주영.png"
               alt="정주영"
               className={styles.profileImage}
             />
@@ -71,7 +71,7 @@ export default function Team() {
           </div>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/정주영.png"
+              src="/images/team/member7.gif"
               alt="하세호"
               className={styles.profileImage}
             />
