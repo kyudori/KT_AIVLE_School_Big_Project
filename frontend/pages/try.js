@@ -25,10 +25,10 @@ export default function TryVoice() {
   const [fakeCount, setFakeCount] = useState(0);
   const [realCount, setRealCount] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState("00:00");
-  const [duration, setDuration] = useState("00:00");
   const [dragging, setDragging] = useState(false);
-  const [dragFileName, setDragFileName] = useState(""); 
+  const [dragFileName, setDragFileName] = useState("");
+  const [currentTime, setCurrentTime] = useState("0:00");
+  const [duration, setDuration] = useState("0:00");
   const lineChartRef = useRef(null);
   const pieChartRef = useRef(null);
   const waveSurferRef = useRef(null);
@@ -47,19 +47,24 @@ export default function TryVoice() {
         progressColor: "#9B90D2",
       });
 
-      waveSurferRef.current.on("finish", () => {
-        setIsPlaying(false);
-        waveSurferRef.current.stop();
+      waveSurferRef.current.on("ready", () => {
+        setDuration(formatTime(waveSurferRef.current.getDuration()));
+        setCurrentTime("0:00");
       });
 
       waveSurferRef.current.on("audioprocess", () => {
-        const currentTime = waveSurferRef.current.getCurrentTime();
-        setCurrentTime(formatTime(currentTime));
+        setCurrentTime(formatTime(waveSurferRef.current.getCurrentTime()));
       });
 
-      waveSurferRef.current.on("ready", () => {
-        const duration = waveSurferRef.current.getDuration();
-        setDuration(formatTime(duration));
+      waveSurferRef.current.on("seek", (progress) => {
+        const newTime = waveSurferRef.current.getDuration() * progress;
+        console.log(`Seek event called. Progress: ${progress}, New Time: ${newTime}`);
+        setCurrentTime(formatTime(newTime));
+      });
+
+      waveSurferRef.current.on("finish", () => {
+        setIsPlaying(false);
+        waveSurferRef.current.stop();
       });
 
       const reader = new FileReader();
@@ -69,6 +74,13 @@ export default function TryVoice() {
       reader.readAsDataURL(file);
     }
   }, [file]);
+
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${hours > 0 ? `${hours}:` : ""}${minutes < 10 && hours > 0 ? "0" : ""}${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   const handleSubscriptionPlan = () => {
     router.push("/plan");
@@ -97,11 +109,13 @@ export default function TryVoice() {
 
     setFile(selectedFile);
     setFileName(selectedFile.name);
-    setIsPlaying(false); 
-    e.target.value = "";
+    setIsPlaying(false); // Reset the play/pause state
+    e.target.value = ""; // Reset the file input value to allow re-upload of the same file
   };
 
   const handleExampleClick = (exampleFile) => {
+    // No need to check for login here
+    // Load the file from the public/audios directory
     const filePath = `/audios/${exampleFile}`;
 
     setFileName(exampleFile);
@@ -110,7 +124,7 @@ export default function TryVoice() {
       .then((blob) => {
         const newFile = new File([blob], exampleFile, { type: blob.type });
         setFile(newFile);
-        setIsPlaying(false); 
+        setIsPlaying(false); // Reset the play/pause state
       })
       .catch((error) => console.error("Error fetching example file:", error));
   };
@@ -118,7 +132,7 @@ export default function TryVoice() {
   const handleFileRemove = () => {
     setFile(null);
     setFileName("");
-    setIsPlaying(false); 
+    setIsPlaying(false); // Reset the play/pause state
   };
 
   const handleFileNameClick = () => {
@@ -388,38 +402,38 @@ export default function TryVoice() {
     }
     setDragging(true); // 드래그 상태 설정
   };
-  
+
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false); // 드래그 상태 초기화
     setDragFileName(""); // 드래그 파일 이름 초기화
-  
+
     if (e.dataTransfer.files && e.dataTransfer.files.length > 1) {
       alert("하나의 File만 업로드 해주세요.");
       return;
     }
-  
+
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const selectedFile = e.dataTransfer.files[0];
       const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
       const fileSizeMB = selectedFile.size / (1024 * 1024);
-  
+
       if (!ALLOWED_EXTENSIONS.includes(`.${fileExtension}`)) {
         alert("Invalid file type. Allowed extensions are: .wav, .mp3, .m4a");
         return;
       }
-  
+
       if (fileSizeMB > MAX_FILE_SIZE_MB) {
         alert("File size exceeds the 200MB limit.");
         return;
       }
-  
+
       setFile(selectedFile);
       setFileName(selectedFile.name);
       setIsPlaying(false); // 재생/일시정지 상태 초기화
     }
   };
-  
+
   const handleDragLeave = () => {
     setDragging(false); // 드래그 상태 초기화
     setDragFileName(""); // 드래그 파일 이름 초기화
@@ -433,14 +447,6 @@ export default function TryVoice() {
       setFile(null);
       setFileName("");
     }
-  };
-
-  const formatTime = (time) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
   };
 
   return (
@@ -479,81 +485,77 @@ export default function TryVoice() {
                 </label>
               </div>
               {inputType === "file" ? (
-  <div
-    className={`${styles.form} ${dragging ? styles.fileDragging : ""}`}
-    onDragOver={handleDragOver}
-    onDragLeave={handleDragLeave}
-    onDrop={handleDrop}
-  >
-    {dragging && dragFileName ? ( // 드래그 중일 때 파일 이름 표시
-      <div className={styles.dragFileNameContainer}>
-        <span className={styles.dragFileName}>{dragFileName}</span>
-      </div>
-    ) : fileName ? (
-      <>
-        <div className={styles.fileNameContainer}>
-          <span
-            className={styles.fileName}
-            onClick={handleFileNameClick}
-          >
-            {fileName}
-          </span>
-          <button
-            type="button"
-            className={styles.removeButton}
-            onClick={handleFileRemove}
-          >
-            X
-          </button>
-        </div>
-        <div className={styles.waveContainer}>
-          <button
-            type="button"
-            className={styles.playPauseButton}
-            onClick={handlePlayPause}
-          >
-            {isPlaying ? (
-              <div 
-              className={styles.img}
-              style={{ backgroundImage: `url("/images/stopbtn.png")` }}>
-              </div>
-            ) : (
-              <div 
-              className={styles.img}
-              style={{ backgroundImage: `url("/images/playbtn.png")` }} />
-            )}
-          </button>
-          <div
-            ref={waveContainerRef}
-            className={styles.waveform}
-          ></div>
-        </div>
-        <div className={styles.timeContainer}>
-          <span>{currentTime}</span>
-          <span>/</span>
-          <span>{duration}</span>
-        </div>
-      </>
-    ) : (
-      <>
-        <label htmlFor="upload" className={styles.uploadLabel}>
-          <span className={styles.uploadIcon}></span>
-        </label>
-        <p className={styles.uploadText}>
-          Click Upload Icon or Drag and Drop Your File.
-        </p>
-      </>
-    )}
-    <input
-      id="upload"
-      type="file"
-      onClick={handleUploadClick}
-      onChange={handleFileChange}
-      ref={fileInputRef}
-      className={styles.uploadHidden}
-    />
-  </div>
-) : (
+                <div
+                  className={`${styles.form} ${dragging ? styles.fileDragging : ""}`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
+                  {dragging && dragFileName ? ( // 드래그 중일 때 파일 이름 표시
+                    <div className={styles.dragFileNameContainer}>
+                      <span className={styles.dragFileName}>{dragFileName}</span>
+                    </div>
+                  ) : fileName ? (
+                    <>
+                      <div className={styles.fileNameContainer}>
+                        <span
+                          className={styles.fileName}
+                          onClick={handleFileNameClick}
+                        >
+                          {fileName}
+                        </span>
+                        <button
+                          type="button"
+                          className={styles.removeButton}
+                          onClick={handleFileRemove}
+                        >
+                          X
+                        </button>
+                      </div>
+                      <div className={styles.waveContainer}>
+                        <button
+                          type="button"
+                          className={styles.playPauseButton}
+                          onClick={handlePlayPause}
+                        >
+                          {isPlaying ? (
+                            <div
+                              className={styles.img}
+                              style={{ backgroundImage: `url("/images/stopbtn.png")` }}
+                            ></div>
+                          ) : (
+                            <div
+                              className={styles.img}
+                              style={{ backgroundImage: `url("/images/playbtn.png")` }}
+                            />
+                          )}
+                        </button>
+                        <div ref={waveContainerRef} className={styles.waveform}></div>
+                      </div>
+                      <div className={styles.timeContainer}>
+                        <span>{currentTime}</span> / <span>{duration}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <label htmlFor="upload" className={styles.uploadLabel}>
+                        <span className={styles.uploadIcon}></span>
+                      </label>
+                      <p className={styles.uploadText}>
+                        Click Upload Icon or Drag and Drop Your File.
+                      </p>
+                    </>
+                  )}
+                  <input
+                    id="upload"
+                    type="file"
+                    onClick={handleUploadClick}
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                    className={styles.uploadHidden}
+                  />
+                </div>
+              ) : (
                 <div
                   className={styles.youtubeContainer}
                   onClick={() => document.getElementById("urlInput").focus()}
@@ -585,6 +587,7 @@ export default function TryVoice() {
                   />
                 </div>
               )}
+
               {inputType === "file" && (
                 <div className={styles.exampleFiles}>
                   <button
@@ -618,24 +621,24 @@ export default function TryVoice() {
                 </div>
               )}
 
-              <div style={{margin:'50px'}}>
-              <h2>
-                {inputType === "file"
-                  ? "음성파일을 업로드한 뒤, Start Detection 버튼을 눌러주세요."
-                  : "URL을 입력한 뒤, Start Detection 버튼을 눌러주세요."}{" "}
-              </h2>
-              <p style={{ color: "#666" }}>
-                {inputType === "file"
-                  ? "200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .m4a)"
-                  : "BGM이 섞인 영상은 분류가 어렵습니다!"}
-              </p>
-              <button type="submit" className={styles.startDetectionButton}>
-                ▶ Start Detection
-              </button>
+              <div style={{ margin: "50px" }}>
+                <h2>
+                  {inputType === "file"
+                    ? "음성파일을 업로드한 뒤, Start Detection 버튼을 눌러주세요."
+                    : "URL을 입력한 뒤, Start Detection 버튼을 눌러주세요."}{" "}
+                </h2>
+                <p style={{ color: "#666" }}>
+                  {inputType === "file"
+                    ? "200MB 이내의 음성 파일로 제한(파일: .wav, .mp3, .m4a)"
+                    : "BGM이 섞인 영상은 분류가 어렵습니다!"}
+                </p>
+                <button type="submit" className={styles.startDetectionButton}>
+                  ▶ Start Detection
+                </button>
               </div>
             </form>
           </div>
-          {loading && <p style={{fontSize:'24px', margin: "100px 0"}}>분석중...</p>}
+          {loading && <p style={{ fontSize: "24px", margin: "100px 0" }}>분석중...</p>}
           {!loading && Array.isArray(predictions) && predictions.length > 0 && (
             <div className={styles.resultContext}>
               <h1>Detect Report</h1>
@@ -679,10 +682,7 @@ export default function TryVoice() {
           )}
           <div className={styles.plan}>
             <h2>우리의 더 나은 서비스를 원하시나요?</h2>
-            <button
-              onClick={handleSubscriptionPlan}
-              className={styles.planButton}
-            >
+            <button onClick={handleSubscriptionPlan} className={styles.planButton}>
               구독플랜 보기
             </button>
           </div>
@@ -692,4 +692,3 @@ export default function TryVoice() {
     </div>
   );
 }
-
