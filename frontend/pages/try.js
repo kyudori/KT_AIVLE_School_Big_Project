@@ -585,7 +585,6 @@ export default function TryVoice() {
                   />
                 </div>
               )}
-
               {inputType === "file" && (
                 <div className={styles.exampleFiles}>
                   <button
