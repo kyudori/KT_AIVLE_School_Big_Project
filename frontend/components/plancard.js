@@ -29,7 +29,7 @@ const PlanCard = ({ plan }) => {
         },
       });
       setGeneralCredits(response.data.remaining_additional_credits);
-      setDailyCredits(response.data.remaining_daily_credits);
+      setDailyCredits(response.data.remaining_daily_credits+response.data.remaining_free_credits);
     } catch (error) {
       console.error("Failed to fetch user credits:", error);
     }
