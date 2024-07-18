@@ -8,8 +8,8 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const PlanCard = ({ plan }) => {
   const router = useRouter();
   const [generalCredits, setGeneralCredits] = useState(null);
-  const [dailyCredits, setDailyCredits] = useState(null);
-  const [freeCredits, setFreeCredits] = useState(null);
+  const [dailyCredits, setDailyCredits] = useState(0);
+  const [freeCredits, setFreeCredits] = useState(0);
   const [currentPlan, setCurrentPlan] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
