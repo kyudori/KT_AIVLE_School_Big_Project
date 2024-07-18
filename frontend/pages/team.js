@@ -24,7 +24,7 @@ export default function Team() {
           </div>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/member2.gif"
+              src="/images/team/김성규.png"
               alt="김성규"
               className={styles.profileImage}
             />
