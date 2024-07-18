@@ -14,7 +14,7 @@ export default function Team() {
         <div className={styles.teamGrid}>
           <div className={styles.teamCard}>
             <img
-              src="/images/team/member3.gif"
+              src="/images/team/문동규.png"
               alt="문동규"
               className={styles.profileImage}
             />
