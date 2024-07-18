@@ -643,6 +643,9 @@ const ApiManagement = () => {
                   </div>
                 </div>
               </div>
+              <div className={styles.nocontent}>🚧
+                <p>~ 기능 개발 중 ~</p>
+              </div>
             </div>
           </div>
         );
@@ -685,8 +688,8 @@ const ApiManagement = () => {
                 className={currentPage === "apiManagement" ? styles.active : ""}
               />
             </li>
-            <li>보안 및 인증</li>
-            <li>알림 설정</li>
+            <li onClick={() => alert("🚧 개발 중입니다.")}>🚧 보안 및 인증</li>
+            <li onClick={() => alert("🚧 개발 중입니다.")}>🚧 알림 설정</li>
           </ul>
         </div>
         <div className={styles.main}>
