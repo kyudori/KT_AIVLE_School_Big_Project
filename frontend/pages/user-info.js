@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import DeleteAccountModal from "../components/DeleteAccountModal"; // 모달 컴포넌트 추가
+import DeleteAccountModal from "../components/DeleteAccountModal"; // Import the modal component
 import { useRouter } from "next/router";
 import styles from "../styles/UserInfo.module.css";
 
@@ -24,7 +24,9 @@ export default function UserInfo() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
+  const [deletePassword, setDeletePassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
   const router = useRouter();
 
   useEffect(() => {
@@ -145,7 +147,47 @@ export default function UserInfo() {
   };
 
   const handleAccountDeletion = () => {
-    setIsModalOpen(true);
+    setIsModalOpen(true); // Show the modal when delete account is clicked
+  };
+
+  const handleImageChange = async (e) => {
+    e.preventDefault();
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      alert("이미지 파일만 업로드해주세요 (jpg, jpeg, png, gif).");
+      return;
+    }
+
+    if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
+      alert("파일 크기가 10MB를 초과합니다.");
+      return;
+    }
+
+    reader.onloadend = () => {
+      setProfileImage(file);
+      setImagePreviewUrl(reader.result);
+    };
+
+    reader.readAsDataURL(file);
+
+    const formData = new FormData();
+    formData.append("profile_image", file);
+
+    const token = localStorage.getItem("token");
+    try {
+      await axios.put(`${BACKEND_URL}/api/user-info/`, formData, {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("프로필 이미지가 성공적으로 업데이트되었습니다.");
+    } catch (error) {
+      console.error("프로필 이미지 업데이트 오류", error);
+      alert("프로필 이미지 업데이트 오류: " + error.response.data.error);
+    }
   };
 
   return (
