@@ -114,7 +114,7 @@ const PlanCard = ({ plan }) => {
             </div>
           ))}
           {isLoggedIn && (
-            <div style={{ margin: "10px 5px" , textAlign: 'start' , fontSize:'15px'}}>
+            <div style={{ margin: "10px 5px" , fontSize:'15px'}}>
               <p>현재 {generalCredits}개의 Credit이 남았습니다.</p>
               <p>구매한 Credit은 90일 후 만료됩니다.</p>
             </div>

@@ -145,6 +145,7 @@
 .optli pre {
   font-family: fontA;
   font-size: 1.1em;
+  text-align: -webkit-center;
 }
 
 .contactUs {
