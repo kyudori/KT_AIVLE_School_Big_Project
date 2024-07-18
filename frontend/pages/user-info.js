@@ -357,7 +357,7 @@ export default function UserInfo() {
                     textAlign: "left",
                   }}
                 >
-                  마케팅활용동의 및 광고수신동의
+                  마케팅활용동의 및 광고수신동의(선택)
                 </p>
               </div>
               <div className={styles.marketing}>
