@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'fontA';
+    src: local("Y 너만을 비춤체"), url('/path/to/Y너만을비춤체.ttf') format('truetype');
+}
+
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -9,9 +14,10 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-  }
-  
-  .modal {
+    font-family: 'fontA';
+}
+
+.modal {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
@@ -19,9 +25,10 @@
     position: relative;
     max-width: 400px;
     width: 100%;
-  }
-  
-  .inputField {
+    font-family: 'fontA';
+}
+
+.inputField {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
@@ -29,14 +36,15 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-  }
-  
-  .buttonContainer {
+    font-family: 'fontA';
+}
+
+.buttonContainer {
     display: flex;
     justify-content: space-between;
-  }
-  
-  .deleteButton {
+}
+
+.deleteButton {
     background-color: #ff4d4d;
     color: white;
     border: none;
@@ -44,9 +52,15 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-  }
-  
-  .cancelButton {
+    font-family: 'fontA';
+    transition: background-color 0.3s;
+}
+
+.deleteButton:hover {
+    background-color: #e60000;
+}
+
+.cancelButton {
     background-color: #ccc;
     color: black;
     border: none;
@@ -54,9 +68,15 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-  }
-  
-  .closeButton {
+    font-family: 'fontA';
+    transition: background-color 0.3s;
+}
+
+.cancelButton:hover {
+    background-color: #b3b3b3;
+}
+
+.closeButton {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -64,10 +84,11 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
-  }
-  
-  .errorMessage {
-    color: red;
+    font-family: 'fontA';
+}
+
+.errorMessage {
+    color: black;
     margin-bottom: 10px;
-  }
-  
+    font-family: 'fontA';
+}
