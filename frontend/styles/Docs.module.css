@@ -154,16 +154,13 @@
   background-image: url(../public/images/docsstarticon.png);
   height: 140px;
   width: 195px;
-  background-repeat: no-repeat;
-  background-position: top center;
   background-size: cover;
-  display: inline-block;
 }
 
 .card .cardicon2 {
   background-image: url(../public/images/keyicon.png);
-  height: 150px;
-  width: 150px;
+  height: 140px;
+  width: 140px;
   background-repeat: no-repeat;
   background-position: top center;
   background-size: cover;
