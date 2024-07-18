@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import DeleteAccountModal from "../components/DeleteAccountModal"; // Import the modal component
 import { useRouter } from "next/router";
 import styles from "../styles/UserInfo.module.css";
 
@@ -23,6 +24,9 @@ export default function UserInfo() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
   const router = useRouter();
 
   useEffect(() => {
@@ -142,39 +146,8 @@ export default function UserInfo() {
     }
   };
 
-  const handleAccountDeletion = async () => {
-    if (confirm("회원을 탈퇴한 경우, 활동한 모든 기록이 삭제되게 됩니다.\n그래도 탈퇴하시겠습니까?")) {
-      const deletePassword = prompt("비밀번호를 입력해주세요:");
-      if (!deletePassword) {
-        alert("비밀번호가 입력되지 않았습니다.");
-        return;
-      }
-      const token = localStorage.getItem("token");
-      try {
-        await axios.post(
-          `${BACKEND_URL}/api/confirm-delete-account/`,
-          {
-            password: deletePassword,
-          },
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
-        await axios.delete(`${BACKEND_URL}/api/delete-account/`, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
-        alert("계정이 성공적으로 삭제되었습니다.");
-        localStorage.removeItem("token");
-        router.push("/");
-      } catch (error) {
-        console.error("계정 삭제 오류", error);
-        alert("계정 삭제 오류: " + error.response.data.error);
-      }
-    }
+  const handleAccountDeletion = () => {
+    setIsModalOpen(true); // Show the modal when delete account is clicked
   };
 
   const handleImageChange = async (e) => {
@@ -387,12 +360,11 @@ export default function UserInfo() {
                   변경사항 저장
                 </button>
               </div>
-              <span
-                className={styles.deleteText}
-                onClick={handleAccountDeletion}
-              >
-                회원 탈퇴하기
-              </span>
+              <div className={styles.deleteContainer}>
+                <span className={styles.deleteText} onClick={handleAccountDeletion}>
+                  회원 탈퇴하기
+                </span>
+              </div>
             </form>
           ) : (
             <p>로딩 중...</p>
@@ -401,6 +373,7 @@ export default function UserInfo() {
       </div>
       <div style={{ height: "100px" }} />
       <Footer />
+      <DeleteAccountModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
