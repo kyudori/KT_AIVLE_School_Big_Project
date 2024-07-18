@@ -235,7 +235,13 @@
   font-size: 1.3em;
 }
 
+.card p {
+  margin: 0;
+  margin-bottom: 20px;
+}
+
 .totalcredit {
+  margin-top: 40px;
   display: flow-root;
   width: 100%;
   max-width: 300px;
@@ -307,6 +313,7 @@
 }
 
 .apiStatus {
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -331,8 +338,6 @@
   border: solid 2px #333;
   transition: all 0.2s ease;
 }
-
-.purchaseButton
 
 .status {
   background-color: green;
@@ -542,4 +547,18 @@
   text-align: center;
   color: black; /* Change text color to black */
   margin-top: 20px;
+}
+
+.nocontent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 60%;
+  font-size: 5em;
+  align-items: center;
+  justify-content: center;
+}
+
+.nocontent p {
+  font-size: 32px;
 }
