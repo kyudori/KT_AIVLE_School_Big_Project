@@ -70,10 +70,10 @@ export default function Signup() {
     const { value } = e.target;
     const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
 
-    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 5)) {
+    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 6)) {
       setNickname(value);
     } else {
-      alert("한글 4자 이하, 영어 5자 이하만 가능합니다.");
+      alert("한글 4자 이하, 영어 6자 이하만 가능합니다.");
     }
   };
 
@@ -81,10 +81,10 @@ export default function Signup() {
     const { value } = e.target;
     const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
 
-    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 5)) {
+    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 6)) {
       setUsername(value);
     } else {
-      alert("한글 4자 이하, 영어 5자 이하만 가능합니다.");
+      alert("한글 4자 이하, 영어 6자 이하만 가능합니다.");
     }
   };
 
