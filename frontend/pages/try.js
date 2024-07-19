@@ -228,7 +228,9 @@ export default function TryVoice() {
           error.response.data.error ===
             "You have reached the maximum number of uploads for today"
         ) {
-          alert("오늘 체험하기 횟수 초과");
+          alert(
+            "오늘 체험 가능한 횟수를 모두 소진하셨습니다.\n엔터하고 내일 다시 이용해 주세요."
+          );
         } else {
           alert("Error uploading file");
         }
