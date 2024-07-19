@@ -109,7 +109,7 @@ export default function Home() {
       setTimeout(() => {
         setCurrentPage((prevPage) => (prevPage + 1) % pages.length);
         setAnimationClass(styles.fadeInNext);
-      }, 300); // 애니메이션 시간과 맞춤
+      }, 300);
     };
   
     const prevPage = () => {
@@ -117,29 +117,52 @@ export default function Home() {
       setTimeout(() => {
         setCurrentPage((prevPage) => (prevPage - 1 + pages.length) % pages.length);
         setAnimationClass(styles.fadeInPrev);
-      }, 300); // 애니메이션 시간과 맞춤
+      }, 300);
+    };
+  
+    const goToPage = (index) => {
+      if (index === currentPage) return;
+      const isNext = index > currentPage;
+      setAnimationClass(isNext ? styles.fadeOutNext : styles.fadeOutPrev);
+      setTimeout(() => {
+        setCurrentPage(index);
+        setAnimationClass(isNext ? styles.fadeInNext : styles.fadeInPrev);
+      }, 300);
     };
   
     useEffect(() => {
       const interval = setInterval(() => {
         nextPage();
-      }, 5000); // 5초마다 페이지 변경
-  
-      return () => clearInterval(interval); // Cleanup on unmount
+      }, 5000);
+      return () => clearInterval(interval);
     }, []);
-
+  
     return (
       <div className={styles.panelcontainer}>
-        <button className={styles.prevbtn} onClick={prevPage}>
+        <button
+          className={styles.prevbtn}
+          onClick={prevPage}
+        >
           {"<"}
         </button>
-        <button className={styles.nextbtn} onClick={nextPage}>
+        <button
+          className={styles.nextbtn}
+          onClick={nextPage}
+        >
           {">"}
         </button>
-        <div
-        className={`${styles.panel} ${animationClass}`}>
-        {pages[currentPage].content}
-      </div>
+        <div className={`${styles.panel} ${animationClass}`}>
+          {pages[currentPage].content}
+        </div>
+        <div className={styles.indicatorContainer}>
+          {pages.map((_, index) => (
+            <span
+              key={index}
+              className={`${styles.indicator} ${index === currentPage ? styles.active : ''}`}
+              onClick={() => goToPage(index)}
+            />
+          ))}
+        </div>
       </div>
     );
   };

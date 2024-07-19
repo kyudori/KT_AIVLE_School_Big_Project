@@ -24,23 +24,23 @@
   min-height: 100vh;
   height: 100%;
   text-align: center;
-  margin: 0 130px;
+  margin: 0 100px;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.85);
 }
 
 .mainContent p {
   font-size: 16px;
-  margin: 30px;
+  margin: 20px;
 }
 
 .textContainer {
-  padding: 20px;
+  padding: 0px;
   margin: 0px 20px 50px 20px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  height: 425px;
+  height: 380px;
 }
 
 .textContainer h1 {
@@ -91,6 +91,7 @@
   border-radius: 10px;
   width: 100%;
   height: 500px;
+  margin-top: 100px;
   background-color: rgba(255, 255, 255, 0.8);
 }
 
@@ -456,7 +457,7 @@
   background: none;
   position: relative;
   left: -650px;
-  top: 300px;
+  top: 220px;
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -470,41 +471,41 @@
   background: none;
   position: relative;
   right: -650px;
-  top: 300px;
+  top: 220px;
   width: 40px;
   height: 40px;
   cursor: pointer;
   border: none;
 }
 
-
 .payContainer {
-  padding: 20px;
+  padding: 0px;
   margin: 0px 20px 50px 20px;
   display: flex;
-  height: 425px;
+  height: 380px;
   flex-direction: row-reverse;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
 }
 
 .payinfo {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
+  margin-bottom: 5px; /* 두 문장 사이의 간격을 줄이기 위해 하단 마진을 5px로 설정 */
 }
 
 .payContainer h1 {
   font-size: 3em;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 .payContainer p {
   font-weight: normal;
-  font-size: 24px;
+  font-size: 30px;
   text-align: end;
   margin: 0;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .paylogo {
@@ -513,10 +514,12 @@
   background-size: cover;
   width: 312px;
   height: 139px;
+  margin-bottom: 20px;
 }
 
 .payContainer .buttonContainer {
   margin-left: 50px;
+  margin-bottom: 100px;
   justify-content: flex-end;
 }
 
@@ -524,7 +527,7 @@
   background-color: rgba(0, 0, 0, 0);
   border-radius: 30px;
   border-color: rgb(0, 0, 0);
-  padding: 10px 40px;
+  padding: 10px 30px;
   color: rgb(0, 0, 0);
   font-size: 20px;
   font-family: fontA;
@@ -537,13 +540,13 @@
 .panelcontainer {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 88%;
 }
 
 .panel {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 90%;
   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
@@ -606,4 +609,24 @@
     opacity: 1;
     transform: translateX(0);
   }
+}
+
+.indicatorContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin: 0 5px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.indicator.active {
+  background-color: #616161;
 }
