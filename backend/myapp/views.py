@@ -345,14 +345,14 @@ def approve_payment(request):
         payment.save()
 
         if payment.plan.is_recurring:
-            # 정기 결제 플랜인 경우 기존 구독 처리
-            current_subscription = UserSubscription.objects.filter(user=user, is_active=True).first()
+            # 정기 결제 플랜인 경우 기존 정기 구독 처리
+            current_subscription = UserSubscription.objects.filter(user=user, is_active=True, plan__is_recurring=True).first()
             if current_subscription:
                 current_subscription.is_active = False
                 current_subscription.end_date = timezone.now()
                 current_subscription.save()
 
-            # 새로운 구독 생성
+            # 새로운 정기 구독 생성
             UserSubscription.objects.create(
                 user=user,
                 plan=payment.plan,
@@ -426,7 +426,7 @@ def upload_audio(request):
     upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
 
     if upload_history.upload_count >= MAX_UPLOADS_PER_DAY:
-        return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_BAD_REQUEST)
+        return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_FORBIDDEN)
 
     # UUID 생성 및 파일 경로 설정
     unique_id = uuid.uuid4()
@@ -474,7 +474,7 @@ def upload_audio(request):
         'real_cnt': real_cnt,
         'fake_cnt': fake_cnt
     }, status=status.HTTP_201_CREATED)
-    
+
 # Define YouTube URL pattern
 YOUTUBE_URL_PATTERN  = re.compile(
     r'^(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')    
@@ -486,14 +486,14 @@ def upload_youtube(request):
     if not url:
         return Response({'error': 'No URL provided'}, status=status.HTTP_400_BAD_REQUEST)
     
-    if not re.match(YOUTUBE_URL_PATTERN , url):
+    if not re.match(YOUTUBE_URL_PATTERN, url):
         return Response({'error': 'Invalid YouTube URL'}, status=status.HTTP_400_BAD_REQUEST)
     
     today = timezone.now().date()
     upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
 
     if upload_history.youtube_upload_count >= MAX_UPLOADS_PER_DAY:
-        return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_BAD_REQUEST)
+        return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_FORBIDDEN)
 
     try:
         response = requests.post(f"{FLASK_URL}/predict", json={'file_path': url, 'data_type': 'youtube', 'key_verity': True})
@@ -524,6 +524,18 @@ def upload_youtube(request):
         'fake_cnt': fake_cnt
     }, status=status.HTTP_201_CREATED)
 
+    # Update upload history
+    if not request.user.is_superuser:
+        upload_history.youtube_upload_count += 1
+        upload_history.save()
+
+    return Response({
+        'url': url,
+        'analysis_result': result,
+        'predictions': predictions,
+        'real_cnt': real_cnt,
+        'fake_cnt': fake_cnt
+    }, status=status.HTTP_201_CREATED)
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -610,44 +622,53 @@ def toggle_api_status(request):
 def get_credits(request):
     user = request.user
     subscriptions = UserSubscription.objects.filter(user=user, is_active=True)
-
-    # 기본적으로 제공되는 free_credits
-    free_credits = user.free_credits
-
-    # 유효한 추가 크레딧 계산 (만료되지 않은 추가 크레딧만 포함)
     today = timezone.now().date()
-    valid_additional_subs = subscriptions.filter(plan__is_recurring=False, end_date__gt=today)
-    total_additional_credits = valid_additional_subs.aggregate(total=Sum('total_credits'))['total'] or 0
 
-    # 유효한 일일 크레딧 계산
-    daily_subs = subscriptions.filter(plan__is_recurring=True)
-    total_daily_credits = daily_subs.aggregate(total=Sum('plan__api_calls_per_day'))['total'] or 0
-    used_daily_credits = daily_subs.aggregate(used=Sum(F('plan__api_calls_per_day') - F('daily_credits')))['used'] or 0
-    remaining_daily_credits = total_daily_credits - used_daily_credits
+    # 기본적으로 제공되는 free_credits (매일 5개 지급)
+    daily_free_credits = 5
+    remaining_free_credits = user.free_credits
+    used_free_credits = daily_free_credits - remaining_free_credits
 
-    # 남은 크레딧 계산
-    remaining_free_credits = free_credits
-    remaining_additional_credits = total_additional_credits
+    # 유효한 일일 크레딧 초기화
+    total_daily_credits = 0
+    used_daily_credits = 0
+    remaining_daily_credits = 0
 
-    # 추가 크레딧 사용량 계산
-    initial_additional_credits = valid_additional_subs.aggregate(total=Sum('plan__credits'))['total'] or 0
-    used_additional_credits = initial_additional_credits - total_additional_credits
+    # 유효한 추가 크레딧 초기화
+    total_additional_credits = 0
+    used_additional_credits = 0
+    remaining_additional_credits = 0
 
-    remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
+    # 유효한 구독 처리
+    for sub in subscriptions:
+        if sub.plan.is_recurring:
+            # 일일 크레딧 처리
+            total_daily_credits += sub.plan.api_calls_per_day
+            remaining_daily_credits += sub.daily_credits
+        else:
+            # 추가 크레딧 처리
+            if sub.end_date and sub.end_date.date() > today:
+                total_additional_credits += sub.total_credits
+                used_additional_credits += sub.total_credits - sub.total_credits * (sub.end_date.date() - today).days // 90
 
-    # 전체 크레딧 계산
-    total_credits = free_credits + total_daily_credits + initial_additional_credits
-    today_total_credits = free_credits + total_daily_credits + initial_additional_credits
+    remaining_additional_credits = total_additional_credits - used_additional_credits
+
+    # 총 크레딧 및 남은 크레딧 계산
+    total_credits = daily_free_credits + total_daily_credits + total_additional_credits
+    total_remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
+
+    # 사용한 크레딧 계산
+    used_credits = total_credits - total_remaining_credits
 
     return Response({
         'remaining_free_credits': remaining_free_credits,
         'remaining_daily_credits': remaining_daily_credits,
         'remaining_additional_credits': remaining_additional_credits,
-        'remaining_credits': remaining_credits,
+        'total_remaining_credits': total_remaining_credits,
         'total_credits': total_credits,
-        'today_total_credits': today_total_credits,
-        'used_credits': today_total_credits - remaining_credits + 5 - free_credits  # 사용된 크레딧 계산 추가
+        'used_credits': used_credits
     })
+
     
 # @csrf_exempt
 # @api_view(['POST'])
@@ -1091,8 +1112,14 @@ def call_history(request):
             .annotate(count=Count('id')) \
             .order_by('label')
         
-        # Format the label to "7월 2주차"
-        formatted_history = [{'label': item['label'].astimezone(pytz.timezone('Asia/Seoul')).strftime('%m월 %U주차'), 'count': item['count']} for item in history]
+        # Format the label to "7월 1주차", "7월 2주차"
+        formatted_history = []
+        for item in history:
+            label_date = item['label'].astimezone(pytz.timezone('Asia/Seoul'))
+            month = label_date.strftime('%m월')
+            week_number = (label_date.day - 1) // 7 + 1
+            formatted_label = f"{month} {week_number}주차"
+            formatted_history.append({'label': formatted_label, 'count': item['count']})
 
     elif interval == 'monthly':
         start_date = now - timedelta(days=365)
@@ -1109,7 +1136,6 @@ def call_history(request):
         return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(formatted_history, status=status.HTTP_200_OK)
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

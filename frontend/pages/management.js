@@ -127,17 +127,13 @@ const ApiManagement = () => {
         withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
-        setTodayTotalCredits(
-          response.data.used_credits + response.data.remaining_credits
-        );
+        setTodayTotalCredits(response.data.total_credits);
         setDailyCredits(response.data.remaining_daily_credits);
         setAdditionalCredits(response.data.remaining_additional_credits);
-        setRemainingCredits(response.data.remaining_credits);
+        setRemainingCredits(response.data.total_remaining_credits);
         setFreeCredits(response.data.remaining_free_credits);
         setUsedCredits(response.data.used_credits);
-        setTotalCredits(
-          response.data.used_credits + response.data.remaining_credits
-        );
+        setTotalCredits(response.data.total_credits);
       })
       .catch((error) => {
         console.error("크레딧 가져오기 오류", error);
@@ -440,8 +436,14 @@ const ApiManagement = () => {
               <div className={styles.card}>
                 <h3>Total Credits</h3>
                 <div className={styles.totalcredit}>
-                  <p>⦁ Daily: {freeCredits + dailyCredits}개</p>
-                  <p>⦁ Additional: {additionalCredits}개</p>
+                  {freeCredits + dailyCredits === 0 && additionalCredits === 0 ? (
+                    <p>남은 Credit이 없습니다.</p>
+                  ) : (
+                    <>
+                      <p>⦁ Daily: {freeCredits + dailyCredits}개</p>
+                      <p>⦁ Additional: {additionalCredits}개</p>
+                    </>
+                  )}
                 </div>
               </div>
               <div className={styles.separator}></div>
@@ -694,7 +696,7 @@ const ApiManagement = () => {
         <div className={styles.main}>
           <div className={styles.header}>
             <div className={styles.headerTitle}>
-              <h1>{currentPage === "dashboard" ? "DashBoard" : "API 관리"}</h1>
+              <h1>{currentPage === "dashboard" ? "Dashboard" : "API 관리"}</h1>
               <span>Welcome! {user ? user.username : "[User name]"}님</span>
             </div>
             <div className={styles.user} onClick={toggleDropdown}>
