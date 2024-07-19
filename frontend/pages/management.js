@@ -127,17 +127,13 @@ const ApiManagement = () => {
         withCredentials: true, // 세션 인증을 위해 필요
       })
       .then((response) => {
-        setTodayTotalCredits(
-          response.data.used_credits + response.data.remaining_credits
-        );
+        setTodayTotalCredits(response.data.total_credits);
         setDailyCredits(response.data.remaining_daily_credits);
         setAdditionalCredits(response.data.remaining_additional_credits);
-        setRemainingCredits(response.data.remaining_credits);
+        setRemainingCredits(response.data.total_remaining_credits);
         setFreeCredits(response.data.remaining_free_credits);
         setUsedCredits(response.data.used_credits);
-        setTotalCredits(
-          response.data.used_credits + response.data.remaining_credits
-        );
+        setTotalCredits(response.data.total_credits);
       })
       .catch((error) => {
         console.error("크레딧 가져오기 오류", error);
