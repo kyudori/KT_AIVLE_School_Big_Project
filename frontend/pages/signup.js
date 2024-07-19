@@ -209,9 +209,9 @@ export default function Signup() {
                 <div className={styles.allcheck}>
                   <div style={{ width: "300px" }}>
                     <p>
-                      전체 동의는 필수 및 선택정보에 대한 동의도 포함되어
+                      전체 동의는 필수 및 선택 정보에 대한 동의도 포함되어
                       있으며, 개별적으로도 동의를 선택할 수 있습니다.
-                      선택항목의 경우 동의를 거부하셔도 서비스
+                      선택 항목의 경우 동의를 거부하셔도 서비스
                       이용이 가능합니다.
                     </p>
                   </div>
@@ -254,7 +254,7 @@ export default function Signup() {
                       onClick={() => handlePopup("/terms/voice-collection")}
                       style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
                     >
-                      [선택] 음성 보이스 수집 및 이용 동의
+                      [선택] 음성 데이터 수집 및 이용 동의
                     </span>
                   </label>
                 </div>
