@@ -146,7 +146,7 @@ export default function PostDetail() {
           {post.title}
         </h1>
         <div className={styles.meta}>
-          <span>By {anonymizeName(post.author_name, user?.is_staff)}</span>
+          <span>By {anonymizeName(post.author_name, post.is_staff)}</span>
           <span>{new Date(post.created_at).toLocaleString()}</span>
           <span>Views: {post.views}</span>
         </div>
@@ -217,7 +217,7 @@ export default function PostDetail() {
                       {comment.content}
                     </p>
                     <div className={styles.meta}>
-                      <span>By {anonymizeName(comment.author_name, user?.is_staff)}</span>
+                      <span>By {anonymizeName(comment.author_name, comment.is_staff)}</span>
                       <span>
                         {new Date(comment.created_at).toLocaleString()}
                       </span>

@@ -159,7 +159,7 @@ export default function Contact() {
                       </span>
                     )}
                   </td>
-                  <td>{anonymizeName(post.author_name, user?.is_staff)}</td>
+                  <td>{anonymizeName(post.author_name, post.author_is_staff)}</td>
                   <td style={{ fontSize: "12px" }}>
                     {new Date(post.created_at).toLocaleString()}
                   </td>
@@ -188,7 +188,7 @@ export default function Contact() {
                       </span>
                     )}
                   </td>
-                  <td>{anonymizeName(post.author_name, user?.is_staff)}</td>
+                  <td>{anonymizeName(post.author_name, post.author_is_staff)}</td>
                   <td style={{ fontSize: "12px" }}>
                     {new Date(post.created_at).toLocaleString()}
                   </td>
