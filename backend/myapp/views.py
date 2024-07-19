@@ -1114,19 +1114,12 @@ def call_history(request):
         
         # Format the label to "7월 1주차", "7월 2주차"
         formatted_history = []
-        current_month = None
-        week_counter = 1
-
         for item in history:
             label_date = item['label'].astimezone(pytz.timezone('Asia/Seoul'))
             month = label_date.strftime('%m월')
-            if current_month != month:
-                current_month = month
-                week_counter = 1
-
-            formatted_label = f"{month} {week_counter}주차"
+            week_number = (label_date.day - 1) // 7 + 1
+            formatted_label = f"{month} {week_number}주차"
             formatted_history.append({'label': formatted_label, 'count': item['count']})
-            week_counter += 1
 
     elif interval == 'monthly':
         start_date = now - timedelta(days=365)
@@ -1143,7 +1136,6 @@ def call_history(request):
         return Response({'error': 'Invalid interval'}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(formatted_history, status=status.HTTP_200_OK)
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
