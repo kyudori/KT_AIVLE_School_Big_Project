@@ -232,7 +232,7 @@ export default function Home() {
                 우리 서비스를{" "}
                 <span style={{ color: "#0300A7" }}>구독하고 싶다면</span>
               </h3>
-              <p>아 싸다싸!</p>
+              <p>아 싸다 싸!</p>
               <p>우리 서비스 완전 싸요!</p>
               <button onClick={handleSubscriptionPlan}>구독플랜 보기</button>
             </div>
@@ -435,7 +435,7 @@ export default function Home() {
                     Media literacy
                   </h2>
                   <ul>
-                    <li>뉴스나 라디오의 음성 진위 여부 확인</li>
+                    <li>뉴스나 라디오의 음성 진위 확인</li>
                     <li>영화나 TV 프로그램에서 사용된 음성의 진위 여부 검증</li>
                   </ul>
                 </section>
