@@ -176,7 +176,7 @@ export default function Signup() {
       <div style={{ padding: "0 200px", background: "#fff" }}>
         <Navbar />
       </div>
-      <div style={{ height: "150px" }} />
+      <div style={{ height: "100px" }} />
       <div className={styles.main}>
         <div className={styles.logoContainer}>
           <Image
@@ -194,8 +194,8 @@ export default function Signup() {
                 <div className={styles.progressFilled} />
               </div>
             </div>
-            <h1>Voice Verity</h1>
-            <h1>서비스 약관에 동의 해주세요.</h1>
+            <h1 className={styles.title}>Voice Verity</h1>
+            <h1 className={styles.subtitle}>서비스 약관에 동의 해주세요.</h1>
             <form onSubmit={handleNextStep}>
               <div className={styles.checkboxContainer}>
                 <label>
@@ -276,7 +276,7 @@ export default function Signup() {
             <h1 className={styles.title}>Voice Verity</h1>
             <h1 className={styles.subtitle}>가입에 필요한 정보를 입력해주세요.</h1>
             <form onSubmit={handleSignup}>
-              <div style={{ margin: '10px' }} />
+              <div style={{ margin: '0px' }} />
               <input
                 type="text"
                 placeholder="사용자 이름 (한글 4자 이하, 영어 5자 이하)"
@@ -377,7 +377,7 @@ export default function Signup() {
           </div>
         )}
       </div>
-      <div style={{ height: "150px" }} />
+      <div style={{ height: "100px" }} />
       <Footer />
     </div>
   );
