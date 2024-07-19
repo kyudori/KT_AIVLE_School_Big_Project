@@ -625,28 +625,29 @@ def get_credits(request):
     today = timezone.now().date()
 
     # 기본적으로 제공되는 free_credits
-    free_credits = user.free_credits
+    remaining_free_credits = user.free_credits
 
-    # 유효한 추가 크레딧 계산 (만료되지 않은 추가 크레딧만 포함)
-    valid_additional_subs = subscriptions.filter(plan__is_recurring=False, end_date__gt=today)
-    total_additional_credits = valid_additional_subs.aggregate(total=Sum('total_credits'))['total'] or 0
-    used_additional_credits = valid_additional_subs.aggregate(used=Sum('daily_credits'))['used'] or 0
-    remaining_additional_credits = total_additional_credits - used_additional_credits
+    # 유효한 추가 크레딧과 일일 크레딧 초기화
+    remaining_additional_credits = 0
+    remaining_daily_credits = 0
 
-    # 유효한 일일 크레딧 계산
-    daily_subs = subscriptions.filter(plan__is_recurring=True)
-    total_daily_credits = daily_subs.aggregate(total=Sum('plan__api_calls_per_day'))['total'] or 0
-    used_daily_credits = daily_subs.aggregate(used=Sum('plan__api_calls_per_day') - Sum('daily_credits'))['used'] or 0
-    remaining_daily_credits = total_daily_credits - used_daily_credits
+    for sub in subscriptions:
+        if sub.plan.is_recurring:
+            # 일일 크레딧 처리
+            remaining_daily_credits += sub.plan.api_calls_per_day - sub.daily_credits
+        else:
+            # 추가 크레딧 처리
+            if sub.end_date > today:
+                remaining_additional_credits += sub.total_credits
 
     # 남은 크레딧 계산
-    remaining_free_credits = free_credits
-
     remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
 
     # 전체 크레딧 계산
-    total_credits = free_credits + total_daily_credits + total_additional_credits
-    today_total_credits = free_credits + total_daily_credits + total_additional_credits
+    total_daily_credits = subscriptions.filter(plan__is_recurring=True).aggregate(total=Sum('plan__api_calls_per_day'))['total'] or 0
+    total_additional_credits = subscriptions.filter(plan__is_recurring=False, end_date__gt=today).aggregate(total=Sum('total_credits'))['total'] or 0
+    total_credits = user.free_credits + total_daily_credits + total_additional_credits
+    today_total_credits = total_credits
 
     return Response({
         'remaining_free_credits': remaining_free_credits,
