@@ -1,4 +1,4 @@
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/Navbar.Term";
 import Footer from "../../components/Footer";
 import styles from "../../styles/Terms.module.css";
 
