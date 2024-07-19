@@ -626,34 +626,36 @@ def get_credits(request):
 
     # 기본적으로 제공되는 free_credits (매일 5개 지급)
     daily_free_credits = 5
-    used_free_credits = daily_free_credits - user.free_credits
     remaining_free_credits = user.free_credits
-
-    # 유효한 추가 크레딧과 일일 크레딧 초기화
-    remaining_additional_credits = 0
-    total_additional_credits = 0
-    used_additional_credits = 0
+    used_free_credits = daily_free_credits - remaining_free_credits
 
     # 유효한 일일 크레딧 초기화
-    remaining_daily_credits = 0
     total_daily_credits = 0
+    used_daily_credits = 0
+    remaining_daily_credits = 0
 
+    # 유효한 추가 크레딧 초기화
+    total_additional_credits = 0
+    used_additional_credits = 0
+    remaining_additional_credits = 0
+
+    # 유효한 구독 처리
     for sub in subscriptions:
         if sub.plan.is_recurring:
             # 일일 크레딧 처리
-            total_daily_credits = sub.plan.api_calls_per_day
+            total_daily_credits += sub.plan.api_calls_per_day
             remaining_daily_credits += sub.daily_credits
         else:
             # 추가 크레딧 처리
             if sub.end_date and sub.end_date.date() > today:
                 total_additional_credits += sub.total_credits
-                used_additional_credits += sub.total_credits - sub.daily_credits
+                used_additional_credits += (sub.total_credits - sub.daily_credits)
 
     remaining_additional_credits = total_additional_credits - used_additional_credits
 
-    # 남은 크레딧 계산 (free 크레딧을 먼저 사용, 그 다음 daily, 그 다음 additional)
-    total_remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
+    # 총 크레딧 및 남은 크레딧 계산
     total_credits = daily_free_credits + total_daily_credits + total_additional_credits
+    total_remaining_credits = remaining_free_credits + remaining_daily_credits + remaining_additional_credits
 
     # 사용한 크레딧 계산
     used_credits = total_credits - total_remaining_credits
@@ -666,6 +668,7 @@ def get_credits(request):
         'total_credits': total_credits,
         'used_credits': used_credits
     })
+
     
 # @csrf_exempt
 # @api_view(['POST'])
