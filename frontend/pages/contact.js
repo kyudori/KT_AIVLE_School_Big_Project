@@ -85,8 +85,8 @@ export default function Contact() {
     fetchPosts(1, query, searchOption);
   };
 
-  const anonymizeName = (name, isAuthorStaff, isUserStaff) => {
-    if (isAuthorStaff || isUserStaff) return name;
+  const anonymizeName = (name, isStaff, isAuthorStaff) => {
+    if (isStaff || isAuthorStaff) return name;
     return name[0] + "*".repeat(name.length - 1);
   };
 
@@ -215,4 +215,3 @@ export default function Contact() {
     </div>
   );
 }
-

@@ -217,7 +217,7 @@ export default function PostDetail() {
                       {comment.content}
                     </p>
                     <div className={styles.meta}>
-                      <span>By {anonymizeName(comment.author_name, comment.is_staff, user?.is_staff)}</span>
+                      <span>By {anonymizeName(comment.author_name, comment.author_is_staff, user?.is_staff)}</span>
                       <span>
                         {new Date(comment.created_at).toLocaleString()}
                       </span>
