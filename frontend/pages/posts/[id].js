@@ -124,8 +124,8 @@ export default function PostDetail() {
     router.push("/contact");
   };
 
-  const anonymizeName = (name, isStaff) => {
-    if (isStaff) return name;
+  const anonymizeName = (name, isStaff, isAdmin) => {
+    if (isAdmin || isStaff) return name;
     return name[0] + "*".repeat(name.length - 1);
   };
 
@@ -146,7 +146,7 @@ export default function PostDetail() {
           {post.title}
         </h1>
         <div className={styles.meta}>
-          <span>By {anonymizeName(post.author_name, post.author_is_staff)}</span>
+          <span>By {anonymizeName(post.author_name, post.author_is_staff, user?.is_staff)}</span>
           <span>{new Date(post.created_at).toLocaleString()}</span>
           <span>Views: {post.views}</span>
         </div>
@@ -217,7 +217,7 @@ export default function PostDetail() {
                       {comment.content}
                     </p>
                     <div className={styles.meta}>
-                      <span>By {anonymizeName(comment.author_name, comment.is_staff)}</span>
+                      <span>By {anonymizeName(comment.author_name, comment.is_staff, user?.is_staff)}</span>
                       <span>
                         {new Date(comment.created_at).toLocaleString()}
                       </span>

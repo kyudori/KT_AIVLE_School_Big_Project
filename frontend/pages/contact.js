@@ -85,8 +85,8 @@ export default function Contact() {
     fetchPosts(1, query, searchOption);
   };
 
-  const anonymizeName = (name, isStaff) => {
-    if (isStaff) return name;
+  const anonymizeName = (name, isAuthorStaff, isUserStaff) => {
+    if (isAuthorStaff || isUserStaff) return name;
     return name[0] + "*".repeat(name.length - 1);
   };
 
@@ -159,7 +159,7 @@ export default function Contact() {
                       </span>
                     )}
                   </td>
-                  <td>{anonymizeName(post.author_name, post.author_is_staff)}</td>
+                  <td>{anonymizeName(post.author_name, post.author_is_staff, user?.is_staff)}</td>
                   <td style={{ fontSize: "12px" }}>
                     {new Date(post.created_at).toLocaleString()}
                   </td>
@@ -188,7 +188,7 @@ export default function Contact() {
                       </span>
                     )}
                   </td>
-                  <td>{anonymizeName(post.author_name, post.author_is_staff)}</td>
+                  <td>{anonymizeName(post.author_name, post.author_is_staff, user?.is_staff)}</td>
                   <td style={{ fontSize: "12px" }}>
                     {new Date(post.created_at).toLocaleString()}
                   </td>
