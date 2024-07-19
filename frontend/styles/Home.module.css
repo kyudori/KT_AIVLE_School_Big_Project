@@ -443,15 +443,28 @@
 
 .prevbtn {
   position: relative;
-  left: -600px;
+  left: -700px;
   top: 300px;
-  transition: all 0.2s;
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+  cursor: pointer;
+  border: none;
 }
 
 .nextbtn {
   position: relative;
-  right: -600px;
+  right: -700px;
   top: 300px;
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+  cursor: pointer;
+  border: none;
 }
 
 .panel {
@@ -481,8 +494,10 @@
 
 .payContainer p {
   font-weight: normal;
-  font-size: 1.2em;
-
+  font-size: 24px;
+  text-align: end;
+  margin: 0;
+  margin-bottom: 30px;
 }
 
 .paylogo {
@@ -491,6 +506,11 @@
   background-size: cover;
   width: 312px;
   height: 139px;
+}
+
+.payContainer .buttonContainer {
+  margin-left: 50px;
+  justify-content: flex-end;
 }
 
 .payContainer button {
@@ -505,4 +525,9 @@
 
 .payContainer button:hover {
   background-color: #d9d9d9;
+}
+
+.go {
+  transform: translateX(-100px);
+  transition: all 0.2S;
 }

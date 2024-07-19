@@ -104,7 +104,7 @@ export default function Home() {
     const [currentPage, setCurrentPage] = useState(0);
 
     const nextPage = () => {
-      setCurrentPage((prevPage) => (prevPage + 1) % pages.length);
+      setCurrentPage((prevPage) => (prevPage + 1) % pages.length)
     };
 
     const prevPage = () => {
@@ -116,8 +116,16 @@ export default function Home() {
     return (
       <div className="panel">
         <div className={styles.panel}>
-          <button className={styles.prevbtn} onClick={prevPage}>◀</button>
-          <button className={styles.nextbtn} onClick={nextPage}>▶</button>
+          <button
+            className={styles.prevbtn}
+            style={{ backgroundImage: "url(/images/home/prev.png)" }}
+            onClick={prevPage}
+          ></button>
+          <button
+            className={styles.nextbtn}
+            style={{ backgroundImage: "url(/images/home/next.png)" }}
+            onClick={nextPage}
+          ></button>
           {pages[currentPage].content}
         </div>
       </div>
@@ -146,36 +154,37 @@ export default function Home() {
       ),
     },
     {
-      content: 
-      <div className={styles.payContainer}>
-      <div className={styles.payinfo}>
-      <p className="phrase">
-        <span> 우리의 서비스, </span>
-        <br className="gap"></br>
-        <span>딱, 한 장</span>
-        <br className="gap"></br>
-      </p>
-      <div className={styles.paylogo} style={{backgroundImage:'url(/images/pay.png)'}}></div>
-      </div> 
-      <div className={styles.buttonContainer}>
-        <button onClick={handleSubscriptionPlan}>Subscription Plan</button>
-      </div>
-    </div>,
+      content: (
+        <div className={styles.payContainer}>
+          <div className={styles.payinfo}>
+            <p>우리의 서비스</p>
+            <p>딱, 한 장</p>
+            <div
+              className={styles.paylogo}
+              style={{ backgroundImage: "url(/images/pay.png)" }}
+            ></div>
+          </div>
+          <div className={styles.buttonContainer}>
+            <button onClick={handleSubscriptionPlan}>Subscription Plan</button>
+          </div>
+        </div>
+      ),
     },
     {
-      content: 
-      <div className={styles.textContainer}>
-      <p className="phrase">
-        <span> 우리랑, </span>
-        <br className="gap"></br>
-        <span>일하고</span>
-        <br className="gap"></br>
-        <span>싶니?</span>
-      </p>
-      <div className={styles.buttonContainer}>
-        <button onClick={handleContactUs}>Contact Us</button>
-      </div>
-    </div>,
+      content: (
+        <div className={styles.textContainer} style={{marginLeft:'50px', marginRight:'50px'}}>
+          <p className="phrase">
+            <span> 우리랑, </span>
+            <br className="gap"></br>
+            <span>일하고</span>
+            <br className="gap"></br>
+            <span>싶니?</span>
+          </p>
+          <div className={styles.buttonContainer} style={{justifyContent: 'flex-end', marginBottom: '20px'}}>
+            <button onClick={handleContactUs} style={{width:'250px'}}>Contact Us</button>
+          </div>
+        </div>
+      ),
     },
   ];
 
@@ -185,7 +194,7 @@ export default function Home() {
         <Navbar />
       </div>
       <div className={styles.mainContent}>
-          <Panel pages={pages} />
+        <Panel pages={pages} />
         <div className={styles.infoSection}>
           <h2>
             Voice Verity, 목소리에{" "}
