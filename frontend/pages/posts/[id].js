@@ -146,7 +146,7 @@ export default function PostDetail() {
           {post.title}
         </h1>
         <div className={styles.meta}>
-          <span>By {anonymizeName(post.author_name, post.is_staff)}</span>
+          <span>By {anonymizeName(post.author_name, post.author_is_staff)}</span>
           <span>{new Date(post.created_at).toLocaleString()}</span>
           <span>Views: {post.views}</span>
         </div>
@@ -241,7 +241,13 @@ export default function PostDetail() {
             );
           })}
           {user && !editingComment && (
-            <div style={{ borderTop: "solid #ccc", marginTop: "50px", padding: "50px 0" }}>
+            <div
+              style={{
+                borderTop: "solid #ccc",
+                marginTop: "50px",
+                padding: "50px 0",
+              }}
+            >
               <form
                 onSubmit={handleCommentSubmit}
                 className={styles.commentForm}
