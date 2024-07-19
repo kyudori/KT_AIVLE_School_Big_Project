@@ -113,6 +113,14 @@ export default function Home() {
       );
     };
 
+    useEffect(() => {
+      const interval = setInterval(() => {
+        nextPage();
+      }, 5000); // 5초마다 페이지 변경
+
+      return () => clearInterval(interval); // Cleanup on unmount
+    }, []);
+
     return (
       <div className="panel">
         <div className={styles.panel}>
