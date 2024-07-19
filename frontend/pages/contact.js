@@ -16,6 +16,7 @@ export default function Contact() {
   const [query, setQuery] = useState("");
   const [searchOption, setSearchOption] = useState("title");
   const [searchInitiated, setSearchInitiated] = useState(false);
+  const [totalPosts, setTotalPosts] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -41,6 +42,7 @@ export default function Contact() {
         setNotices(notices || []);
         setPosts(posts || []);
         setTotalPages(Math.ceil(count / 10));
+        setTotalPosts(count);
       })
       .catch((error) => console.error("Error fetching posts", error));
   };
@@ -135,7 +137,7 @@ export default function Contact() {
           </thead>
           <tbody>
             {notices.length > 0 &&
-              notices.map((post, index) => (
+              notices.map((post) => (
                 <tr
                   key={post.id}
                   onClick={() => handlePostClick(post)}
@@ -170,7 +172,7 @@ export default function Contact() {
                   onClick={() => handlePostClick(post)}
                   className={post.is_notice ? styles.notice : ""}
                 >
-                  <td>{(totalPages - currentPage) * 10 - index}</td>
+                  <td>{totalPosts - ((currentPage - 1) * 10 + index)}</td>
                   <td>
                     {!post.is_public && <span>(비공개) </span>}
                     {post.title}
