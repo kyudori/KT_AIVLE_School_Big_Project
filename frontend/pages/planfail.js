@@ -32,7 +32,7 @@ const PlanFail = () => {
       </div>
       <div className={styles.contactUs}>
         <h2>Contact Us</h2>
-        <Link href="/contact">
+        <Link href="/contact/1">
           <button className={styles.button}>Contact Support</button>
         </Link>
       </div>

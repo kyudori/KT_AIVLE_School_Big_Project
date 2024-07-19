@@ -45,7 +45,7 @@ export default function Documentation() {
   };
 
   const handleContactUs = () => {
-    router.push("/contact");
+    router.push("/contact/1");
   };
 
   const handleCopyClick = (textToCopy, id) => {

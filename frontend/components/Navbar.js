@@ -18,7 +18,7 @@ export default function Navbar() {
         headers: {
           'Authorization': `Token ${token}`
         },
-        withCredentials: true,  // 세션 인증을 위해 필요
+        // withCredentials: true,  // 세션 인증을 위해 필요
       })
       .then(response => {
         setUser(response.data);

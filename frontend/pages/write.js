@@ -85,7 +85,7 @@ export default function Write() {
   };
 
   const handleCancel = () => {
-    router.push("/contact");
+    router.push("/contact/1");
   };
 
   return (

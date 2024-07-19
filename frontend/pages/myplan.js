@@ -184,7 +184,7 @@ const MyPlan = () => {
       <div className={styles.contactUs}>
         <h2>Voice Verity와 함께해요.</h2>
         <p>당신의 든든한 파트너가 될 수 있습니다.</p>
-        <button onClick={() => router.push("/contact")}>Contact Us</button>
+        <button onClick={() => router.push("/contact/1")}>Contact Us</button>
       </div>
       <Footer />
       {showModal && (

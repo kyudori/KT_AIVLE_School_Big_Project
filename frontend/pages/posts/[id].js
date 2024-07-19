@@ -43,7 +43,10 @@ export default function PostDetail() {
       .catch((error) => {
         if (error.response && error.response.status === 403) {
           alert("비공개 게시글 입니다.");
-          router.push("/contact");
+          router.push("/contact/1");
+        } else if (error.response && error.response.status === 404) {
+          alert("삭제되었거나 존재하지 않는 게시글입니다.");
+          router.push("/contact/1");
         } else {
           console.error("Error fetching post", error);
         }
@@ -115,13 +118,13 @@ export default function PostDetail() {
 
       axios
         .delete(`${BACKEND_URL}/api/posts/${id}/`, { headers })
-        .then(() => router.push("/contact"))
+        .then(() => router.push("/contact/1"))
         .catch((error) => console.error("Error deleting post", error));
     }
   };
 
   const handleBackClick = () => {
-    router.push("/contact");
+    router.push("/contact/1");
   };
 
   const anonymizeName = (name, isAuthorStaff, isUserStaff) => {
