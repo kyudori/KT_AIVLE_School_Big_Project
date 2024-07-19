@@ -124,6 +124,11 @@ export default function PostDetail() {
     router.push("/contact");
   };
 
+  const anonymizeName = (name, isStaff) => {
+    if (isStaff) return name;
+    return name[0] + "*".repeat(name.length - 1);
+  };
+
   if (!post) return <div>Loading...</div>;
 
   const canEditOrDelete = user && (user.is_staff || user.id === post.author_id);
@@ -141,7 +146,7 @@ export default function PostDetail() {
           {post.title}
         </h1>
         <div className={styles.meta}>
-          <span>By {post.author_name}</span>
+          <span>By {anonymizeName(post.author_name, user?.is_staff)}</span>
           <span>{new Date(post.created_at).toLocaleString()}</span>
           <span>Views: {post.views}</span>
         </div>
@@ -212,7 +217,7 @@ export default function PostDetail() {
                       {comment.content}
                     </p>
                     <div className={styles.meta}>
-                      <span>By {comment.author_name}</span>
+                      <span>By {anonymizeName(comment.author_name, user?.is_staff)}</span>
                       <span>
                         {new Date(comment.created_at).toLocaleString()}
                       </span>
