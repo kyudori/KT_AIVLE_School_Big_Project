@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, SubscriptionPlan, UserSubscription, PaymentHistory, APIKey, AudioFile, UploadHistory, Payment, Post, Comment
+from .models import CustomUser, SubscriptionPlan, UserSubscription, PaymentHistory, APIKey, AudioFile, UploadHistory, Payment, Post, Comment, ApiCallHistory, YouTubeAnalysis
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -27,7 +27,7 @@ class PaymentHistoryAdmin(admin.ModelAdmin):
 
 @admin.register(APIKey)
 class APIKeyAdmin(admin.ModelAdmin):
-    list_display = ('user', 'key', 'created_at', 'last_used_at')
+    list_display = ('user', 'key', 'created_at', 'last_used_at', 'is_active')
     search_fields = ('user__username', 'key')
     list_filter = ('created_at', 'last_used_at')
 
@@ -39,7 +39,7 @@ class AudioFileAdmin(admin.ModelAdmin):
 
 @admin.register(UploadHistory)
 class UploadHistoryAdmin(admin.ModelAdmin):
-    list_display = ('user', 'upload_date', 'upload_count')
+    list_display = ('user', 'upload_date', 'upload_count', 'youtube_upload_count')
     search_fields = ('user__username',)
     list_filter = ('upload_date',)
 
@@ -60,3 +60,15 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('post', 'author', 'created_at', 'updated_at', 'is_public')
     search_fields = ('post__title', 'author__username', 'content')
     list_filter = ('created_at', 'updated_at', 'is_public')
+
+@admin.register(ApiCallHistory)
+class ApiCallHistoryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'api_key', 'endpoint', 'timestamp', 'success', 'response_time', 'file_path', 'youtube_url')
+    search_fields = ('user__username', 'api_key', 'endpoint')
+    list_filter = ('timestamp', 'success')
+
+@admin.register(YouTubeAnalysis)
+class YouTubeAnalysisAdmin(admin.ModelAdmin):
+    list_display = ('user', 'url', 'analysis_result', 'created_at')
+    search_fields = ('user__username', 'url', 'analysis_result')
+    list_filter = ('created_at',)
