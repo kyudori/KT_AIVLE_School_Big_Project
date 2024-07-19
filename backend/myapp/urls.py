@@ -41,4 +41,5 @@ urlpatterns = [
     path('youtube-verity/', youtube_verity, name='youtube-verity'),
     path('call-history/', call_history, name='call-history'),
     path('call-summary/', call_summary, name='call-summary'),
+    path('contact/<int:page>/', posts_list_create, name='contact'),
 ]

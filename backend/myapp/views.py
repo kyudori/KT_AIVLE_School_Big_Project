@@ -721,6 +721,12 @@ def user_files(request):
 class PostPagination(PageNumberPagination):
     page_size = 10
 
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+
+class PostPagination(PageNumberPagination):
+    page_size = 10
+
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def posts_list_create(request):
@@ -768,7 +774,6 @@ def posts_list_create(request):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def post_detail(request, pk):
@@ -791,7 +796,6 @@ def post_detail(request, pk):
             ]
             return Response(response_data)
         elif user and user == post.author:
-            # 작성자인 경우에도 게시글을 볼 수 있도록 허용
             post.views += 1
             post.save()
             serializer = PostSerializer(post)
