@@ -662,7 +662,7 @@ export default function TryVoice() {
               <div style={{ margin: "50px" }}>
                 <h2>
                   {inputType === "file"
-                    ? "음성파일을 업로드한 뒤, Start Detection 버튼을 눌러주세요."
+                    ? "음성파일을 올린 뒤, Start Detection 버튼을 눌러주세요."
                     : "URL을 입력한 뒤, Start Detection 버튼을 눌러주세요."}{" "}
                 </h2>
                 <p style={{ color: "#666" }}>
