@@ -124,8 +124,8 @@ export default function PostDetail() {
     router.push("/contact");
   };
 
-  const anonymizeName = (name, isStaff, isAdmin) => {
-    if (isAdmin || isStaff) return name;
+  const anonymizeName = (name, isAuthorStaff, isUserStaff) => {
+    if (isAuthorStaff || isUserStaff) return name;
     return name[0] + "*".repeat(name.length - 1);
   };
 
