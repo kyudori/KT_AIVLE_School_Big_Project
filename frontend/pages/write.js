@@ -22,6 +22,18 @@ export default function Write() {
     if (id) {
       setIsEditMode(true);
       fetchPost(id);
+    } else {
+      setContent(`<비즈니스 문의 양식>
+
+담당자 이름:
+이메일:
+연락처: 
+부서:
+직급:
+회사:
+국가:
+문의 주제:
+문의 내용:`);
     }
   }, [id]);
 
@@ -94,21 +106,7 @@ export default function Write() {
             required
           />
           <textarea
-            value={
-              isEditMode
-                ? content
-                : `<비즈니스 문의 양식>
-
-담당자 이름:
-이메일:
-연락처: 
-부서:
-직급:
-회사:
-국가:
-문의 주제:
-문의 내용:`
-            }
+            value={content}
             onChange={(e) => setContent(e.target.value)}
             required
           />
@@ -148,7 +146,9 @@ export default function Write() {
           </div>
         </form>
       </div>
-      <Footer />
+      <div className={styles.footer}>
+        <Footer />
+      </div>
     </div>
   );
 }
