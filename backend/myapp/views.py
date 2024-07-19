@@ -345,14 +345,14 @@ def approve_payment(request):
         payment.save()
 
         if payment.plan.is_recurring:
-            # 정기 결제 플랜인 경우 기존 구독 처리
-            current_subscription = UserSubscription.objects.filter(user=user, is_active=True).first()
+            # 정기 결제 플랜인 경우 기존 정기 구독 처리
+            current_subscription = UserSubscription.objects.filter(user=user, is_active=True, plan__is_recurring=True).first()
             if current_subscription:
                 current_subscription.is_active = False
                 current_subscription.end_date = timezone.now()
                 current_subscription.save()
 
-            # 새로운 구독 생성
+            # 새로운 정기 구독 생성
             UserSubscription.objects.create(
                 user=user,
                 plan=payment.plan,
