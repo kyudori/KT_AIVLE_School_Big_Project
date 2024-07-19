@@ -423,10 +423,11 @@ def upload_audio(request):
         return Response({'error': f'File size exceeds {MAX_FILE_SIZE_MB} MB limit'}, status=status.HTTP_402_BAD_REQUEST)
 
     today = timezone.now().date()
-    upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
-
-    if upload_history.upload_count >= MAX_UPLOADS_PER_DAY:
-        return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_BAD_REQUEST)
+    if not request.user.is_superuser:
+        upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
+        
+        if upload_history.upload_count >= MAX_UPLOADS_PER_DAY:
+            return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_BAD_REQUEST)
 
     # UUID 생성 및 파일 경로 설정
     unique_id = uuid.uuid4()
@@ -463,8 +464,9 @@ def upload_audio(request):
     audio_file.save()
 
     # 업로드 기록 업데이트 (성공한 경우에만)
-    upload_history.upload_count += 1
-    upload_history.save()
+    if not request.user.is_superuser:
+        upload_history.upload_count += 1
+        upload_history.save()
 
     return Response({
         'file_name': file.name,
@@ -474,6 +476,7 @@ def upload_audio(request):
         'real_cnt': real_cnt,
         'fake_cnt': fake_cnt
     }, status=status.HTTP_201_CREATED)
+
     
 # Define YouTube URL pattern
 YOUTUBE_URL_PATTERN  = re.compile(
@@ -490,10 +493,11 @@ def upload_youtube(request):
         return Response({'error': 'Invalid YouTube URL'}, status=status.HTTP_400_BAD_REQUEST)
     
     today = timezone.now().date()
-    upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
-
-    if upload_history.youtube_upload_count >= MAX_UPLOADS_PER_DAY:
-        return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_BAD_REQUEST)
+    if not request.user.is_superuser:
+        upload_history, created = UploadHistory.objects.get_or_create(user=request.user, upload_date=today)
+        
+        if upload_history.youtube_upload_count >= MAX_UPLOADS_PER_DAY:
+            return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_BAD_REQUEST)
 
     try:
         response = requests.post(f"{FLASK_URL}/predict", json={'file_path': url, 'data_type': 'youtube', 'key_verity': True})
@@ -513,8 +517,9 @@ def upload_youtube(request):
     )
 
     # Update upload history
-    upload_history.youtube_upload_count += 1
-    upload_history.save()
+    if not request.user.is_superuser:
+        upload_history.youtube_upload_count += 1
+        upload_history.save()
 
     return Response({
         'url': url,
@@ -523,7 +528,6 @@ def upload_youtube(request):
         'real_cnt': real_cnt,
         'fake_cnt': fake_cnt
     }, status=status.HTTP_201_CREATED)
-
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
