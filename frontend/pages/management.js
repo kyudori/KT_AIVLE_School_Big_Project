@@ -436,8 +436,14 @@ const ApiManagement = () => {
               <div className={styles.card}>
                 <h3>Total Credits</h3>
                 <div className={styles.totalcredit}>
-                  <p>⦁ Daily: {freeCredits + dailyCredits}개</p>
-                  <p>⦁ Additional: {additionalCredits}개</p>
+                  {freeCredits + dailyCredits === 0 && additionalCredits === 0 ? (
+                    <p>남은 Credit이 없습니다.</p>
+                  ) : (
+                    <>
+                      <p>⦁ Daily: {freeCredits + dailyCredits}개</p>
+                      <p>⦁ Additional: {additionalCredits}개</p>
+                    </>
+                  )}
                 </div>
               </div>
               <div className={styles.separator}></div>
