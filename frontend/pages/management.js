@@ -282,8 +282,7 @@ const ApiManagement = () => {
   };
 
   const handleToggleApiStatus = (status) => {
-    const password = prompt("비밀번호를 입력해주세요:");
-    if (password) {
+    openPasswordModal((password) => {
       axios
         .post(
           `${BACKEND_URL}/api/toggle-api-status/`,
@@ -305,7 +304,7 @@ const ApiManagement = () => {
             console.error("API Key 상태 변경 오류", error);
           }
         });
-    }
+    });
   };
 
   const toggleDropdown = () => {
