@@ -102,40 +102,44 @@ export default function Home() {
 
   const Panel = ({ pages }) => {
     const [currentPage, setCurrentPage] = useState(0);
-
+    const [animationClass, setAnimationClass] = useState('');
+  
     const nextPage = () => {
-      setCurrentPage((prevPage) => (prevPage + 1) % pages.length)
+      setAnimationClass(styles.fadeOutNext);
+      setTimeout(() => {
+        setCurrentPage((prevPage) => (prevPage + 1) % pages.length);
+        setAnimationClass(styles.fadeInNext);
+      }, 300); // 애니메이션 시간과 맞춤
     };
-
+  
     const prevPage = () => {
-      setCurrentPage(
-        (prevPage) => (prevPage - 1 + pages.length) % pages.length
-      );
+      setAnimationClass(styles.fadeOutPrev);
+      setTimeout(() => {
+        setCurrentPage((prevPage) => (prevPage - 1 + pages.length) % pages.length);
+        setAnimationClass(styles.fadeInPrev);
+      }, 300); // 애니메이션 시간과 맞춤
     };
-
+  
     useEffect(() => {
       const interval = setInterval(() => {
         nextPage();
       }, 5000); // 5초마다 페이지 변경
-
+  
       return () => clearInterval(interval); // Cleanup on unmount
     }, []);
 
     return (
-      <div className="panel">
-        <div className={styles.panel}>
-          <button
-            className={styles.prevbtn}
-            style={{ backgroundImage: "url(/images/home/prev.png)" }}
-            onClick={prevPage}
-          ></button>
-          <button
-            className={styles.nextbtn}
-            style={{ backgroundImage: "url(/images/home/next.png)" }}
-            onClick={nextPage}
-          ></button>
-          {pages[currentPage].content}
-        </div>
+      <div className={styles.panelcontainer}>
+        <button className={styles.prevbtn} onClick={prevPage}>
+          {"<"}
+        </button>
+        <button className={styles.nextbtn} onClick={nextPage}>
+          {">"}
+        </button>
+        <div
+        className={`${styles.panel} ${animationClass}`}>
+        {pages[currentPage].content}
+      </div>
       </div>
     );
   };
@@ -180,7 +184,10 @@ export default function Home() {
     },
     {
       content: (
-        <div className={styles.textContainer} style={{marginLeft:'50px', marginRight:'50px'}}>
+        <div
+          className={styles.textContainer}
+          style={{ marginLeft: "50px", marginRight: "50px" }}
+        >
           <p className="phrase">
             <span> 우리랑, </span>
             <br className="gap"></br>
@@ -190,7 +197,9 @@ export default function Home() {
           </p>
           <div className={styles.buttonContainer}>
             <div className={styles.hand} />
-               <button onClick={handleContactUs} style={{width:'250px'}}>Contact Us</button>
+            <button onClick={handleContactUs} style={{ width: "250px" }}>
+              Contact Us
+            </button>
           </div>
         </div>
       ),

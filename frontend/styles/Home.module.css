@@ -450,34 +450,33 @@
 }
 
 .prevbtn {
+  color: #616161;
+  font-family: fontA;
+  font-size: 3em;
+  background: none;
   position: relative;
-  left: -700px;
+  left: -650px;
   top: 300px;
   width: 40px;
   height: 40px;
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: cover;
   cursor: pointer;
   border: none;
 }
 
 .nextbtn {
+  color: #616161;
+  font-family: fontA;
+  font-size: 3em;
+  background: none;
   position: relative;
-  right: -700px;
+  right: -650px;
   top: 300px;
   width: 40px;
   height: 40px;
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: cover;
   cursor: pointer;
   border: none;
 }
 
-.panel {
-  width: 100%;
-}
 
 .payContainer {
   padding: 20px;
@@ -535,7 +534,76 @@
   background-color: #d9d9d9;
 }
 
-.go {
-  transform: translateX(-100px);
-  transition: all 0.2S;
+.panelcontainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+
+.fadeOutNext {
+  animation: fadeOutNext 0.5s forwards;
+}
+
+.fadeOutPrev {
+  animation: fadeOutPrev 0.5s forwards;
+}
+
+.fadeInNext {
+  animation: fadeInNext 0.5s forwards;
+}
+
+.fadeInPrev {
+  animation: fadeInPrev 0.5s forwards;
+}
+
+@keyframes fadeOutNext {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-10%);
+  }
+}
+
+@keyframes fadeOutPrev {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(10%);
+  }
+}
+
+@keyframes fadeInNext {
+  0% {
+    opacity: 0;
+    transform: translateX(10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInPrev {
+  0% {
+    opacity: 0;
+    transform: translateX(-10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
