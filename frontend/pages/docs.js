@@ -130,7 +130,7 @@ export default function Documentation() {
                     Voice Verity는 KT AivleSchool 5기 AI Track 8조가 제공하는
                   </span>
                   <br />
-                  <span>API 및 플랫폼 서비스 입니다.</span>
+                  <span>API 및 플랫폼 서비스입니다.</span>
                 </p>
                 <div className={styles.cardContainer}>
                   <div
@@ -140,7 +140,7 @@ export default function Documentation() {
                     
                     <div style={{height:'200px', alignContent: 'center'}}><div className={styles.cardicon}/></div>
                     <div className={styles.cardtext}>
-                      <h2>시작 하기</h2>
+                      <h2>시작하기</h2>
                       <p style={{ color: "#444", fontSize: "20px" }}>Get start</p>
                       <p style={{ color: "blue" }}>Read documentation &gt;</p>
                     </div>
@@ -335,7 +335,7 @@ Value: YOUR_AUDIO_FILE.wav`, 'body')
     설명: 업로드한 YouTube Link를 기반으로 AI 모델로부터 Deep Fake 여부를 판단합니다.
   </li>
   <li>영상에 대한 분석은 1초 단위로 제공됩니다.</li>
-  <li>BGM, MR등이 포함된 영상은 정확도가 떨어질 수 있습니다.</li>
+  <li>BGM 등이 포함된 영상은 정확도가 떨어질 수 있습니다.</li>
 </ul>
 <h3>Request Header</h3>
 <div className={styles.codeEX}>
@@ -513,7 +513,7 @@ Value: Bearer YOUR_API_KEY`, 'youtubeHeader')
                   </tr>
                   <tr>
                     <td className={styles.td1}>410 Only One File</td>
-                    <td>| 1개의 파일만 분석 가능합니다.</td>
+                    <td>| 1개의 파일만 분석할 수 있습니다.</td>
                   </tr>
                   <tr>
                     <td className={styles.td1}>413 Payload Too Large</td>
