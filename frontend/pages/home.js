@@ -188,8 +188,9 @@ export default function Home() {
             <br className="gap"></br>
             <span>싶니?</span>
           </p>
-          <div className={styles.buttonContainer} style={{justifyContent: 'flex-end', marginBottom: '20px'}}>
-            <button onClick={handleContactUs} style={{width:'250px'}}>Contact Us</button>
+          <div className={styles.buttonContainer}>
+            <div className={styles.hand} />
+               <button onClick={handleContactUs} style={{width:'250px'}}>Contact Us</button>
           </div>
         </div>
       ),

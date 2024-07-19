@@ -57,12 +57,20 @@
 .logo {
   background-image: url(./images/logo.png);
   background-repeat: no-repeat;
-  background-position: top center;
-  background-size: cover;
+  background-position: center; /* Center the image both horizontally and vertically */
+  background-size: contain; /* Scale the image to fit within the container */
   width: 256px;
   height: 182px;
 }
 
+.hand {
+  background-image: url(./images/hand.png);
+  background-repeat: no-repeat;
+  background-position: center; /* Center the image both horizontally and vertically */
+  background-size: contain; /* Scale the image to fit within the container */
+  width: 256px;
+  height: 182px;
+}
 .textContainer button {
   background-color: rgba(0, 0, 0, 0);
   border-radius: 30px;
