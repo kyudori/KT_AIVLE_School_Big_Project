@@ -418,8 +418,8 @@
 }
 
 .img {
-  width: 60px;
-  height: 60px;
+  width: 30px;
+  height: 30px;
   background-repeat: no-repeat;
   background-position: top center;
   background-size: cover;
@@ -427,8 +427,10 @@
 
 .timeContainer {
   display: flex;
-  justify-content: center;
-  gap: 5px;
+  justify-content: flex-start;
   font-size: 1em;
   margin-top: 10px;
+  align-items: center;
+  width: 90%;
+  gap: 5px
 }

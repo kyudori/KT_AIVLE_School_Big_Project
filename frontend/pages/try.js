@@ -91,7 +91,10 @@ export default function TryVoice() {
 
     return () => {
       if (waveContainerRef.current) {
-        waveContainerRef.current.removeEventListener("click", handleWaveformClick);
+        waveContainerRef.current.removeEventListener(
+          "click",
+          handleWaveformClick
+        );
       }
     };
   }, [isPlaying, waveContainerRef.current]);
@@ -100,7 +103,9 @@ export default function TryVoice() {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
-    return `${hours > 0 ? `${hours}:` : ""}${minutes < 10 && hours > 0 ? "0" : ""}${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+    return `${hours > 0 ? `${hours}:` : ""}${
+      minutes < 10 && hours > 0 ? "0" : ""
+    }${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
   const handleSubscriptionPlan = () => {
@@ -507,14 +512,18 @@ export default function TryVoice() {
               </div>
               {inputType === "file" ? (
                 <div
-                  className={`${styles.form} ${dragging ? styles.fileDragging : ""}`}
+                  className={`${styles.form} ${
+                    dragging ? styles.fileDragging : ""
+                  }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                 >
                   {dragging && dragFileName ? ( // 드래그 중일 때 파일 이름 표시
                     <div className={styles.dragFileNameContainer}>
-                      <span className={styles.dragFileName}>{dragFileName}</span>
+                      <span className={styles.dragFileName}>
+                        {dragFileName}
+                      </span>
                     </div>
                   ) : fileName ? (
                     <>
@@ -534,6 +543,13 @@ export default function TryVoice() {
                         </button>
                       </div>
                       <div className={styles.waveContainer}>
+                        <div
+                          ref={waveContainerRef}
+                          className={styles.waveform}
+                        ></div>
+                      </div>
+                      <div className={styles.timeContainer}>
+
                         <button
                           type="button"
                           className={styles.playPauseButton}
@@ -542,19 +558,20 @@ export default function TryVoice() {
                           {isPlaying ? (
                             <div
                               className={styles.img}
-                              style={{ backgroundImage: `url("/images/stopbtn.png")` }}
+                              style={{
+                                backgroundImage: `url("/images/stopbtn.png")`,
+                              }}
                             ></div>
                           ) : (
                             <div
                               className={styles.img}
-                              style={{ backgroundImage: `url("/images/playbtn.png")` }}
+                              style={{
+                                backgroundImage: `url("/images/playbtn.png")`,
+                              }}
                             />
                           )}
                         </button>
-                        <div ref={waveContainerRef} className={styles.waveform}></div>
-                      </div>
-                      <div className={styles.timeContainer}>
-                        <span>{currentTime}</span> / <span>{duration}</span>
+                        <span>{currentTime}</span>/<span>{duration}</span>
                       </div>
                     </>
                   ) : (
@@ -659,7 +676,9 @@ export default function TryVoice() {
               </div>
             </form>
           </div>
-          {loading && <p style={{ fontSize: "24px", margin: "100px 0" }}>분석중...</p>}
+          {loading && (
+            <p style={{ fontSize: "24px", margin: "100px 0" }}>분석중...</p>
+          )}
           {!loading && Array.isArray(predictions) && predictions.length > 0 && (
             <div className={styles.resultContext}>
               <h1>Detect Report</h1>
@@ -703,7 +722,10 @@ export default function TryVoice() {
           )}
           <div className={styles.plan}>
             <h2>우리의 더 나은 서비스를 원하시나요?</h2>
-            <button onClick={handleSubscriptionPlan} className={styles.planButton}>
+            <button
+              onClick={handleSubscriptionPlan}
+              className={styles.planButton}
+            >
               구독플랜 보기
             </button>
           </div>
