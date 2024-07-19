@@ -649,7 +649,7 @@ def get_credits(request):
             # 추가 크레딧 처리
             if sub.end_date and sub.end_date.date() > today:
                 total_additional_credits += sub.total_credits
-                used_additional_credits += sub.total_credits - sub.daily_credits
+                used_additional_credits += sub.total_credits - sub.total_credits * (sub.end_date.date() - today).days // 90
 
     remaining_additional_credits = total_additional_credits - used_additional_credits
 
