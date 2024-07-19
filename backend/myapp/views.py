@@ -637,7 +637,7 @@ def get_credits(request):
             remaining_daily_credits += sub.plan.api_calls_per_day - sub.daily_credits
         else:
             # 추가 크레딧 처리
-            if sub.end_date > today:
+            if sub.end_date and sub.end_date.date() > today:
                 remaining_additional_credits += sub.total_credits
 
     # 남은 크레딧 계산
