@@ -24,7 +24,7 @@ export default function Contact() {
   useEffect(() => {
     if (currentPage > totalPages) {
       alert("없는 페이지입니다.");
-      router.push(`/contact/1/${totalPages}`);
+      router.push(`/contact/${totalPages}`);
     } else {
       fetchPosts(currentPage, query, searchOption);
     }
@@ -54,7 +54,7 @@ export default function Contact() {
 
         if (currentPage > Math.ceil(count / 10)) {
           alert("없는 페이지입니다.");
-          router.push(`/contact/1/${Math.ceil(count / 10)}`);
+          router.push(`/contact/${Math.ceil(count / 10)}`);
         }
       })
       .catch((error) => console.error("Error fetching posts", error));
@@ -80,7 +80,7 @@ export default function Contact() {
   };
 
   const handlePageChange = (page) => {
-    router.push(`/contact/1/${page}`);
+    router.push(`/contact/${page}`);
   };
 
   const handleSearchChange = (e) => {
