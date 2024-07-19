@@ -377,7 +377,7 @@ export default function Signup() {
           </div>
         )}
       </div>
-      <div style={{ height: "100px" }} />
+      <div style={{ height: "80px" }} />
       <Footer />
     </div>
   );
