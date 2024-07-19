@@ -170,7 +170,7 @@ export default function Contact() {
                   onClick={() => handlePostClick(post)}
                   className={post.is_notice ? styles.notice : ""}
                 >
-                  <td>{(currentPage - 1) * 10 + index + 1}</td>
+                  <td>{(totalPages - currentPage) * 10 - index}</td>
                   <td>
                     {!post.is_public && <span>(비공개) </span>}
                     {post.title}
