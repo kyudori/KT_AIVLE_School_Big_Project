@@ -289,20 +289,20 @@ export default function Home() {
           <div>
             <div className={styles.callicon} />
             <ul>
-              Deep Learning Deep Voice Classifier
+              Deep Learning Deep Voice Detection
               <li>
                 딥러닝 기반의 딥보이스 분류 모델을 개발하여 정확하게 딥보이스를
-                감지합니다.
+                탐지합니다.
               </li>
             </ul>
           </div>
           <div>
             <div className={styles.timeicon} />
             <ul>
-              Real-Time Deep Voice Classifier
+              Real-Time Deep Voice Analysis
               <li>
                 최신 딥러닝 모델을 이용하여 높은 정확성과 빠른 추론 속도의
-                모델을 이용하여 통화 상태에서의 실시간 딥보이스 분류를
+                모델을 이용하여 통화 상태에서의 실시간 딥보이스 분석을
                 지원합니다.
               </li>
             </ul>
@@ -406,7 +406,7 @@ export default function Home() {
         <div className={styles.do}>
           <div>
             <div style={{ height: "fit-content" }}>
-              <h2>Voice Verity로 어떤 걸 할 수 있을까?</h2>
+              <h2>Voice Verity로 어떤 걸 할 수 있을까요?</h2>
               <p>
                 Voice Verity는 생각지도 못한 다양한 곳에 사용될 수 있습니다.
               </p>
