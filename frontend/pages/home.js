@@ -480,7 +480,7 @@ export default function Home() {
           <div>
             <h2>우리의 Dev Story</h2>
             <p style={{ margin: "30px 0 5px 0" }}>
-              Voice Verity의 시작은 어디서부터였을까? Voice Verity의 이야기를
+              Voice Verity의 시작은 어디서부터였을까요? Voice Verity의 이야기를
               만나보세요.
             </p>
             <p style={{ margin: "5px 0 30px 0" }}>
