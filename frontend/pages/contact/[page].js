@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import styles from "../../styles/contact.module.css";
+import styles from "../../styles/Contact.module.css";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
