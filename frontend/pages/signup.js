@@ -66,31 +66,26 @@ export default function Signup() {
     setStep(2);
   };
 
-  const handleNicknameChange = (e) => {
-    const { value } = e.target;
+  const validateNickname = (value) => {
     const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
+    return (isKorean && value.length >= 2 && value.length <= 4) || (!isKorean && value.length >= 2 && value.length <= 6);
+  };
 
-    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 6)) {
-      setNickname(value);
-    } else {
-      alert("한글 4자 이하, 영어 6자 이하만 가능합니다.");
-    }
+  const validateUsername = (value) => {
+    const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
+    return (isKorean && value.length >= 2 && value.length <= 4) || (!isKorean && value.length >= 2 && value.length <= 6);
+  };
+
+  const handleNicknameChange = (e) => {
+    setNickname(e.target.value);
   };
 
   const handleUsernameChange = (e) => {
-    const { value } = e.target;
-    const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value);
-
-    if ((isKorean && value.length <= 4) || (!isKorean && value.length <= 6)) {
-      setUsername(value);
-    } else {
-      alert("한글 4자 이하, 영어 6자 이하만 가능합니다.");
-    }
+    setUsername(e.target.value);
   };
 
   const handleEmailChange = (e) => {
-    const { value } = e.target;
-    setEmail(value);
+    setEmail(e.target.value);
   };
 
   const handleEmailBlur = () => {
@@ -101,7 +96,7 @@ export default function Signup() {
   };
 
   const handleContactChange = (e) => {
-    const { value } = e.target;
+    const value = e.target.value;
     const isNumeric = /^\d+$/.test(value);
 
     if (isNumeric) {
@@ -118,6 +113,16 @@ export default function Signup() {
 
     if (!emailRegex.test(email)) {
       alert("유효한 이메일 형식이 아닙니다.");
+      return;
+    }
+
+    if (!validateUsername(username)) {
+      alert("사용자 이름은 한글 2~4자, 영어 2~6자만 가능합니다.");
+      return;
+    }
+
+    if (!validateNickname(nickname)) {
+      alert("닉네임은 한글 2~4자, 영어 2~6자만 가능합니다.");
       return;
     }
 
@@ -218,54 +223,54 @@ export default function Signup() {
                 </div>
                 <hr style={{ border: "solid 1px #d9d9d9" }} />
                 <div className={styles.termsList}>
-                  <label>
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
                     <input
                       type="checkbox"
                       checked={termsChecked.personalInfo}
                       onChange={() => handleCheck("personalInfo")}
                     />
-                  </label>
-                  <span
-                    style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePopup("/terms/personal-info");
-                    }}
-                  >
-                    [필수] 개인정보 수집 및 이용 동의
-                  </span>
-                  <label>
+                    <span
+                      style={{ cursor: "pointer", textDecoration: "underline", color: "black", marginLeft: "10px" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePopup("/terms/personal-info");
+                      }}
+                    >
+                      [필수] 개인정보 수집 및 이용 동의
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
                     <input
                       type="checkbox"
                       checked={termsChecked.serviceTerms}
                       onChange={() => handleCheck("serviceTerms")}
                     />
-                  </label>
-                  <span
-                    style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePopup("/terms/service-terms");
-                    }}
-                  >
-                    [필수] Voice Verity 통합서비스 약관
-                  </span>
-                  <label>
+                    <span
+                      style={{ cursor: "pointer", textDecoration: "underline", color: "black", marginLeft: "10px" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePopup("/terms/service-terms");
+                      }}
+                    >
+                      [필수] Voice Verity 통합서비스 약관
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
                     <input
                       type="checkbox"
                       checked={termsChecked.voiceCollection}
                       onChange={() => handleCheck("voiceCollection")}
                     />
-                  </label>
-                  <span
-                    style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePopup("/terms/voice-collection");
-                    }}
-                  >
-                    [선택] 음성 데이터 수집 및 이용 동의
-                  </span>
+                    <span
+                      style={{ cursor: "pointer", textDecoration: "underline", color: "black", marginLeft: "10px" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePopup("/terms/voice-collection");
+                      }}
+                    >
+                      [선택] 음성 데이터 수집 및 이용 동의
+                    </span>
+                  </div>
                 </div>
               </div>
               <button type="submit" className={styles.signupButton}>
@@ -288,7 +293,7 @@ export default function Signup() {
               <div style={{ margin: '0px' }} />
               <input
                 type="text"
-                placeholder="사용자 이름 (한글 4자 이하, 영어 6자 이하)"
+                placeholder="사용자 이름 (한글 2~4자, 영어 2~6자)"
                 value={username}
                 onChange={handleUsernameChange}
                 required
@@ -296,7 +301,7 @@ export default function Signup() {
               />
               <input
                 type="text"
-                placeholder="닉네임 (한글 4자 이하, 영어 6자 이하)"
+                placeholder="닉네임 (한글 2~4자, 영어 2~6자)"
                 value={nickname}
                 onChange={handleNicknameChange}
                 required
