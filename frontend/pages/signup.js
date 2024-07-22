@@ -224,39 +224,48 @@ export default function Signup() {
                       checked={termsChecked.personalInfo}
                       onChange={() => handleCheck("personalInfo")}
                     />
-                    <span
-                      style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
-                      onClick={() => handlePopup("/terms/personal-info")}
-                    >
-                      [필수] 개인정보 수집 및 이용 동의
-                    </span>
                   </label>
+                  <span
+                    style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePopup("/terms/personal-info");
+                    }}
+                  >
+                    [필수] 개인정보 수집 및 이용 동의
+                  </span>
                   <label>
                     <input
                       type="checkbox"
                       checked={termsChecked.serviceTerms}
                       onChange={() => handleCheck("serviceTerms")}
                     />
-                    <span
-                      style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
-                      onClick={() => handlePopup("/terms/service-terms")}
-                    >
-                      [필수] Voice Verity 통합서비스 약관
-                    </span>
                   </label>
+                  <span
+                    style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePopup("/terms/service-terms");
+                    }}
+                  >
+                    [필수] Voice Verity 통합서비스 약관
+                  </span>
                   <label>
                     <input
                       type="checkbox"
                       checked={termsChecked.voiceCollection}
                       onChange={() => handleCheck("voiceCollection")}
                     />
-                    <span
-                      style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
-                      onClick={() => handlePopup("/terms/voice-collection")}
-                    >
-                      [선택] 음성 데이터 수집 및 이용 동의
-                    </span>
                   </label>
+                  <span
+                    style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePopup("/terms/voice-collection");
+                    }}
+                  >
+                    [선택] 음성 데이터 수집 및 이용 동의
+                  </span>
                 </div>
               </div>
               <button type="submit" className={styles.signupButton}>
