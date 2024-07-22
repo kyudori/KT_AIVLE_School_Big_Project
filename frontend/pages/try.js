@@ -632,31 +632,31 @@ export default function TryVoice() {
                 <div className={styles.exampleFiles}>
                   <button
                     type="button"
-                    onClick={() => handleExampleClick("example(1).wav")}
+                    onClick={() => handleExampleClick("Real 1.wav")}
                     className={styles.exampleFile}
                   >
-                    Real_1
+                    Real 1
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleExampleClick("example(2).wav")}
+                    onClick={() => handleExampleClick("Fake 1".wav)}
                     className={styles.exampleFile}
                   >
-                    Fake_1
+                    Fake 1
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleExampleClick("example(3).wav")}
+                    onClick={() => handleExampleClick("Fake 2.wav")}
                     className={styles.exampleFile}
                   >
-                    Fake_2
+                    Fake 2
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleExampleClick("example(4).mp3")}
+                    onClick={() => handleExampleClick("Fake 3.mp4")}
                     className={styles.exampleFile}
                   >
-                    Fake_3
+                    Fake 3
                   </button>
                 </div>
               )}
