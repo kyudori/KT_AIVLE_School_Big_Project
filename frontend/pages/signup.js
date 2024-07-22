@@ -210,9 +210,8 @@ export default function Signup() {
                   <div style={{ width: "300px" }}>
                     <p>
                       전체 동의는 필수 및 선택 정보에 대한 동의도 포함되어
-                      있으며, 개별적으로도 동의를 선택할 수 있습니다.
-                      선택 항목의 경우 동의를 거부하셔도 서비스
-                      이용이 가능합니다.
+                      있으며, 개별적으로도 동의를 선택할 수 있습니다. 선택
+                      항목의 경우 동의를 거부하셔도 서비스 이용이 가능합니다.
                     </p>
                   </div>
                 </div>
@@ -224,48 +223,60 @@ export default function Signup() {
                       checked={termsChecked.personalInfo}
                       onChange={() => handleCheck("personalInfo")}
                     />
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        color: "black",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePopup("/terms/personal-info");
+                      }}
+                    >
+                      [필수] 개인정보 수집 및 이용 동의
+                    </span>
                   </label>
-                  <span
-                    style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePopup("/terms/personal-info");
-                    }}
-                  >
-                    [필수] 개인정보 수집 및 이용 동의
-                  </span>
                   <label>
                     <input
                       type="checkbox"
                       checked={termsChecked.serviceTerms}
                       onChange={() => handleCheck("serviceTerms")}
                     />
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        color: "black",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePopup("/terms/service-terms");
+                      }}
+                    >
+                      [필수] Voice Verity 통합서비스 약관
+                    </span>
                   </label>
-                  <span
-                    style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePopup("/terms/service-terms");
-                    }}
-                  >
-                    [필수] Voice Verity 통합서비스 약관
-                  </span>
                   <label>
                     <input
                       type="checkbox"
                       checked={termsChecked.voiceCollection}
                       onChange={() => handleCheck("voiceCollection")}
                     />
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        color: "black",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePopup("/terms/voice-collection");
+                      }}
+                    >
+                      [선택] 음성 데이터 수집 및 이용 동의
+                    </span>
                   </label>
-                  <span
-                    style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePopup("/terms/voice-collection");
-                    }}
-                  >
-                    [선택] 음성 데이터 수집 및 이용 동의
-                  </span>
                 </div>
               </div>
               <button type="submit" className={styles.signupButton}>
@@ -283,9 +294,11 @@ export default function Signup() {
               </div>
             </div>
             <h1 className={styles.title}>Voice Verity</h1>
-            <h1 className={styles.subtitle}>가입에 필요한 정보를 입력해주세요.</h1>
+            <h1 className={styles.subtitle}>
+              가입에 필요한 정보를 입력해주세요.
+            </h1>
             <form onSubmit={handleSignup}>
-              <div style={{ margin: '0px' }} />
+              <div style={{ margin: "0px" }} />
               <input
                 type="text"
                 placeholder="사용자 이름 (한글 4자 이하, 영어 6자 이하)"
@@ -372,15 +385,12 @@ export default function Signup() {
                   </label>
                 </div>
               </div>
-              <div style={{ margin: '10px' }} />
+              <div style={{ margin: "10px" }} />
               <button type="submit" className={styles.signupButton}>
                 회원 가입
               </button>
             </form>
-            <button
-              onClick={() => setStep(1)}
-              className={styles.backButton}
-            >
+            <button onClick={() => setStep(1)} className={styles.backButton}>
               뒤로 가기
             </button>
           </div>
