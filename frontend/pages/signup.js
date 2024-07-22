@@ -217,12 +217,14 @@ export default function Signup() {
                 </div>
                 <hr style={{ border: "solid 1px #d9d9d9" }} />
                 <div className={styles.termsList}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={termsChecked.personalInfo}
-                      onChange={() => handleCheck("personalInfo")}
-                    />
+                  <div className={styles.agreebox}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={termsChecked.personalInfo}
+                        onChange={() => handleCheck("personalInfo")}
+                      />
+                    </label>
                     <span
                       style={{
                         cursor: "pointer",
@@ -236,13 +238,15 @@ export default function Signup() {
                     >
                       [필수] 개인정보 수집 및 이용 동의
                     </span>
-                  </label>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={termsChecked.serviceTerms}
-                      onChange={() => handleCheck("serviceTerms")}
-                    />
+                  </div>
+                  <div className={styles.agreebox}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={termsChecked.serviceTerms}
+                        onChange={() => handleCheck("serviceTerms")}
+                      />
+                    </label>
                     <span
                       style={{
                         cursor: "pointer",
@@ -256,13 +260,15 @@ export default function Signup() {
                     >
                       [필수] Voice Verity 통합서비스 약관
                     </span>
-                  </label>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={termsChecked.voiceCollection}
-                      onChange={() => handleCheck("voiceCollection")}
-                    />
+                  </div>
+                  <div className={styles.agreebox}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={termsChecked.voiceCollection}
+                        onChange={() => handleCheck("voiceCollection")}
+                      />
+                    </label>
                     <span
                       style={{
                         cursor: "pointer",
@@ -276,7 +282,7 @@ export default function Signup() {
                     >
                       [선택] 음성 데이터 수집 및 이용 동의
                     </span>
-                  </label>
+                  </div>
                 </div>
               </div>
               <button type="submit" className={styles.signupButton}>

@@ -44,6 +44,12 @@
 .signupBox label {
   display: flex;
   align-items: center;
+}
+
+.agreebox {
+  display: flex;
+  align-items: center;
+  align-items: stretch;
   margin: 10px 0;
 }
 
