@@ -46,6 +46,13 @@
   align-items: center;
 }
 
+.agreebox {
+  display: flex;
+  align-items: center;
+  align-items: stretch;
+  margin: 10px 0;
+}
+
 .allcheck {
   display: flex;
   align-items: center;
