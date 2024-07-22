@@ -639,7 +639,7 @@ export default function TryVoice() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleExampleClick("Fake 1".wav)}
+                    onClick={() => handleExampleClick("Fake 1.wav")}
                     className={styles.exampleFile}
                   >
                     Fake 1
