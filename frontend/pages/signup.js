@@ -225,8 +225,8 @@ export default function Signup() {
                       onChange={() => handleCheck("personalInfo")}
                     />
                     <span
-                      onClick={() => handlePopup("/terms/personal-info")}
                       style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
+                      onClick={() => handlePopup("/terms/personal-info")}
                     >
                       [필수] 개인정보 수집 및 이용 동의
                     </span>
@@ -238,8 +238,8 @@ export default function Signup() {
                       onChange={() => handleCheck("serviceTerms")}
                     />
                     <span
-                      onClick={() => handlePopup("/terms/service-terms")}
                       style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
+                      onClick={() => handlePopup("/terms/service-terms")}
                     >
                       [필수] Voice Verity 통합서비스 약관
                     </span>
@@ -251,8 +251,8 @@ export default function Signup() {
                       onChange={() => handleCheck("voiceCollection")}
                     />
                     <span
-                      onClick={() => handlePopup("/terms/voice-collection")}
                       style={{ cursor: "pointer", textDecoration: "underline", color: "black" }}
+                      onClick={() => handlePopup("/terms/voice-collection")}
                     >
                       [선택] 음성 데이터 수집 및 이용 동의
                     </span>
@@ -279,7 +279,7 @@ export default function Signup() {
               <div style={{ margin: '0px' }} />
               <input
                 type="text"
-                placeholder="사용자 이름 (한글 4자 이하, 영어 5자 이하)"
+                placeholder="사용자 이름 (한글 4자 이하, 영어 6자 이하)"
                 value={username}
                 onChange={handleUsernameChange}
                 required
@@ -287,7 +287,7 @@ export default function Signup() {
               />
               <input
                 type="text"
-                placeholder="닉네임 (한글 4자 이하, 영어 5자 이하)"
+                placeholder="닉네임 (한글 4자 이하, 영어 6자 이하)"
                 value={nickname}
                 onChange={handleNicknameChange}
                 required
