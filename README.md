@@ -2,6 +2,7 @@
 
 ## 소개
 **Voice Verity**는 오디오 및 유튜브 영상의 음성을 분석하여 해당 음성이 Deep Fake Voice인지 Real Voice인지 판별하는 API 서비스입니다.
+- 서비스 URL: http://voice-verity.com
 
 ## 기술 스택
 - **Backend**: Python 3.11.5, Django 5.0.6, MySQL 8.0.20
@@ -19,6 +20,7 @@ python manage.py runserver 0.0.0.0
 cd frontend
 npm run dev
 ```
+
 
 # 주요 기능
 
