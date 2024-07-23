@@ -88,7 +88,7 @@ const ApiManagement = () => {
       fetchTrafficData(selectedInterval);
       fetchSummaryData(selectedInterval);
     }
-  }, [selectedInterval, user]);
+  }, [selectedInterval, user]); //user 마다 저장된 트래픽과 요약 가져오기
 
   useEffect(() => {
     // Set initial input width based on the text length
@@ -111,7 +111,7 @@ const ApiManagement = () => {
         setApiLastUsed(response.data.last_used_at);
         setApiStatus(response.data.is_active);
         const apiKeyText = response.data.api_key || "발급된 키 없음";
-        setText(apiKeyText);
+        setText(apiKeyText); //키 폼에 띄울 글자 받아옴
       })
       .catch((error) => {
         console.error("API Key 가져오기 오류", error);
@@ -318,7 +318,7 @@ const ApiManagement = () => {
 
   const toggleMenu = () => {
     setMenu((isOpen) => !isOpen);
-  };
+  }; //메뉴바 열림 닫힘 토글
 
   const handleIntervalChange = (interval) => {
     setSelectedInterval(interval);
@@ -331,7 +331,7 @@ const ApiManagement = () => {
     // Update input width based on new text length
     const newWidth = `${newText.length + 1}ch`;
     setInputWidth(newWidth);
-  };
+  }; //새로 발급된 키 글자와 글자수 설정
 
   const handleCopyApiKey = () => {
     if (apiKey) {

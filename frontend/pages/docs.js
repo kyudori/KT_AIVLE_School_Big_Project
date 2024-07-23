@@ -19,21 +19,21 @@ export default function Documentation() {
           currentSection = section.getAttribute("id");
         }
       });
-      setActiveSection(currentSection);
+      setActiveSection(currentSection); 
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, []); 
 
   const handleScrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }; //스크롤 이동
 
   const handleNavigateToSetting = () => {
     const token = localStorage.getItem("token");
@@ -42,11 +42,11 @@ export default function Documentation() {
       return;
     }
     router.push("/management");
-  };
+  }; //로그인이 되어있으면 api페이지 이동, 안되어있으면 경고 문구 출력
 
   const handleContactUs = () => {
     router.push("/contact/1");
-  };
+  }; 
 
   const handleCopyClick = (textToCopy, id) => {
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -76,7 +76,7 @@ export default function Documentation() {
       }
       document.body.removeChild(textArea);
     }
-  };
+  }; //클립보드 복사 기능
 
   return (
     <div className={styles.documentationContainer}>
