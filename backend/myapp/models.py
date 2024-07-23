@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 
+# CustomUser 모델: 사용자 정보를 확장하여 커스터마이징
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=150, unique=False)
     email = models.EmailField(unique=True)
@@ -20,6 +21,7 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
     
+# 구독 플랜 모델: 다양한 구독 플랜 정보를 저장
 class SubscriptionPlan(models.Model):
     PLAN_CHOICES = [
         ('Pay As You Go', 'Pay As You Go'),
@@ -37,6 +39,7 @@ class SubscriptionPlan(models.Model):
     def __str__(self):
         return self.name
 
+# 사용자 구독 모델: 사용자의 구독 상태를 저장
 class UserSubscription(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
@@ -46,6 +49,7 @@ class UserSubscription(models.Model):
     total_credits = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
+    # 비반복 구독일 경우, 종료 날짜를 90일 후로 설정
     def save(self, *args, **kwargs):
         if not self.end_date and not self.plan.is_recurring:
             self.end_date = timezone.now() + timezone.timedelta(days=90)
@@ -54,6 +58,7 @@ class UserSubscription(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.plan.name}"
 
+# 결제 기록 모델: 사용자의 결제 기록을 저장
 class PaymentHistory(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
@@ -64,6 +69,7 @@ class PaymentHistory(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.plan.name} - {self.amount}"
     
+# 결제 모델: 결제 정보를 저장
 class Payment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
@@ -78,6 +84,7 @@ class Payment(models.Model):
     def __str__(self):
         return f"{self.user} - {self.plan} - {self.tid}"
 
+# API 키 모델: API 키 정보를 저장
 class APIKey(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     key = models.CharField(max_length=32, unique=True)
@@ -88,6 +95,7 @@ class APIKey(models.Model):
     def __str__(self):
         return self.key
 
+# 오디오 파일 모델: 업로드된 오디오 파일 정보를 저장
 class AudioFile(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     file_name = models.CharField(max_length=255)
@@ -97,9 +105,10 @@ class AudioFile(models.Model):
     analysis_result = models.CharField(max_length=255)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-    def str(self):
+    def __str__(self):
         return self.file_name
 
+# 유튜브 분석 모델: 유튜브 분석 결과를 저장
 class YouTubeAnalysis(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     url = models.URLField()
@@ -109,6 +118,7 @@ class YouTubeAnalysis(models.Model):
     def __str__(self):
         return f"{self.user.email} - {self.url} - {self.analysis_result}"
 
+# 업로드 기록 모델: 사용자의 업로드 기록을 저장
 class UploadHistory(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     upload_date = models.DateField()
@@ -121,6 +131,7 @@ class UploadHistory(models.Model):
     def __str__(self):
         return f"{self.user.email} - {self.upload_date}: {self.upload_count} uploads"
 
+# 게시글 모델: 게시글 정보를 저장
 class Post(models.Model):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -134,6 +145,7 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+# 댓글 모델: 게시글에 달린 댓글 정보를 저장
 class Comment(models.Model):
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -145,6 +157,7 @@ class Comment(models.Model):
     def __str__(self):
         return self.content
 
+# API 호출 기록 모델: API 호출 내역을 저장
 class ApiCallHistory(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     api_key = models.CharField(max_length=32)

@@ -5,43 +5,41 @@ import re
 import random
 import string
 import json
-from datetime import timedelta
-from django.contrib.auth import get_user_model, authenticate
-from rest_framework.decorators import api_view, permission_classes
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
-from rest_framework import status
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from .models import AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory, Payment, Post, Comment, ApiCallHistory, YouTubeAnalysis
-from .serializers import PostSerializer, CommentSerializer, YouTubeAnalysisSerializer
-from django.db import models 
-import requests
-from datetime import date
-from django.utils import timezone
-from dotenv import load_dotenv
-from django.core.files.storage import default_storage
-from django.shortcuts import get_object_or_404
-from django.shortcuts import redirect
-from django.shortcuts import redirect, render
-import logging
 import uuid
+import logging
+import requests
 import boto3
 import pytz
-from django.db.models import Count, Avg, Sum, F, Q
-from rest_framework.pagination import PageNumberPagination
+
+from datetime import date, timedelta
 from urllib.parse import urlencode
-from django.contrib.auth import login as django_login
+
+from django.contrib.auth import get_user_model, authenticate, login as django_login
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage, default_storage
+from django.db import models
+from django.db.models import Count, Avg, Sum, F, Q
 from django.db.models.functions import TruncHour, TruncDay, TruncWeek, TruncMonth
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+
+from dotenv import load_dotenv
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.pagination import PageNumberPagination
-from django.core.files.storage import FileSystemStorage
-from .models import CustomUser
-import uuid
-from datetime import timedelta
+
+from .models import (
+    AudioFile, UploadHistory, APIKey, SubscriptionPlan, UserSubscription, PaymentHistory,
+    Payment, Post, Comment, ApiCallHistory, YouTubeAnalysis, CustomUser
+)
+from .serializers import PostSerializer, CommentSerializer, YouTubeAnalysisSerializer
 
 AI_SERVER_URL = 'http://220.149.235.232:8000'
 
