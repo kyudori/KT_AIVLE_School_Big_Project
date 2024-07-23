@@ -37,15 +37,43 @@ from rest_framework.pagination import PageNumberPagination
 from urllib.parse import urlencode
 from django.contrib.auth import login as django_login
 from django.db.models.functions import TruncHour, TruncDay, TruncWeek, TruncMonth
+from rest_framework.pagination import PageNumberPagination
+from django.core.files.storage import FileSystemStorage
+from .models import CustomUser
+import uuid
+from datetime import timedelta
+
+AI_SERVER_URL = 'http://220.149.235.232:8000'
+
+ALLOWED_EXTENSIONS = ['.wav', '.mp3', '.m4a']
+MAX_FILE_SIZE_MB = 10
+MAX_UPLOADS_PER_DAY = 5
+MAX_YOUTUBE_PER_DAY = 5
+MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
+
+# AWS settings
+AWS_REGION = 'ap-northeast-1'
+AWS_STORAGE_BUCKET_NAME = 'aivle-8-team-rsb'
+AWS_ACCESS_KEY_ID = 'AKIA2TMUP5YA2QQRN5WE'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com'
+
+# Initialize S3 client
+s3_client = boto3.client(
+    's3',
+    region_name=AWS_REGION,
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+)
 
 User = get_user_model()
 
+# 회원가입
 @api_view(['POST'])
 @csrf_exempt
 @permission_classes([AllowAny])
 def signup(request):
     data = request.data
-    print(data)  # 디버깅용 로그
     if User.objects.filter(email=data['email']).exists():
         return Response({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -65,6 +93,7 @@ def signup(request):
     token, created = Token.objects.get_or_create(user=user)
     return Response({'token': token.key}, status=status.HTTP_201_CREATED)
 
+#회원 탈퇴 전 확인
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def confirm_delete_account(request):
@@ -76,6 +105,7 @@ def confirm_delete_account(request):
     
     return Response({'status': '비밀번호가 확인되었습니다.'}, status=status.HTTP_200_OK)
 
+#회원 탈퇴
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_account(request):
@@ -83,6 +113,7 @@ def delete_account(request):
     user.delete()
     return Response({'status': 'Account deleted successfully'}, status=status.HTTP_200_OK)
 
+#로그인
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -98,6 +129,7 @@ def login(request):
         return Response({'token': token.key})
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
+#비밀번호 초기화
 @api_view(['POST'])
 @csrf_exempt
 @permission_classes([AllowAny])
@@ -113,6 +145,7 @@ def reset_password(request):
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
+#ID찾기
 @api_view(['POST'])
 @csrf_exempt
 @permission_classes([AllowAny])
@@ -128,15 +161,7 @@ def find_id(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from django.core.files.storage import FileSystemStorage
-from django.conf import settings
-from .models import CustomUser
-from rest_framework import status
-import os
-
+#회원 정보 조회
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def user_info(request):
@@ -173,6 +198,7 @@ def user_info(request):
         user.save()
         return Response({'status': 'Profile updated successfully'})
 
+#비밀번호 변경
 @api_view(['POST'])
 def change_password(request):
     data = request.data
@@ -188,6 +214,7 @@ def change_password(request):
     user.save()
     return Response({'status': 'Password changed successfully'}, status=status.HTTP_200_OK)
 
+#구독 플랜 조회
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def subscription_plans(request):
@@ -205,6 +232,7 @@ def subscription_plans(request):
     ]
     return Response(plans_data, status=status.HTTP_200_OK)
 
+#현재 내 구독 플랜 조회
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def current_plan(request):
@@ -233,9 +261,7 @@ def current_plan(request):
 # 설정된 로거 사용
 logger = logging.getLogger(__name__)
 
-import uuid
-from datetime import timedelta
-
+#카카오페이 결제
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_payment(request):
@@ -294,7 +320,7 @@ def create_payment(request):
         request.session.modified = True  # 세션이 변경되었음을 명시적으로 표시
         print("Session TID:", request.session['tid'])  # 디버깅 로그
 
-        # Return all possible redirect URLs for flexibility
+        # Rredirect URLs
         return Response({
             'next_redirect_app_url': response_data.get('next_redirect_app_url'),
             'next_redirect_mobile_url': response_data.get('next_redirect_mobile_url'),
@@ -303,6 +329,7 @@ def create_payment(request):
     except requests.RequestException as e:
         return Response({'error': 'Failed to initiate payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+#카카오페이 승인 및 저장
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -383,26 +410,19 @@ def approve_payment(request):
     except requests.RequestException as e:
         return Response({'error': 'Failed to approve payment', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#결제 취소
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def cancel_payment(request):
     return redirect(f'{settings.FRONTEND_URL}/plancancel')
 
+#결제 실패
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def fail_payment(request):
     return redirect(f'{settings.FRONTEND_URL}/planfail')
 
-
 load_dotenv()
-
-FLASK_URL = 'http://220.149.235.232:8000'
-
-ALLOWED_EXTENSIONS = ['.wav', '.mp3', '.m4a']
-MAX_FILE_SIZE_MB = 200
-MAX_UPLOADS_PER_DAY = 1000
-MAX_YOUTUBE_PER_DAY = 1000
-MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -439,7 +459,7 @@ def upload_audio(request):
 
     # AI 서버에 파일 경로 전송
     try:
-        response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
+        response = requests.post(f"{AI_SERVER_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
         response.raise_for_status()
         result = response.json().get('analysis_result', '')
         predictions = response.json().get('predictions', [])
@@ -475,10 +495,11 @@ def upload_audio(request):
         'fake_cnt': fake_cnt
     }, status=status.HTTP_201_CREATED)
 
-# Define YouTube URL pattern
+# YouTube URL 패턴
 YOUTUBE_URL_PATTERN  = re.compile(
     r'^(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')    
 
+# YouTube URL 분석
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_youtube(request):
@@ -496,7 +517,7 @@ def upload_youtube(request):
         return Response({'error': 'You have reached the maximum number of uploads for today'}, status=status.HTTP_403_FORBIDDEN)
 
     try:
-        response = requests.post(f"{FLASK_URL}/predict", json={'file_path': url, 'data_type': 'youtube', 'key_verity': True})
+        response = requests.post(f"{AI_SERVER_URL}/predict", json={'file_path': url, 'data_type': 'youtube', 'key_verity': True})
         response.raise_for_status()
         result = response.json().get('analysis_result', '')
         predictions = response.json().get('predictions', [])
@@ -505,26 +526,14 @@ def upload_youtube(request):
     except requests.RequestException as e:
         return Response({'error': 'Error communicating with AI server', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    # Save analysis to the database
+    # 분석 저장
     YouTubeAnalysis.objects.create(
         user=request.user,
         url=url,
         analysis_result=result
     )
 
-    # Update upload history
-    upload_history.youtube_upload_count += 1
-    upload_history.save()
-
-    return Response({
-        'url': url,
-        'analysis_result': result,
-        'predictions': predictions,
-        'real_cnt': real_cnt,
-        'fake_cnt': fake_cnt
-    }, status=status.HTTP_201_CREATED)
-
-    # Update upload history
+    # 관리자인 경우 카운트 안함, 일반 유저인 경우 카운트
     if not request.user.is_superuser:
         upload_history.youtube_upload_count += 1
         upload_history.save()
@@ -537,6 +546,7 @@ def upload_youtube(request):
         'fake_cnt': fake_cnt
     }, status=status.HTTP_201_CREATED)
 
+#API Key 조회 및 관련 정보 조회
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def get_api_key(request):
@@ -571,9 +581,11 @@ def get_api_key(request):
 
         return Response({'api_key': api_key.key, 'is_active': api_key.is_active})
 
+#API Key 생성
 def generate_api_key():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=32))
 
+#API Key 변경
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def regenerate_api_key(request):
@@ -588,6 +600,7 @@ def regenerate_api_key(request):
     api_key.save()
     return Response({'api_key': api_key.key})
 
+#API Key 삭제
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_api_key(request):
@@ -600,6 +613,7 @@ def delete_api_key(request):
     APIKey.objects.filter(user=user).delete()
     return Response({'status': 'API key deleted successfully'})
 
+#API Key 상태 변경 시 확인
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def toggle_api_status(request):
@@ -617,6 +631,7 @@ def toggle_api_status(request):
     except APIKey.DoesNotExist:
         return Response({'error': 'API Key not found'}, status=status.HTTP_404_NOT_FOUND)
 
+#Credit 조회
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_credits(request):
@@ -669,47 +684,7 @@ def get_credits(request):
         'used_credits': used_credits
     })
 
-    
-# @csrf_exempt
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def validate_key(request):
-#     api_key = request.headers.get('Authorization')
-#     if not api_key:
-#         return Response({'valid': False, 'error': 'Missing API key'}, status=401)
-
-#     api_key = api_key.replace('Bearer ', '')
-#     try:
-#         key = APIKey.objects.get(key=api_key)
-#         if key.credits <= 0:
-#             return Response({'valid': False, 'error': 'Insufficient credits'}, status=401)
-
-#         key.credits -= 1
-#         key.last_used_at = timezone.now()
-#         key.save()
-#         return Response({'valid': True})
-#     except APIKey.DoesNotExist:
-#         return Response({'valid': False, 'error': 'Invalid API key'}, status=401)
-    
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def api_usage_weekly(request):
-#     user = request.user
-#     one_week_ago = timezone.now() - timedelta(days=7)
-#     history = UploadHistory.objects.filter(user=user, upload_date__gte=one_week_ago)
-#     data = [{"date": h.upload_date, "count": h.upload_count} for h in history]
-#     return Response(data)
-
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def group_usage(request):
-#     group_data = (
-#         UploadHistory.objects
-#         .values('user__company')
-#         .annotate(total_uploads=models.Sum('upload_count'))
-#     )
-#     return Response(group_data)
-
+# 사용자 분석 파일 조회
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_files(request):
@@ -721,12 +696,10 @@ def user_files(request):
 class PostPagination(PageNumberPagination):
     page_size = 10
 
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
-
 class PostPagination(PageNumberPagination):
     page_size = 10
 
+# 게시판 글 목록 조회
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def posts_list_create(request):
@@ -774,6 +747,7 @@ def posts_list_create(request):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+# 게시글 수정 삭제 보기
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def post_detail(request, pk):
@@ -823,7 +797,8 @@ def post_detail(request, pk):
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+ 
+#댓글 생성   
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_comment(request, post_pk):
@@ -839,6 +814,7 @@ def create_comment(request, post_pk):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#댓글 수정 삭제
 @api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def comment_detail(request, pk):
@@ -863,7 +839,7 @@ def comment_detail(request, pk):
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    
+# 사용자 글 보기    
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_posts(request):
@@ -872,6 +848,7 @@ def user_posts(request):
     serializer = PostSerializer(posts, many=True)
     return Response(serializer.data)
 
+# 사용자 댓글 보기
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_comments(request):
@@ -880,31 +857,18 @@ def user_comments(request):
     serializer = CommentSerializer(comments, many=True)
     return Response(serializer.data)
 
+#API 서버 상태 확인
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def check_api_status(request):
     try:
-        response = requests.get(f"{FLASK_URL}/status")
+        response = requests.get(f"{AI_SERVER_URL}/status")
         response.raise_for_status()
         return Response(response.json(), status=status.HTTP_200_OK)
     except requests.RequestException as e:
         return Response({'status': 'Error', 'detail': 'FastAPI server is down'}, status=503)
 
-# AWS settings
-AWS_REGION = 'ap-northeast-1'
-AWS_STORAGE_BUCKET_NAME = 'aivle-8-team-rsb'
-AWS_ACCESS_KEY_ID = 'AKIA2TMUP5YA2QQRN5WE'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com'
-
-# Initialize S3 client
-s3_client = boto3.client(
-    's3',
-    region_name=AWS_REGION,
-    aws_access_key_id=AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=AWS_SECRET_ACCESS_KEY
-)
-
+# YouTube API 분석
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def youtube_verity(request):
@@ -928,7 +892,7 @@ def youtube_verity(request):
 
         try:
             start_time = timezone.now()
-            response = requests.post(f"{FLASK_URL}/predict", json={'file_path': youtube_url, 'data_type': 'youtube', 'key_verity': True})
+            response = requests.post(f"{AI_SERVER_URL}/predict", json={'file_path': youtube_url, 'data_type': 'youtube', 'key_verity': True})
             response.raise_for_status()
             ai_result = response.json()
             end_time = timezone.now()
@@ -980,6 +944,7 @@ def youtube_verity(request):
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
+# 음성 파일 API 분석
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def voice_verity(request):
@@ -1026,7 +991,7 @@ def voice_verity(request):
 
         try:
             start_time = timezone.now()
-            response = requests.post(f"{FLASK_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
+            response = requests.post(f"{AI_SERVER_URL}/predict", json={'file_path': file_url, 'data_type': 'aws', 'key_verity': True})
             response.raise_for_status()
             ai_result = response.json()
             end_time = timezone.now()
@@ -1077,7 +1042,8 @@ def voice_verity(request):
         return Response({'error': 'Invalid API key'}, status=401)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
-    
+ 
+ # API 호출 분석   
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def call_history(request):
@@ -1141,6 +1107,7 @@ def call_history(request):
 
     return Response(formatted_history, status=status.HTTP_200_OK)
 
+# API 호출 요약
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def call_summary(request):
@@ -1177,7 +1144,7 @@ def call_summary(request):
 
     return Response(summary, status=status.HTTP_200_OK)
 
-
+# 성공률 보기
 def calculate_success_rate(user):
     total_calls = ApiCallHistory.objects.filter(user=user).count()
     success_calls = ApiCallHistory.objects.filter(user=user, success=True).count()
