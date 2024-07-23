@@ -36,15 +36,15 @@ export default function Home() {
 
   const handleTryVoiceVerity = () => {
     router.push("/try");
-  };
+  }; // try페이지로 이동
 
   const handleSubscriptionPlan = () => {
     router.push("/plan");
-  };
+  }; // plan페이지로 이동
 
   const handleContactUs = () => {
     router.push("/contact/1");
-  };
+  }; // contact페이지로 이동
 
   const stopCurrentAudio = () => {
     if (realAudioRef.current.audioEl.current.src) {
@@ -61,7 +61,7 @@ export default function Home() {
   const toggleHandler1 = () => {
     stopCurrentAudio();
     setisOn1((prevState) => !prevState);
-  };
+  }; // 오디오 토글 버튼
 
   const toggleHandler2 = () => {
     stopCurrentAudio();
@@ -110,7 +110,7 @@ export default function Home() {
         setCurrentPage((prevPage) => (prevPage + 1) % pages.length);
         setAnimationClass(styles.fadeInNext);
       }, 300);
-    };
+    }; //다음 패널 이동
   
     const prevPage = () => {
       setAnimationClass(styles.fadeOutPrev);
@@ -118,7 +118,7 @@ export default function Home() {
         setCurrentPage((prevPage) => (prevPage - 1 + pages.length) % pages.length);
         setAnimationClass(styles.fadeInPrev);
       }, 300);
-    };
+    }; //이전 패널 이동
   
     const goToPage = (index) => {
       if (index === currentPage) return;
@@ -128,14 +128,14 @@ export default function Home() {
         setCurrentPage(index);
         setAnimationClass(isNext ? styles.fadeInNext : styles.fadeInPrev);
       }, 300);
-    };
+    }; //패널 이동 효과
   
     useEffect(() => {
       const interval = setInterval(() => {
         nextPage();
       }, 5000);
       return () => clearInterval(interval);
-    }, []);
+    }, []); //5초 후 자동으로 다음 패널로 넘어감
   
     return (
       <div className={styles.panelcontainer}>
@@ -487,7 +487,9 @@ export default function Home() {
               우리의 이야기는 끝나지 않았습니다.
             </p>
           </div>
+          
           <div className={styles.youtubeContainer}>
+          {/* 유튜브 프레임*/}  
             <iframe
               src="https://www.youtube.com/embed/OIbLEwy_O1s"
               title="YouTube video player"

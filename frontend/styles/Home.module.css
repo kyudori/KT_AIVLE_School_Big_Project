@@ -2,7 +2,7 @@
   font-family: fontA;
   src: local("Y 너만을 비춤체"),
   url(Y너만을비춤체.ttf);
-}
+} /*폰트 가져오기*/
 
 .homeContainer {
   font-family: fontA, sans-serif;
@@ -550,6 +550,7 @@
   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
+/* 패널 이동 효과*/
 
 .fadeOutNext {
   animation: fadeOutNext 0.5s forwards;
