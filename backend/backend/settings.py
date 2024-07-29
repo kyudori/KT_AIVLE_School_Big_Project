@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
+import drf_yasg
 from pathlib import Path
 from dotenv import load_dotenv
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,13 +30,24 @@ SECRET_KEY = "django-insecure-i@pxotdn++f)^@he$%5=$qu1qa(lr-59!vud%41^co^x)wk364
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+INSTALLED_APPS = [
+    'drf_yasg',
+]
+
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '54.238.129.211',  # EC2 서버의 공인 IP 주소
-    'voice-verity.com',  # 도메인 이름
+    '54.238.129.211',
+    'voice-verity.com', 
+    '220.149.235.232',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1",
+    "http://localhost",
+    "http://voice-verity.com",
+    "http://www.voice-verity.com",
+]
 
 # Application definition
 
@@ -83,23 +97,43 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+#CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
     "http://127.0.0.1:5000",
     "http://localhost:5000",
     "http://127.0.0.1:3000",
     "http://localhost:3000",
+#    "http://voice-verity.com",
+    "http://54.238.129.211",
+    "http://220.149.235.232",
 ]
 
 # CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOWED_CREDENTIALS = True
+# CORS_ALLOWED_CREDENTIALS = True
 
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+    'x-requested-with',
+]
 
 ROOT_URLCONF = "backend.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(os.path.dirname(drf_yasg.__file__), 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -123,7 +157,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'bigproject',
         'USER': 'root',
-        'PASSWORD': 'aivle',
+        'PASSWORD': '00000000',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
@@ -158,7 +192,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
@@ -173,6 +207,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'backend', 'static'),  # 프로젝트 수준의 정적 파일 디렉토리
     os.path.join(BASE_DIR, 'myapp', 'static'),  # myapp의 정적 파일 디렉토리    ]
+    os.path.join(os.path.dirname(drf_yasg.__file__), 'static'),
 ]
 
 MEDIA_URL = '/media/'
@@ -190,11 +225,11 @@ KAKAO_CLIENT_SECRET = os.getenv('KAKAO_CLIENT_SECRET', '6A30E511787B17728E0F')
 KAKAO_SECRET_KEY = os.getenv('KAKAO_SECRET_KEY', 'PRDF619AC16509EF03690B153FBCD89AD4D8827B')
 KAKAO_DEV_SECRET_KEY = os.getenv('KAKAO_DEV_SECRET_KEY', 'DEV61F51599C94E540877AB9055EA68A19D624B1')
 
-# BASE_URL = 'http://voice-verity.com'
-# FRONTEND_URL = 'http://voice-verity.com'
+BASE_URL = 'http://voice-verity.com'
+FRONTEND_URL = 'http://voice-verity.com'
 
-BASE_URL = 'http://127.0.0.1:8000'
-FRONTEND_URL = 'http://127.0.0.1:3000' 
+# BASE_URL = 'http://127.0.0.1:8000'
+# FRONTEND_URL = 'http://127.0.0.1:3000' 
 
 APPROVAL_URL = f'{BASE_URL}/api/payments/approval'
 CANCEL_URL = f'{BASE_URL}/api/payments/cancel'
@@ -207,5 +242,39 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = False  # 로컬 개발 환경에서는 False, 프로덕션에서는 True로 설정
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_SAVE_EVERY_REQUEST = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_SAVE_EVERY_REQUEST = True
+
+#AWS Setting
+AWS_REGION = 'ap-northeast-1' #AWS서버의 지역
+AWS_STORAGE_BUCKET_NAME = 'aivle-8-team-rsb' #생성한 버킷 이름
+AWS_ACCESS_KEY_ID = 'AKIA2TMUP5YA2QQRN5WE' #액서스 키 ID
+AWS_SECRET_ACCESS_KEY = 'abFRkoxK2mNEXO3SQ5H1ooQKgprKcqZMvcn5fcUu' #액서스 키 PW
+#버킷이름.s3.AWS서버지역.amazonaws.com 형식
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com'
+
+#Static Setting
+#STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
+#STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+#Media Setting
+#MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+PROFILE_IMAGE_STORAGE = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        'LOCATION': os.path.join(BASE_DIR, 'media/profile_images'),
+    }
+}
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC = False
+

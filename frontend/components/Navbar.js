@@ -51,7 +51,7 @@ export default function Navbar() {
         {user ? (
           <div className={styles.userSection}>
             <div className={styles.navLinks}>
-              {user && user.is_staff && <a href={`${BACKEND_URL}/admin`} target="_blank" rel="noopener noreferrer">Admin</a>}
+              {user && user.is_staff && <a href={`http://voice-verity.com:8000/admin`} target="_blank" rel="noopener noreferrer">Admin</a>}
               <Link href="/management" onClick={handleApiClick}>API</Link>
               <Link href="/team">Team</Link>
               <Link href="/docs">Docs</Link>
