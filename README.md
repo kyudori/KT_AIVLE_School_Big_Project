@@ -1,12 +1,18 @@
 # Voice Verity 프로젝트
 
 ## 소개
+KT AIVLE School AI Track 5기 빅(최종) 프로젝트 입니다.
 **Voice Verity**는 오디오 및 유튜브 영상의 음성을 분석하여 해당 음성이 Deep Fake Voice인지 Real Voice인지 판별하는 API 서비스입니다.
 - 서비스 URL: http://voice-verity.com (현재 지원 종료)
 - [발표 영상(Full)](https://youtu.be/Ml-k_nT5-gs?feature=shared)
 - [발표 영상(Short)](https://youtu.be/mp11_yAb4lg?feature=shared)
 - [팀 인터뷰](https://youtu.be/9RefN1SSlWk?feature=shared)
 - [발표 자료](https://github.com/kyudori/KT_AIVLE_School_Big_Project/blob/main/%EC%84%9C%EB%A5%98%20%EB%AA%A8%EC%9D%8C/7%EC%A3%BC%EC%B0%A8%20%EC%B5%9C%EC%A2%85%20%EC%B5%9C%EC%B6%9C%ED%8C%8C%EC%9D%BC/AI%208%EC%A1%B0%20%EB%B0%9C%ED%91%9C%EC%9E%90%EB%A3%8C.pdf)
+
+## 맡은 역할
+- **Backend**: 백 로직(기능) 구현
+- **Frontend**: 웹 퍼블리싱(CSS)을 제외한 기능 구현, API 통합(백 통신), 예외 처리 개발
+- **Server**: AWS EC2, S3을 사용할 수 있도록 백/프론트 환경 셋팅
 
 ## 기술 스택
 - **Backend**: Python 3.11.5, Django 5.0.6, MySQL 8.0.20
