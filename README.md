@@ -1,7 +1,7 @@
 # Voice Verity 프로젝트
 
 ## 소개
-- KT AIVLE School AI Track 5기 빅(최종) 프로젝트
+- [KT AIVLE School AI Track 5기 빅(최종) 프로젝트](https://github.com/AIVLESCHOOLFIFTHBIGPROJECT/AI_8_VoiceVerity)
 - 우수상 수상
 
 **Voice Verity**는 오디오 및 유튜브 영상의 음성을 분석하여 해당 음성이 Deep Fake Voice인지 Real Voice인지 판별하는 API 서비스입니다.
